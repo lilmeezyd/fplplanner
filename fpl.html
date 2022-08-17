@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>uganda fantasy league</title>
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<link rel="stylesheet" type="text/css" href="css/stats.css">
+	<link rel="stylesheet" type="text/css" href="css/fixtures.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-icons.css">
+</head>
+<body>
+	<nav id="myNav" class="topnav">
+		<h4 class="logo">FPL CAPTAIN</h4>
+		<div class="links small">
+			<a href="" id="team_id">Team ID</a>
+		</div>
+	</nav>
+	<div class="playerpopup"></div>
+	<div class="main">
+		<div class="transfers-col">
+			<div>
+				<div class="details-one">
+					<div class="tteam">
+						<div class="tname-details large slideshow">
+							<span class="theading">Name</span>
+							<h4 class="tname">El Capitano</h4>
+						</div>
+						<div class="ttime-details large slideshow">
+							<h4 class="theading">Gameweek Deadline In:</h4>
+							<div class="ttime small">
+								<div>
+									<span id="day"></span><span>Days</span>
+								</div>
+								<div>
+									<span id="hour"></span><span>Hours</span>
+								</div>
+								<div>
+									<span id="minute"></span><span>Minutes</span>
+								</div>
+								<div>
+									<span id="second"></span><span>Seconds</span>
+								</div>
+							</div>
+						</div>
+						<div class="trank-details large slideshow">
+							<span class="theading">Rank</span>
+							<h4 class="trank">567</h4>
+						</div>
+						<div class="dots">
+      						<span class="dot" onclick="currentHeader(0)"></span>
+      						<span class="dot" onclick="currentHeader(1)"></span>
+     						<span class="dot" onclick="currentHeader(2)"></span>
+    					</div>
+					</div>
+					<div class="gw-buttonswrapper">
+						<div class="gw-buttons">
+							<button class="btn btn-fpl small" id="prevGameweek"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+</svg><span class="btn-name">Previous</span></button>
+							<h4 id="gameweekNum" class="large"></h4>
+							<button class="btn btn-fpl small" id="nextGameweek"><span class="btn-name">Next</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-right" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+</svg></button>
+						</div>
+					</div>
+					<div class="budgetwrapper">
+						<div class="budget">
+							<div class="budget-players large">
+								<h4 class="large">Player Selection</h4>
+								<div><span class="player-num" ></span>&nbsp;<span>/</span>&nbsp;<span>15</span></div>
+							</div>
+							<div class="free-transfers large">
+								<h4 title="Free Transfers large">FT</h4>
+								<span class="transfer-number"></span>
+							</div>
+							<div class="cost-transfers large">
+								<h4 title="Transfer Cost large">TC</h4>
+								<span class="points-lost">0</span>
+							</div>
+							<div class="remain large">
+								<h4 class="large">Remaining Budget</h4>
+								<span class="remain-budget">0.5m</span>
+							</div>
+						</div>
+					</div>
+					<div class="btn-displayer">
+						<div id="transfer" class="tab-item tab-border">
+							<p class="large">Transfers</p>
+						</div>
+						<div id="chip" class="tab-item">
+							<p class="large">Chips</p>
+						</div>
+					</div>
+					<div id="transfer-tab"  class="upper-buttons button-item show">
+						<button class="btn btn-block show-fpl btn-fpl small">Transfers</button>
+						<button class="btn btn-block reset btn-fpl small">Reset</button>
+						<!-- <button class="btn btn-block btn-auto">Autopick</button> -->
+					</div>
+					<div id="chip-tab"  class="chip-buttons button-item">
+						<button class="btn btn-block btn-chip small" id="wcard"></button>
+						<button class="btn btn-block btn-chip small" id="bbench">Bench Boost</button>
+						<button class="btn btn-block btn-chip small" id="tcap">Triple Captain</button>
+						<button class="btn btn-block btn-chip small" id="fhit">Free Hit</button>
+					</div>
+					<div class="transfer-rows">
+						<div class="transfer-out-wrapper">
+							<h4 class="small">Transfer Out</h4>
+							<div class="transfer-out"></div>
+						</div>
+						<div class="transfer-in-wrapper">
+							<h4 class="small">Transfer In</h4>
+							<div class="transfer-in"></div>
+						</div>
+					</div>
+					<div class="message small"></div>
+				</div>
+				<div class="field">
+					<div class="pitch">
+						<!-- GoalKeeper -->
+						<div class="pitch_row" id="goal"  size="pitch">
+						</div>
+                        
+                        <!-- Defenders -->
+
+                        <div class="pitch_row" id="defend"  size="pitch">
+							
+						</div>
+
+						<!-- Midfielders -->
+						<div class="pitch_row" id="mid"   size="pitch">
+							
+						</div>
+
+						<!-- Forwards -->
+						<div class="pitch_row" id="forw"   size="pitch">
+							
+						</div>
+					</div>
+					<div class="bench" id="bench">
+						<div class="bench_element">
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<div class="players-col">
+			<div class="players small">
+		<div class="players-container">
+			<div class="players-heading-container">
+				<h3 class="players-heading">Player Selection</h3>
+				<!--  <a href="#" class="players-heading-link">Back</a> -->
+			</div>
+			<div class="form">
+				<form>
+					<div class="view">
+						<label>View</label>
+						<select class="custom-select small" id="view_by">
+							<optgroup label="Global">
+								<option value="all players">All Players</option>
+							</optgroup>
+							<optgroup label="By Position">
+								<option class="position" value="goalkeeper">Goalkeepers</option>
+								<option class="position" value="defender">Defenders</option>
+								<option class="position" value="midfielder">Midfielders</option>
+								<option class="position" value="forward">Forwards</option>
+							</optgroup>
+							<optgroup label="By Team">
+								<option class="team" value="arsenal">Arsenal</option>
+								<option class="team" value="chelsea">Chelsea</option>
+								<option class="team" value="liverpool">Liverpool</option>
+								<option class="team" value="man city">Manchester City</option>
+								<option class="team" value="man united">Manchester United</option>
+								<option class="team" value="spurs">Tottenham Hotspurs</option>
+							</optgroup>
+						</select>
+					</div>
+					<div class="sort">
+						<label>Sorted by</label>
+						<select class="custom-select" id="sort_by">
+							<option value="points">Total points</option>
+							<option>Round points</option>
+							<option value="price">Price</option>
+							<option>Team selected by %</option>
+							<option>Minutes played</option>
+							<option>Goals scored</option>
+							<option>Assists</option>
+							<option>Clean sheets</option>
+							<option>Goals conceded</option>
+							<option>Own goals</option>
+							<option>Penalties saved</option>
+							<option>Penalties missed</option>
+							<option>Yellow cards</option>
+							<option>Red cards</option>
+							<option>Saves</option>
+							<option>Points per match</option>
+							<option>Transfers in</option>
+							<option>Transfers out</option>
+							<option>Transfers in(round)</option>
+							<option>Transfers out(round)</option>
+							<option>Price rise</option>
+							<option>Price fall</option>
+							<option>Price rise(round)</option>
+							<option>Price fall(round)</option>
+						</select>
+					</div>
+					<div class="search">
+						<label>Search</label>
+						<input id="search" class="blur" type="text" name="">
+					</div>
+					<div class="cost">
+						<label>Max cost</label>
+						<span>Between 3.7 and 13.1</span>
+						<select class="custom-select">
+						</select>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Player Info -->
+	<div class="player-info">
+		<div class="player-numbers">
+			<span class="number"></span>
+			<span class="numbers"></span>
+		</div>
+		<div class="players-table small">
+			<table id="goalkeepers" class="table-one">
+				<thead>
+					<tr>
+						<th></th>
+						<th class="position-table">Goalkeepers</th>
+						<th>£</th>
+						<th>Points</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr><td colspan="4"><i>Loading...</i></td></tr>
+				</tbody>
+			</table>
+			<table id="defenders" class="table-one">
+				<thead>
+					<tr>
+						<th></th>
+						<th class="position-table">Defenders</th>
+						<th>£</th>
+						<th>Points</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr><td colspan="4"><i>Loading...</i></td></tr>
+				</tbody>
+			</table>
+			<table id="midfielders" class="table-one">
+				<thead>
+					<tr>
+						<th></th>
+						<th class="position-table">Midfielders</th>
+						<th>£</th>
+						<th>Points</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr><td colspan="4"><i>Loading...</i></td></tr>
+				</tbody>
+			</table>
+			<table id="forwards" class="table-one">
+				<thead>
+					<tr>
+						<th></th>
+						<th class="position-table">Forwards</th>
+						<th>£</th>
+						<th>Points</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr><td colspan="4"><i>Loading...</i></td></tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="button-controls">
+			<button class="btn btn-controls" id="firstPage">Start</button>
+			<button class="btn btn-controls" id="prevButton">Prev</button>
+			<div class="pages">
+				<span class="current"></span>
+				<span>of</span>
+				<span class="total_pages"></span>
+			</div>
+			<button class="btn btn-controls" id="nextButton">Next</button>
+			<button class="btn btn-controls" id="lastPage">End</button>.
+		</div>
+	</div>
+		</div>
+	</div>
+		<div class="fixtures-col">
+			<h4 class="large fixture-heading">Fixture Ticker</h4>
+			<div class="fixture-ticker">
+				<table class="ticker-table">
+					<thead class="small">
+						<tr>
+							<th>Team</th>
+							<th>GW1</th>
+							<th>GW2</th>
+							<th>GW3</th>
+							<th>GW4</th>
+							<th>GW5</th>
+							<th>GW6</th>
+							<th>GW7</th>
+							<th>GW8</th>
+							<th>GW9</th>
+							<th>GW10</th>
+						</tr>
+					</thead>
+					<tbody class="small">
+						<tr>
+							<td>
+								<span class="ticker-image">
+									<img src="static/arsenal_badge.svg" alt="arsenal">
+								</span>
+								<span class="ticker-team">Arsenal</span>
+							</td>
+							<td>MUN (H)</td>
+							<td>LIV (A)</td>
+							<td>MCI (H)</td>
+							<td>CHE (H)</td>
+							<td>TOT (A)</td>
+							<td>TOT (A)</td>
+							<td>ARS (H)</td>
+							<td>CHE (A)</td>
+							<td>ARS (A)</td>
+							<td>ARS (A)</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="ticker-image">
+									<img src="static/liverpool_badge.svg" alt="liverpool">
+								</span> 
+								<span class="ticker-team">Liverpool</span>
+						   </td>
+							<td>TOT (A)</td>
+							<td>ARS (H)</td>
+							<td>CHE (A)</td>
+							<td>ARS (A)</td>
+							<td>ARS (A)</td>						
+						</tr>
+						<tr>
+							<td>
+								<span class="ticker-image">
+									<img src="static/man_utd_badge.svg" alt="man_utd">
+								</span>
+								<span class="ticker-team">Manchester United</span>
+							</td>
+							<td>ARS (A)</td>
+							<td>CHE (H)</td>
+							<td>TOT (A)</td>
+							<td>MCI (H)</td>
+							<td>ARS (A)</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="ticker-image"><img src="static/chelsea_badge.svg" alt="chelsea"></span>
+								<span class="ticker-team">Chelsea</span>
+							</td>
+							<td>MCI (H)</td>
+							<td>MUN (A)</td>
+							<td>LIV (H)</td>
+							<td>ARS (A)</td>
+							<td>ARS (A)</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="ticker-image">
+									<img src="static/spurs_badge.svg" alt="spurs">
+								</span>
+								<span class="ticker-team">Tottenham Hotspur</span>
+							</td>
+							<td>LIV (H)</td>
+							<td>MCI (A)</td>
+							<td>MUN (H)</td>
+							<td>ARS (H)</td>
+							<td>CHE (A)</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="ticker-image">
+									<img src="static/man_city_badge.svg" alt="man_city">
+								</span>
+								<span class="ticker-team">Manchester City</span>
+							</td>
+							<td>CHE (A)</td>
+							<td>TOT (H)</td> 
+							<td>ARS (A)</td>
+							<td>MUN (A)</td>
+							<td>LIV (H)</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!--<div class="table-col">
+			<h4>Table</h4>
+		</div>-->
+
+	<footer class="footer small">
+		<div class="social-icons">
+			<a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="aqua" class="bi bi-twitter" viewBox="0 0 16 16">
+  <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+</svg></a>
+		</div>
+		<p>&copy FPL CAPTAIN 2022</p>
+	</footer>
+	<div id="modal" class="hide_modal">
+		<form name="team">
+			<label for="team">Team ID</label>
+			<input type="number" id="teamid">
+			<button type="submit" class="btn btn-block btn-fpl">Load</button>
+			<button class="btn-info btn-close btn-danger">X</button>
+		</form>
+	</div>
+	
+	<script type="text/javascript">
+
+		let team_id = document.getElementById('team_id')
+		let player_id
+		let showModal = false
+		/*team_id.addEventListener('click', function() {
+			console.log('yes')
+		})*/
+		team_id.onclick = function(e) {
+			e.preventDefault()
+			showModal = !showModal
+			if(showModal) {
+				modal.classList.add('show_modal')
+				modal.classList.remove('hide_modal')
+			}
+			if(!showModal) {
+				modal.classList.remove('show_modal')
+				modal.classList.add('hide_modal')
+			}
+		}
+
+		document.forms.team.onsubmit = function(e) {
+			e.preventDefault()
+			modal.classList.remove('show_modal')
+			modal.classList.add('hide_modal')
+			player_id = teamid.value
+			teamid.value = ""
+		}
+		links = document.querySelectorAll('.links')
+		let y = document.getElementById("myNav")
+		/*dropdown = document.querySelector('.dropdown-content')
+		more = document.querySelector('.more')
+		document.body.onresize = function() {
+			width = document.body.clientWidth
+			if(width > 800) {
+				more.style.display = 'none'
+			} else {
+				more.style.display = 'block'
+			}
+			
+		}
+		dropdown.onblur = function() {
+			this.style.display = 'none'
+		}*/
+		/*for(let i=0; i<links.length; i++) {
+			links[i].addEventListener('click', function(e) {
+				e.stopPropagation()
+				close(this)
+				links[i].classList.add('active')
+				y.classList.remove('responsive')
+			})
+		}
+
+		function close(e) {
+			arr = []
+			let x = document.getElementsByClassName('active')
+			for(let i=0; i<x.length; i++) {
+				if(e == x[i]) {
+					arr.push(i)
+				} else {
+					x[i].classList.remove('active')
+				}
+			}
+		}*/
+
+		//document.addEventListener('click', close)
+
+		function display() {
+			y.classList.toggle('responsive')
+			//link = Array.from(links).filter(link => getComputedStyle(link).display === 'none')
+			/*let dropdownMenu = dropdown.style.display === 'block' ? 'none' : 'block'
+			if(dropdownMenu === 'block'){
+				Array.from(links).forEach(link => {
+				if(getComputedStyle(link).display === 'none') {
+					dropdown.append(link)
+				}
+				dropdown.style.display = dropdownMenu
+				show.style.display = 'block'
+			})
+			} else {
+				dropdownLinks = document.querySelectorAll('.dropdown-content a')
+				Array.from(dropdownLinks).forEach(link => {
+					//document.querySelector('nav').append(link)
+					more.before(link)
+				})
+				dropdown.style.display = 'none'
+			}*/
+		}
+
+		let index = 0
+
+		showHeader(index)
+
+		function currentHeader(n) {
+			showHeader(index = n)
+		}
+
+		function showHeader(n) {
+			let headers = document.querySelectorAll('.slideshow')
+			let dots = document.querySelectorAll('.dot')
+			for(let i = 0; i<headers.length; i++) {
+				headers[i].style.display = 'none'
+			}
+			for(let i = 0; i < dots.length; i++) {
+				dots[i].classList.remove('active')
+			}
+			n++;
+			if(n > headers.length) { n = 1}
+			if(n > dots.length) { n = 1}
+
+			headers[n-1].style.display = 'flex'
+			dots[n-1].classList.add('active')
+			setTimeout(showHeader, 5000, n)
+		}
+	</script>
+	<script type="text/javascript" src="js/players.js"></script>
+	<script type="text/javascript" src="js/tables.js">
+	</script>
+	<script type="text/javascript" src="js/fixtures.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/modal.js"></script>
+	<script type="text/javascript" src="js/gameweeks.js"></script>
+	<script type="text/javascript" src="js/chips.js"></script>
+</body>
+</html>
+
