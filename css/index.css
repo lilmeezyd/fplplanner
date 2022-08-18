@@ -714,22 +714,17 @@
 	}
 
 	.playerpop1 {
-		position: fixed;
-		width: 550px;
 		border: 1px solid rgba(0, 0, 0, 0.2);
 		margin: auto;
-		top: 25%;
-		left: 25%;
-		transform: translate(-5%, 25%);
+		width: min-content;
+		height: min-content;
 		padding: 0.4rem;
 		background: rgba(13, 122, 86, 1);
 		text-transform: capitalize;
+		position: relative;
 	}
 	@media(max-width: 1000px) {
 		.playerpop {
-			transform: translate(-22.5%, 25%);
-		}
-		.playerpop1 {
 			transform: translate(-22.5%, 25%);
 		}
 	}
@@ -737,28 +732,19 @@
 		.playerpop {
 			transform: translate(25%, 25%);
 		}
-		.playerpop1 {
-			transform: translate(-7.5%, 25%);
-		}
 	}
 	@media(max-width: 910px) {
 		.playerpop {
 			transform: translate(15%, 25%);
-		}
-		.playerpop1 {
-			transform: translate(-15%, 25%);
 		}
 	}
 	@media(max-width: 750px) {
 		.playerpop {
 			transform: translate(10%, 25%);
 		}
-		.playerpop1 {
-			transform: translate(-18%, 25%);
-		}
 	}
 	@media(max-width: 620px) {
-		.playerpop, .playerpop1 {
+		.playerpop{
 			left: 2.5%;
 			width: 90%;
 			transform: translate(0%, 25%);
@@ -790,7 +776,6 @@
 		display: flex;
 		justify-content: left;
 		align-items: center;
-		border: 1px solid black;
 	}
 	.games-info-fixtures .table tbody td, .games-info-fixtures .table thead th {
 		padding: 0.5rem 2.0rem;

@@ -131,6 +131,35 @@ function load_popup(a,b) {
 	`
 }
 
+function playerOpponent(a) {
+	let result = ''
+	fFixtures.forEach(x => {
+		if(x.team_a === a && !eventIds.includes(x.event)) {
+			nameAway = fTeams.find(tname => tname.id === x.team_h).name
+			dateAway = new Date(x.kickoff_time).toDateString()
+			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
+			x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_a_difficulty === 4 ?
+			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
+			rowAway = `<tr>
+			<td style="font-weight: bolder;">${dateAway}</td><td style="font-weight: bolder;">${x.event}</td><td>${nameAway} (A)</td>
+			<td style="background: ${awayColor};">${x.team_a_difficulty}</td></tr>`
+			result += rowAway
+		}
+		if(x.team_h === a && !eventIds.includes(x.event)) {
+			nameHome = fTeams.find(tname => tname.id === x.team_a).name
+			dateHome = new Date(x.kickoff_time).toDateString()
+			let homeColor = x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
+			x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_h_difficulty === 4 ?
+			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
+			rowHome = `<tr>
+			<td style="font-weight: bolder;">${dateHome}</td><td style="font-weight: bolder;">${x.event}</td><td>${nameHome} (H)</td>
+			<td style="background: ${homeColor};">${x.team_h_difficulty}</td></tr>`
+			result += rowHome
+		}
+	})
+	return result
+}
+
 function loadInfo(a) {
 	let player = players.find(x => x.id === a)
 	let teamId = player.team
@@ -138,22 +167,21 @@ function loadInfo(a) {
 	playerName = `${player.first_name} ${player.second_name}` 
 	pTeam = fTeams.find(x => x.id === teamId)
 	pElement = elementTypes.find(x => x.id === elementId)
-	console.log(teamId)
 	return `
 	<div class="playerpop1">
 		<div class="info-details">
 			<span class='large'>${playerName}</span>
 			<span class='small'>${pTeam.name}</span>
 			<span class='small'>${pElement.singular_name}</span>
+			<button class="btn btn-close btn-danger btn-player">X</button>
 		</div>
-		<button class="btn btn-close btn-danger btn-player">X</button>
 		<div class="games-info">
 			<div class="games-info-buttons">
 				<button class="btn btn-fpl btn-block  btn-game-results">Results</button>
 				<button class="btn btn-block btn-fpl btn-game-fixtures">Fixtures</button>
 			</div>
 			<div class="games-info-fixtures">
-				<table class="table">
+				<table class="table" style="width: 100%">
 					<thead>
 						<tr>
 							<th>Date</th>
@@ -162,14 +190,8 @@ function loadInfo(a) {
 							<th>FDR</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>28 Aug</td>
-							<td>4</td>
-							<td><span>Manchester United</span></td>
-							<td><span>A</span></td>
-							<td class="diff-2">2</td>
-						</tr>
+					<tbody class="t-fixtures">
+						${playerOpponent(teamId)}
 					</tbody>
 				</table>
 			</div>
@@ -194,39 +216,6 @@ function loadInfo(a) {
 							<td class='table-sticky'>1</td>
 							<td class='table-sticky-1'><span>West Ham</span></td>
 							<td><span>H</span></td>
-							<td>10</td>
-							<td>1</td>
-							<td>1</td>
-							<td>0.88</td>
-							<td>0.33</td>
-							<td>3</td>
-						</tr>
-						<tr>
-							<td class='table-sticky'>2</td>
-							<td class='table-sticky-1'><span>Liverpool</span></td>
-							<td><span>A</span></td>
-							<td>10</td>
-							<td>1</td>
-							<td>1</td>
-							<td>0.88</td>
-							<td>0.33</td>
-							<td>3</td>
-						</tr>
-						<tr>
-							<td class='table-sticky'>3</td>
-							<td class='table-sticky-1'><span>Tottenham Hotspur</span></td>
-							<td><span>H</span></td>
-							<td>10</td>
-							<td>1</td>
-							<td>1</td>
-							<td>0.88</td>
-							<td>0.33</td>
-							<td>3</td>
-						</tr>
-						<tr>
-							<td class='table-sticky'>4</td>
-							<td class='table-sticky-1'><span>Manchester United</span></td>
-							<td><span>A</span></td>
 							<td>10</td>
 							<td>1</td>
 							<td>1</td>

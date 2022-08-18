@@ -1,4 +1,5 @@
-
+		document.addEventListener('DOMContentLoaded', returnData, false)
+		document.addEventListener('DOMContentLoaded', returnFixtures, false)
 		function returnData() {
 			var requestOptions = {
 			method: 'GET',
@@ -33,10 +34,6 @@
 				sessionStorage.setItem('fixtures', JSON.stringify(result))
 			})
 			.catch(error => console.log('error', error));
-		}
-		window.onload = function() {
-			returnData();
-			returnFixtures();
 		}
 
 		//Retrieve Fixtures
