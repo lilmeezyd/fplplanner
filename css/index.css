@@ -14,7 +14,7 @@
 	}
 	body {
 		overflow-x: hidden;
-		font-family: 'Premier League W01', 'Segoe UI', Tahoma, Geneva, Verdana, 'Arial', sans-serif;
+		font-family: 'Premier League W01', 'Roboto' 'Segoe UI', Tahoma, Geneva, Verdana, 'Arial', sans-serif;
 		position: relative;
 		background: linear-gradient(300deg, rgba(0, 255, 255, 0.1) 50%,
 		 rgba(22, 22, 68, 0.1) 100%);
