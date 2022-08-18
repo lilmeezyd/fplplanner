@@ -5,7 +5,7 @@
 	}
 	body {
 		overflow-x: hidden;
-		font-family: 'Premier League W01', 'Segoe UI', Tahoma, Geneva, Verdana, 'Arial', sans-serif;
+		font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, 'Arial', sans-serif;
 		color: rgba(22, 22, 68, 1.0);
 	}
 	.players,  .player-info {
@@ -192,7 +192,7 @@
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		font-family: 'Premier League W01';
+		font-family: 'Montserrat';
 		width: 110px;
 	}
 	.player-cell-info .name {
@@ -284,7 +284,7 @@
 	 .search input {
 	 	display: block;
 	 	font-size: 16px;
-	 	font-family: 'Premier League W01', 'Arial', sans-serif;
+	 	font-family: 'Montserrat', 'Arial', sans-serif;
 	 	color: #444;
 	 	line-height: 1.3;
 	 	padding: .6rem 1.4rem .5rem .8rem;
@@ -308,7 +308,7 @@
 	 }
 	 .custom-select{
 	 	display: block;
-	 	font-family: 'Premier League W01', 'Arial', sans-serif;
+	 	font-family: 'Montserrat', 'Arial', sans-serif;
 	 	font-weight: 700;
 	 	line-height: 1.3;
 	 	padding: .6rem 1.4rem .5rem .8rem;
