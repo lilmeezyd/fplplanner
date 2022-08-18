@@ -1,3 +1,5 @@
+@import url(//db.onlinewebfonts.com/c/06287ed0bce9672ab6385e0ef804ed4c?family=PremierLeagueW01-Regular);
+
 * {
 		margin: 0;
 		padding: 0;
@@ -5,7 +7,7 @@
 	}
 	body {
 		overflow-x: hidden;
-		font-family: 'Premier League W01', 'Roboto' 'Segoe UI', Tahoma, Geneva, Verdana, 'Arial', sans-serif;
+		font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, 'Arial', sans-serif;
 		position: relative;
 		background: linear-gradient(300deg, rgba(0, 255, 255, 0.1) 50%,
 		 rgba(22, 22, 68, 0.1) 100%);
@@ -341,7 +343,7 @@
 		line-height: 1;
 		cursor: pointer;
 		font-weight: bolder;
-		font-family: 'Premier League W01';
+		font-family: 'Montserrat';
 		border-radius: 5px;
 		border: 1px solid transparent;
 	}
@@ -886,7 +888,7 @@
 		margin-bottom: 0.2rem;
 		color: rgba(22, 22, 68, 1.0);
 		background: ghostwhite;
-		font-family: 'Premier League W01';
+		font-family: 'Montserrat';
 		font-weight: 700;
 		border: 1px solid rgba(0, 0, 0, 0.3);
 	}
@@ -912,7 +914,7 @@
 		margin: 0.2rem 0;
 		cursor: pointer;
 		color: #fff;
-		font-family: 'Premier League W01';
+		font-family: 'Montserrat';
 	}
 	.btn-info-block {
 		width: 100%;
@@ -970,7 +972,7 @@
 		text-align: center;
 		cursor: pointer;
 		color: #fff;
-		font-family: 'Premier League W01';
+		font-family: 'Montserrat';
 		border-radius: 5px;
 	}
 	.btn-block {
