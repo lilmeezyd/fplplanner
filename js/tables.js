@@ -1,11 +1,12 @@
+console.log(players.length)
 const cachedPlayers = [...players]
 selectedPlayers = cachedPlayers
 const pageSize = 20
 let curPage = 1 
-let maxPrice = Math.max(...cachedPlayers.map(x => x.price))
-let minPrice = Math.min(...cachedPlayers.map(x => x.price))
+let maxPrice = Math.max(...cachedPlayers.map(x => (x.now_cost/10).toFixed(1)))
+let minPrice = Math.min(...cachedPlayers.map(x => (x.now_cost/10).toFixed(1)))
 let priceCut = maxPrice
-let sortParam = 'points'
+let sortParam = 'total_points'
 positions = []
 teams = []
 viewValue = ''
@@ -205,8 +206,10 @@ let cost = document.querySelector('.cost select')
 
 document.querySelector('.numbers').innerHTML = players.length === 1 ? 'player shown' : 'players shown'
 document.addEventListener('DOMContentLoaded', load_prices, false)
+document.addEventListener('DOMContentLoaded', loadTeams, false)
 let player_cells = document.getElementsByClassName('player-cell')
 
+//Load Player Prices
 function load_prices() {
 	cost.innerHTML = ''
 	for(i=maxPrice; i>=minPrice; i-=0.5) {
@@ -216,7 +219,7 @@ function load_prices() {
 		cost.append(priceOption)
 	}
 	if(players.length) {
-		actualMax = Math.max(...players.map(x => x.price))
+		actualMax = Math.max(...players.map(x => (x.now_cost/10).toFixed(1)))
 		bMax = actualMax % 0.5 === 0 ? actualMax : 
 		Math.ceil(actualMax)-actualMax <= 0.5 ? Math.ceil(actualMax) : 
 		Math.ceil(actualMax)-0.5
@@ -225,24 +228,32 @@ function load_prices() {
 	}
 	arr = Array.from(cost.options).map(x => +x.value)
 	index = arr.indexOf(bMax)
+	console.log(index)
+	console.log(cost.options)
 	cost.options[index].selected = true
 	document.querySelector('.current').innerHTML = `${curPage}`	
 }
-players.filter(player => player.price <= maxPrice)
+
+
+
+/* Filter Players By Price */
+players.filter(player => (player.now_cost/10).toFixed(1) <= maxPrice)
 	cost.addEventListener('change', function() {
 		priceCut = +this.value
+		console.log(priceCut)
 		if(viewValue.length>0) {
+			console.log(viewValue)
 			if(positions.includes(viewValue)) {
-			players = cachedPlayers.filter(x => x.position === viewValue && x.price <= priceCut)
+			players = cachedPlayers.filter(x => x.position === viewValue && (x.now_cost/10).toFixed(1) <= priceCut)
 		}
 		if(teams.includes(viewValue)) {
-			players = cachedPlayers.filter(x => x.team === viewValue && x.price <= priceCut)
+			players = cachedPlayers.filter(x => x.team === viewValue && (x.now_cost/10).toFixed(1) <= priceCut)
 		}
 		if(viewValue.toLowerCase() === 'all players'.toLowerCase()) {
-			players = cachedPlayers.filter(x => x.price <= priceCut)
+			players = cachedPlayers.filter(x => (x.now_cost/10).toFixed(1) <= priceCut)
 		}
 	   } else {
-	   		players = players.filter(player => player.price <= +this.value)
+	   		players = players.filter(player => (player.now_cost/10).toFixed(1) <= +this.value)
 	   	}
 	   	selectedPlayers = players
 		curPage = players.length === 0 ? 0 : 1
@@ -259,9 +270,7 @@ players.filter(player => player.price <= maxPrice)
 	/* search players */
 	document.querySelector('#search').oninput = function() {
 		c = this.value
-		console.log(c)
-		console.log(players)
-		players = selectedPlayers.filter(x => x.name.toLowerCase().startsWith(c.toLowerCase()))
+		players = selectedPlayers.filter(x => x.web_name.toLowerCase().startsWith(c.toLowerCase()))
 		curPage = players.length === 0 ? 0 : 1
 		document.querySelector('.numbers').innerHTML = players.length === 1 ? 'player shown' : 'players shown'
 		document.querySelector('.number').innerHTML = `${players.length}`
@@ -294,10 +303,12 @@ players.filter(player => player.price <= maxPrice)
 			}
 		})
 		if(positions.includes(this.value)) {
-			players = cachedPlayers.filter(x => x.position === this.value)
+			let pPosition = +this.value.slice(-1)
+			players = cachedPlayers.filter(x => x.element_type === pPosition)
 		}
 		if(teams.includes(this.value)) {
-			players = cachedPlayers.filter(x => x.team === this.value)
+			let pTeam = +this.value.slice(5)
+			players = cachedPlayers.filter(x => x.team === pTeam)
 		}
 		if(this.value.toLowerCase() === 'all players'.toLowerCase()) {
 			players = cachedPlayers
@@ -319,16 +330,16 @@ players.filter(player => player.price <= maxPrice)
 	/* sort players */
 	document.querySelector('#sort_by').addEventListener('change', function() {
 		curPage = 1
-		if(this.value === 'price') {
+		if(this.value === 'now_cost') {
 			players.sort((x,y) => {
-				if(x.price>y.price) return -1 
-				if(x.price<y.price) return 1	
+				if(x.now_cost>y.now_cost) return -1 
+				if(x.now_cost<y.now_cost) return 1	
 			})
 		}
-		if(this.value === 'points') {
+		if(this.value === 'total_points') {
 			players.sort((x,y) => {
-				if(x.points > y.points) return -1
-				if(x.points < y.points) return 1	
+				if(x.total_points > y.total_points) return -1
+				if(x.total_points < y.total_points) return 1	
 			})
 		}
 		document.querySelector('.current').innerHTML = `${curPage}`
@@ -397,16 +408,16 @@ players.filter(player => player.price <= maxPrice)
 			let end = curPage*pageSize
 			if(index >= start && index < end) return true
 		}).forEach(a => {
-			if(a.position === 'goalkeeper') {
+			if(a.element_type === 1) {
 				return result += load_body(a)
 			}
-			if(a.position === 'defender') {
+			if(a.element_type === 2) {
 				return result1 += load_body(a)
 			}
-			if(a.position === 'midfielder') {
+			if(a.element_type === 3) {
 				return result2 += load_body(a)
 			}
-			if(a.position === 'forward') {
+			if(a.element_type === 4) {
 				return result3 += load_body(a)
 			}
 		})
@@ -588,6 +599,14 @@ players.filter(player => player.price <= maxPrice)
 	}
 
 	function load_body(a) {
+		let teamObj = fTeams.find(x => x.id === a.team)
+		let short_name = teamObj.short_name
+		let team_name = teamObj.name
+		let positionObj = elementTypes.find(x => x.id === a.element_type)
+		let short_pos = positionObj.singular_name_short
+		let pos_name = positionObj.singular_name
+		a.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
+		`./static/shirt_${teamObj.code}-66.webp`
 		return `<tr class="player-tbh">
 					<td class="info">
 						<button class="player-info-button-table">
@@ -601,32 +620,19 @@ players.filter(player => player.price <= maxPrice)
 						<button class="player-cell btn-table" ${a.disabled}>
 							<div class="images"><img src="${a.image}"></div>
 							<div class="player-cell-info small">
-								<span class="name">${a.name}</span>
+								<span class="name">${a.web_name}</span>
 								<div class="player-cell-details">
-									<span class="team" team="${a.team}">${a.team_code}</span>
-									<span class="position" position="${a.position}">${a.position_code}</span>
+									<span class="team" team="${team_name}">${short_name}</span>
+									<span class="position" position="${pos_name}">${short_pos}</span>
 								</div>
 							</div>
 						</button>
 					</td>
-					<td><span class="price">${a.price.toFixed(1)}</span></td>
-					<td><span class="points">${a.points}</span></td>
+					<td><span class="price">${(a.now_cost/10).toFixed(1)}</span></td>
+					<td><span class="points">${a.total_points}</span></td>
 				</tr>`
 	}
 
-/*
-async function getPlayerz() {
-	const playerStream = await fetch('https://fantasy.premierleague.com/api/bootstrap-static/',{
-		method: 'GET',
-		headers: {
-			'accept': 'application/json'
-		}
-	})
-	const playersx = await playerStream.json()
-	playersx.forEach(x => console.log(x))
-}
-
-getPlayerz()*/
 
 /* search script */	
 let select = document.getElementsByTagName('select')

@@ -1,5 +1,3 @@
-@import url(//db.onlinewebfonts.com/c/06287ed0bce9672ab6385e0ef804ed4c?family=PremierLeagueW01-Regular);
-
 * {
 		margin: 0;
 		padding: 0;
@@ -23,7 +21,7 @@
 		color: white;
 		margin: auto;
 		width: 90%;
-		background: rgba(22, 22, 68, 1.0);
+		box-shadow: rgba(0, 255, 255, 1) inset 0px 0px 10px;
 		z-index: 1;
 		display: flex;
 		justify-content: space-between;
@@ -33,8 +31,7 @@
 	nav .logo {
 		font-weight: 700;
 		font-size: 1.5rem;
-		background: rgba(22, 22, 98, 0.8);
-		color:  rgba(0, 255, 255, 1);;
+		color: rgba(22, 22, 98, 0.8);
 		padding: 0.5rem;
 	}
 	@media(max-width: 620px) {
@@ -43,11 +40,12 @@
 		}
 	}
 	nav .links a {
-		color: rgba(0, 255, 255, 1);;
-		border: 1px solid rgba(0, 255, 255, 1);;
+		color: rgba(22, 22, 68, 1);;
+		border: 1px solid rgba(22, 22, 68, 1);;
 		padding: 0.3rem 0.8rem;
 		border-radius: 1rem;
 		cursor: pointer;
+		font-weight: 600;
 	}
 	nav .links a:hover {
 		opacity: 0.8;
@@ -501,9 +499,10 @@
 		align-items: center;
 		margin: 0.5rem 0;
 		border-radius: 10px;
-		background: linear-gradient(300deg, rgb(28 49 227) 15.54%, 
-      	rgb(22 96 87) 60.23%, rgb(22 22 68) 100%);
-		color:  #fff;
+		background: linear-gradient(300deg, rgba(0, 255, 255, 0.1) 50%, 
+      	rgba(0, 255, 255, 0.3) 100%);
+		box-shadow: 0px 0px 5px;
+		color:  rgb(22 22 68);
 		padding: 1rem 0;
 	}
 	.slideshow {
@@ -517,6 +516,8 @@
 		align-items: center;
 		justify-content: center;
 		padding: 0.5rem 1rem;
+		position: relative;
+		width: 90%;
 		/*color: rgba(22, 22, 68, 1.0);*/
 	}
 	.tname, .trank {
@@ -528,8 +529,31 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		row-gap:  1rem;
+		column-gap:  0.5rem;
 		font-weight: bolder;
+	}
+	.ttime div {
+		background: linear-gradient(300deg,  rgba(0, 255, 255, 0.5) 50%,
+		rgba(0, 255, 255, 1) 100%);
+		border-radius: 5px;
+		padding: 0.2rem;
+		text-align: center;
+	}
+	.trank-details {
+		padding: 0.5rem 1.5rem;
+	}
+	.new_ranks {
+		position: absolute;
+		right: 28%;
+		bottom: 0%;
+	}
+	#red_rank, #green_rank {
+	}
+	.hide_rank {
+		display: none;
+	}
+	.show_rank {
+		display: block;
 	}
 	.ttime > div {
 		display: flex;
