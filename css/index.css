@@ -1224,7 +1224,6 @@
 	}
 	.ticker-table tr {
 		border: 1px solid rgba(22, 22, 68, 0.2);
-		box-shadow: 0px 0px 2px 2px;
 		padding: 0 0.5rem;
 	}
 	.ticker-table .ticker-team {
