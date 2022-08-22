@@ -138,6 +138,7 @@ function loadInfo(a) {
 	playerName = `${player.first_name} ${player.second_name}` 
 	pTeam = fTeams.find(x => x.id === teamId)
 	pElement = elementTypes.find(x => x.id === elementId)
+	console.log(teamId)
 	return `
 	<div class="playerpop1">
 		<div class="info-details">
@@ -158,32 +159,10 @@ function loadInfo(a) {
 							<th>Date</th>
 							<th>GW</th>
 							<th>Fixture</th>
-							<th></th>
 							<th>FDR</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>5 Aug</td>
-							<td>1</td>
-							<td><span>West Ham</span></td>
-							<td><span>H</span></td>
-							<td class="diff-3">3</td>
-						</tr>
-						<tr>
-							<td>13 Aug</td>
-							<td>2</td>
-							<td><span>Liverpool</span></td>
-							<td><span>A</span></td>
-							<td class="diff-5">5</td>
-						</tr>
-						<tr>
-							<td>20 Aug</td>
-							<td>3</td>
-							<td><span>Tottenham Hotspur</span></td>
-							<td><span>H</span></td>
-							<td class="diff-4">4</td>
-						</tr>
 						<tr>
 							<td>28 Aug</td>
 							<td>4</td>

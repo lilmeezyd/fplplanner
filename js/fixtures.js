@@ -5,6 +5,7 @@ function loadFixtures() {
 	tickerDiv.innerHTML = table
 }
 
+//Load fixture Header
 function fixtureHeader() {
 	let result = '<th>Team</th>'
 	fEvents.forEach(event => {
@@ -19,6 +20,8 @@ function fixtureHeader() {
 	<thead class="small"><tr>${result}</tr></thead>`
 	return tableHeader
 }
+
+//Load Fixture Body
 function fixtureBody() {
 	let result = ''
 	fTeams.forEach(team => {
