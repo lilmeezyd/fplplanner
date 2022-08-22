@@ -131,13 +131,19 @@ function load_popup(a,b) {
 	`
 }
 
-function loadInfo(a, b, c) {
+function loadInfo(a) {
+	let player = players.find(x => x.id === a)
+	let teamId = player.team
+	let elementId = player.element_type
+	playerName = `${player.first_name} ${player.second_name}` 
+	pTeam = fTeams.find(x => x.id === teamId)
+	pElement = elementTypes.find(x => x.id === elementId)
 	return `
 	<div class="playerpop1">
 		<div class="info-details">
-			<span class='large'>${a}</span>
-			<span class='small'>${b}</span>
-			<span class='small'>${c}</span>
+			<span class='large'>${playerName}</span>
+			<span class='small'>${pTeam.name}</span>
+			<span class='small'>${pElement.singular_name}</span>
 		</div>
 		<button class="btn btn-close btn-danger btn-player">X</button>
 		<div class="games-info">

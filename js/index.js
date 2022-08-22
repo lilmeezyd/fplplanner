@@ -110,7 +110,7 @@ function load_team() {
 			playerteam = x.parentElement.getAttribute('team')
 			playername = x.parentElement.querySelector('.data_name').innerText
 			playerposition = x.parentElement.getAttribute('position')
-			document.querySelector('.playerpopup').innerHTML = loadInfo(playername, playerposition, playerteam)
+			//document.querySelector('.playerpopup').innerHTML = loadInfo(playername, playerposition, playerteam)
 			document.querySelector('.playerpopup').style.display = 'block'
 			document.body.style.overflow = 'hidden'
 			document.body.style.paddingRight = '17px'
@@ -202,7 +202,7 @@ function load_team() {
 			load_team()
 		}
 		document.querySelector('.btn-player-info').onclick = function() {
-			document.querySelector('.playerpopup').innerHTML = loadInfo(playername, playerposition, playerteam)
+			//document.querySelector('.playerpopup').innerHTML = loadInfo(playername, playerposition, playerteam)
 			document.querySelector('.playerpopup').style.display = 'block'
 			popupclose = document.querySelector('.btn-player')
 			popupclose.addEventListener('click', function() {

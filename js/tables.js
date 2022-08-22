@@ -212,6 +212,8 @@ let player_cells = document.getElementsByClassName('player-cell')
 //Load Player Prices
 function load_prices() {
 	cost.innerHTML = ''
+	pMin.innerHTML = minPrice.toFixed(1)
+	pMax.innerHTML = maxPrice.toFixed(1)
 	for(i=maxPrice; i>=minPrice; i-=0.5) {
 		let priceOption = document.createElement('option')
 		priceOption.setAttribute('value', i)
@@ -228,8 +230,6 @@ function load_prices() {
 	}
 	arr = Array.from(cost.options).map(x => +x.value)
 	index = arr.indexOf(bMax)
-	console.log(index)
-	console.log(cost.options)
 	cost.options[index].selected = true
 	document.querySelector('.current').innerHTML = `${curPage}`	
 }
@@ -240,14 +240,12 @@ function load_prices() {
 players.filter(player => (player.now_cost/10).toFixed(1) <= maxPrice)
 	cost.addEventListener('change', function() {
 		priceCut = +this.value
-		console.log(priceCut)
 		if(viewValue.length>0) {
-			console.log(viewValue)
 			if(positions.includes(viewValue)) {
-			players = cachedPlayers.filter(x => x.position === viewValue && (x.now_cost/10).toFixed(1) <= priceCut)
+			players = cachedPlayers.filter(x => x.element_type === +viewValue.slice(9) && (x.now_cost/10).toFixed(1) <= priceCut)
 		}
 		if(teams.includes(viewValue)) {
-			players = cachedPlayers.filter(x => x.team === viewValue && (x.now_cost/10).toFixed(1) <= priceCut)
+			players = cachedPlayers.filter(x => x.team === +viewValue.slice(5) && (x.now_cost/10).toFixed(1) <= priceCut)
 		}
 		if(viewValue.toLowerCase() === 'all players'.toLowerCase()) {
 			players = cachedPlayers.filter(x => (x.now_cost/10).toFixed(1) <= priceCut)
@@ -435,10 +433,8 @@ players.filter(player => (player.now_cost/10).toFixed(1) <= maxPrice)
 	    playerinfo = document.querySelectorAll('.player-info-button-table')
 		Array.from(playerinfo).forEach(x => {
 			x.onclick = function() {
-				playerteam = x.parentElement.nextElementSibling.querySelector('.team').getAttribute('team')
-				playername = x.parentElement.nextElementSibling.querySelector('.name').innerText
-				playerposition = x.parentElement.nextElementSibling.querySelector('.position').getAttribute('position')
-				document.querySelector('.playerpopup').innerHTML = loadInfo(playername, playerposition, playerteam)
+				playerId = +x.parentElement.nextElementSibling.id
+				document.querySelector('.playerpopup').innerHTML = loadInfo(playerId)
 				document.querySelector('.playerpopup').style.display = 'block'
 				popupclose = document.querySelector('.btn-player')
 				popupclose.addEventListener('click', function() {
@@ -616,7 +612,7 @@ players.filter(player => (player.now_cost/10).toFixed(1) <= maxPrice)
 							 </svg>
 							 </button>
 						</td>
-					<td class="player">
+					<td class="player" id=${a.id}>
 						<button class="player-cell btn-table" ${a.disabled}>
 							<div class="images"><img src="${a.image}"></div>
 							<div class="player-cell-info small">
