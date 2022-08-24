@@ -1,10 +1,9 @@
-//let teamSave = document.querySelector('.save-button .save')
 let teamReset = document.querySelector('.reset')
 const gameweekSize = 1
 let curGameweek = 1
 const bdiff = []
 const sdiff = []
-const gameweeks = [
+/*const gameweeks = [
     {
         "gameweek": 1,
         "team": [...teamz],
@@ -70,18 +69,31 @@ const gameweeks = [
         "transfers": [{"transfersOut":[]}, {"transfersIn":[]}],
         "deadline" : 'Sat, 20 Aug 2022 11:30:00 GMT'
     }
-]
+]*/
 
 
 const team = []
 const oldTeam = []
+
+let gameweeks = []
+let ayt = []
+
+function createGameweek() {
+    fEvents.forEach(event => {
+        if(new Date(event.deadline_time) > new Date() && !event.finished) {
+            gameweeks.push(event)
+        } else {
+            ayt.push(event)
+        }
+    })
+}
 
 gameweeks.sort((a,b) => {
     if(a.gameweek > b.gameweek) return 1
     if(a.gameweek < b.gameweek) return -1
 })
 
-sessionStorage.setItem('gameweeks', JSON.stringify(gameweeks))
+
 //let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
 
 
@@ -92,15 +104,7 @@ document.querySelector('#nextGameweek').addEventListener('click', nextGameweek, 
 document.querySelector('#prevGameweek').addEventListener('click', previousGameweek, false)
 gameweekNum.textContent = `Gameweek ${curGameweek}`
 
-function saveTeam() {
-    console.log(curGameweek)
-    //previousWeek = gameweeks.filter(x => x.gameweek === curGameweek - 1)
-    newWeek = gameweeks.filter(x => x.gameweek === curGameweek)
-    newWeek[0].team.length = 0
-    newWeek[0].team.push(...team)
-    sessionStorage.setItem('gameweeks', JSON.stringify(gameweeks))
-    if(curGameweek > 1) {}
-}
+
 
 function resetTeam() {
     let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
@@ -308,7 +312,7 @@ function nextGameweek() {
 }
 
 
-loadGameweek()
+//loadGameweek()
 
 
 function loadGameweek() {
@@ -316,7 +320,8 @@ function loadGameweek() {
     let chips = document.querySelectorAll('.btn-chip')
     let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
     let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-    let currentChip = currentWeek[0].wcard ? 'wcard' : currentWeek[0].fhit ? 'fhit' :
+    console.log(retrievedGameweeks)
+   /* let currentChip = currentWeek[0].wcard ? 'wcard' : currentWeek[0].fhit ? 'fhit' :
                       currentWeek[0].tcap ? 'tcap' : currentWeek[0].bbench ? 'bbench' : ""
     let usedChips = []
     currentWeek[0].wcardUsed ? usedChips.push('wcard') : usedChips.push()
@@ -378,7 +383,7 @@ function loadGameweek() {
         document.querySelector('#nextGameweek').style.visibility = 'hidden'
     } else {
         document.querySelector('#nextGameweek').style.visibility = 'visible'
-    }
+    }*/
 
     team.length = 0
     oldTeam.length = 0
@@ -389,6 +394,7 @@ function loadGameweek() {
         let end = curGameweek*gameweekSize
         if(index >= start && index < end) return true
     }).forEach(a => {
+        console.log(a)
         team.push(...a.team)
         oldTeam.push(...a.team)
         load_team()
@@ -397,7 +403,7 @@ function loadGameweek() {
 }
 
 
-setInterval(getTime, 1000)
+//setInterval(getTime, 1000)
 
 function getTime() {
     let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))

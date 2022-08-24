@@ -434,6 +434,7 @@ players.filter(player => (player.now_cost/10).toFixed(1) <= maxPrice)
 		Array.from(playerinfo).forEach(x => {
 			x.onclick = function() {
 				playerId = +x.parentElement.nextElementSibling.id
+				setPlayerData(playerId)
 				document.querySelector('.playerpopup').innerHTML = loadInfo(playerId)
 				document.querySelector('.playerpopup').style.display = 'block'
 				popupclose = document.querySelector('.btn-player')

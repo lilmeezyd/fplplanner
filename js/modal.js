@@ -160,6 +160,30 @@ function playerOpponent(a) {
 	return result
 }
 
+function playerHistory(a) {
+	let result = ''
+	let playerData = JSON.parse(sessionStorage.getItem('playerData'))
+	playerData.history.forEach(x => {
+		let hTeam = fTeams.find(tname => tname.id === x.opponent_team).name
+		let home = x.was_home ? 'H':'A'
+		let row = `<tr><td class='table-sticky'>${x.round}</td>
+		<td class='table-sticky-1'>${hTeam}&nbsp;&nbsp;(${home}) </td>
+		<td>${x.team_h_score} : ${x.team_a_score}</td>
+		<td>${x.minutes}</td>
+		<td>${x.total_points}</td>
+		<td>${x.goals_scored}</td>
+		<td>${x.assists}</td>
+		<td>${x.clean_sheets}</td>
+		</tr>`
+		result += row
+	})
+	return result
+}
+
+//document.querySelector('btn-close-info').onclick = function() {
+//	sessionStorage.removeItem('playerData')
+//}
+
 function loadInfo(a) {
 	let player = players.find(x => x.id === a)
 	let teamId = player.team
@@ -173,7 +197,7 @@ function loadInfo(a) {
 			<span class='large'>${playerName}</span>
 			<span class='small'>${pTeam.name}</span>
 			<span class='small'>${pElement.singular_name}</span>
-			<button class="btn btn-close btn-danger btn-player">X</button>
+			<button class="btn btn-close btn-close-info btn-danger btn-player">X</button>
 		</div>
 		<div class="games-info">
 			<div class="games-info-buttons">
@@ -202,27 +226,15 @@ function loadInfo(a) {
 							<th class='table-sticky'>GW</th>
 							<th class='table-sticky-1'>Fixture</th>
 							<th></th>
+							<th>Mins</th>
 							<th>Points</th>
 							<th>Goals</th>
 							<th>Assists</th>
-							<th tooltip="Expected Goals">xG</th>
-							<th>xA</th>
-							<th>BC</th>
-							<th>xGc</th>
+							<th>CS</td>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td class='table-sticky'>1</td>
-							<td class='table-sticky-1'><span>West Ham</span></td>
-							<td><span>H</span></td>
-							<td>10</td>
-							<td>1</td>
-							<td>1</td>
-							<td>0.88</td>
-							<td>0.33</td>
-							<td>3</td>
-						</tr>
+							${playerHistory(a)}
 					</tbody>
 				</table>
 			</div>

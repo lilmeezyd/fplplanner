@@ -60,4 +60,6 @@ function loadOpponent(a) {
 	return result
 }
 
+
+
 document.addEventListener('DOMContentLoaded', loadFixtures, false)

@@ -351,6 +351,16 @@
 				modal.classList.add('hide_modal')
 			}
 		}
+		document.addEventListener('scroll', changeLogo, false)
+		function changeLogo(){
+			if(scrollY >= 100) {
+				document.querySelector('.logo').innerHTML = document.querySelector('.tname').innerHTML
+				//document.querySelector('.tname').innerHTML = 'TEAM NAME'
+				//document.querySelector('.trank').innerHTML = 'OVERALL RANK'
+			} else {
+				document.querySelector('.logo').innerHTML = 'Fpl Gang'
+			}
+		}
 
 		document.forms.team.onsubmit = function(e) {
 			e.preventDefault()
@@ -359,7 +369,47 @@
 			playerId = teamid.value
 			getManagerInfo()
 			redOrGreen()
+			getManagerPicks()
+			getManagerHistory()
+			sessionStorage.setItem('gameweeks', JSON.stringify(gameweeks))
+			loadGameweek()
 			teamid.value = ""
+		}
+
+		//Get Manager Picks
+		function getManagerPicks() {
+			let eventId = Math.max(...eventIds)
+			var requestOptions = {
+			method: 'GET',
+			redirect: 'follow'
+			};
+
+			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
+			.then(response => response.json())
+			.then(result => {
+				console.log(result)
+				createGameweek()
+				gameweeks.map(x => x.team = result.picks)
+				gameweeks.map(x => x.transfers = [{"transfersOut":[]}, {"transfersIn":[]}])
+			})
+			.catch(error => console.log('error', error));
+		}
+
+		//Get Manager History
+		function getManagerHistory() {
+			var requestOptions = {
+			method: 'GET',
+			redirect: 'follow'
+			};
+
+			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
+			.then(response => response.json())
+			.then(result => {
+				console.log(result)
+				gameweeks[0].current = result.current
+				gameweeks.map(x => x.chips = result.chips)
+			})
+			.catch(error => console.log('error', error));
 		}
 
 		//Get Manager Info
@@ -383,8 +433,24 @@
 		}	
 		retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
 		retrievedColor = JSON.parse(sessionStorage.getItem('color'))
+
+		//set player Data
+		function setPlayerData(a) {
+			var requestOptions = {
+			method: 'GET',
+			redirect: 'follow'
+			};
+
+			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/element-summary/${a}/`, requestOptions)
+			.then(response => response.json())
+			.then(result => {
+				console.log(result)
+				sessionStorage.setItem('playerData', JSON.stringify(result))
+			})
+			.catch(error => console.log('error', error));
+		}
+
 		window.onload = function() {
-			returnData()
 			if(JSON.parse(sessionStorage.getItem('managerInfo')) === null) {
 				document.querySelector('.tname').innerHTML = 'TEAM NAME'
 				document.querySelector('.trank').innerHTML = 'OVERALL RANK'
