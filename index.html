@@ -369,15 +369,12 @@
 			playerId = teamid.value
 			getManagerInfo()
 			redOrGreen()
-			getManagerPicks()
-			getManagerHistory()
-			sessionStorage.setItem('gameweeks', JSON.stringify(gameweeks))
-			loadGameweek()
+			createGameweek()
 			teamid.value = ""
 		}
 
 		//Get Manager Picks
-		function getManagerPicks() {
+		function getManagerPicks(gameweek) {
 			let eventId = Math.max(...eventIds)
 			var requestOptions = {
 			method: 'GET',
@@ -387,16 +384,15 @@
 			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
-				console.log(result)
-				createGameweek()
-				gameweeks.map(x => x.team = result.picks)
-				gameweeks.map(x => x.transfers = [{"transfersOut":[]}, {"transfersIn":[]}])
+				gameweek.team = result.picks
+				gameweek.transfers = [{"transfersOut":[]}, {"transfersIn":[]}]
+				return gameweek
 			})
 			.catch(error => console.log('error', error));
 		}
 
 		//Get Manager History
-		function getManagerHistory() {
+		function getManagerHistory(gameweek) {
 			var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
@@ -405,9 +401,9 @@
 			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
-				console.log(result)
-				gameweeks[0].current = result.current
-				gameweeks.map(x => x.chips = result.chips)
+				gameweek.current = result.current
+				gameweek.chips = result.chips
+				return gameweek
 			})
 			.catch(error => console.log('error', error));
 		}

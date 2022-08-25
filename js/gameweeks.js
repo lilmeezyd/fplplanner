@@ -78,7 +78,8 @@ const oldTeam = []
 let gameweeks = []
 let ayt = []
 
-function createGameweek() {
+function createGameweek() { 
+    gameweeks.length = 0
     sessionStorage.removeItem('gameweeks')
     fEvents.forEach(event => {
         if(new Date(event.deadline_time) > new Date() && !event.finished) {
@@ -87,6 +88,13 @@ function createGameweek() {
             ayt.push(event)
         }
     })
+    gameweeks.map(x => getManagerPicks(x))
+    gameweeks.map(x => getManagerHistory(x))
+    nGW = []
+    nGW.push(...gameweeks)
+    sessionStorage.setItem('gameweeks', JSON.stringify(nGW))
+
+            loadGameweek()
 }
 
 gameweeks.sort((a,b) => {
@@ -312,16 +320,23 @@ function nextGameweek() {
     }
 }
 
+window.on
+window.onload = function() {
+    if(JSON.parse(sessionStorage.getItem('gameweeks')) === null) {
+        console.log('Upload Team')
+        } else {
+            loadGameweek()
+        }
+    }
 
-//loadGameweek()
 
 
 function loadGameweek() {
     document.querySelector('.details-one').style.paddingBottom = '8px'
     let chips = document.querySelectorAll('.btn-chip')
     let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-    let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-    console.log(retrievedGameweeks)
+    console.log(gameweeks)
+    //let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
    /* let currentChip = currentWeek[0].wcard ? 'wcard' : currentWeek[0].fhit ? 'fhit' :
                       currentWeek[0].tcap ? 'tcap' : currentWeek[0].bbench ? 'bbench' : ""
     let usedChips = []
