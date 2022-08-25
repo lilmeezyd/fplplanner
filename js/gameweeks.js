@@ -79,6 +79,7 @@ let gameweeks = []
 let ayt = []
 
 function createGameweek() {
+    sessionStorage.removeItem('gameweeks')
     fEvents.forEach(event => {
         if(new Date(event.deadline_time) > new Date() && !event.finished) {
             gameweeks.push(event)

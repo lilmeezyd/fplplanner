@@ -21,29 +21,32 @@ function load_team() {
 	result3 = ''
 	result4 = ''
 	team.forEach(a => {
-		if(a.position === 'goalkeeper' && !a.bench) {
-			result += load_player(a)
+		console.log(a)
+		player = players.find(x => x.id === a.element)
+		console.log(player)
+		if(player.element_type === 1 && (a.multiplier === 1 || a.multiplier === 2)) {
+			result += load_player(a, player)
 		}
-		if(a.position === 'goalkeeper' && a.bench) {
-			result4 += load_bench(a)
+		if(player.element_type === 1 && a.multiplier === 0) {
+			result4 += load_bench(a, player)
 		}
-		if(a.position === 'defender' && !a.bench) {
-			result1 += load_player(a)
+		if(player.element_type === 2 && (a.multiplier === 1 || a.multiplier === 2)) {
+			result1 += load_player(a, player)
 		}
-		if(a.position === 'defender' && a.bench) {
-			result4 += load_bench(a)
+		if(player.element_type === 2 && a.multiplier === 0) {
+			result4 += load_bench(a, player)
 		}
-		if(a.position === 'midfielder' && !a.bench) {
-			result2 += load_player(a)
+		if(player.element_type === 3 && (a.multiplier === 1 || a.multiplier === 2)) {
+			result2 += load_player(a, player)
 		}
-		if(a.position === 'midfielder' && a.bench) {
-			result4 += load_bench(a)
+		if(player.element_type === 3 && a.multiplier === 0) {
+			result4 += load_bench(a, player)
 		}
-		if(a.position === 'forward' && !a.bench) {
-			result3 += load_player(a)
+		if(player.element_type === 4 && (a.multiplier === 1 || a.multiplier === 2)) {
+			result3 += load_player(a, player)
 		}
-		if(a.position === 'forward' && a.bench) {
-			result4 += load_bench(a)
+		if(player.element_type === 4 && a.multiplier === 0) {
+			result4 += load_bench(a, player)
 		}
 	})
 	goal.innerHTML = result
@@ -107,12 +110,12 @@ function load_team() {
 	playerinfo = document.querySelectorAll('.player-info-button')
 	Array.from(playerinfo).forEach(x => {
 		x.onclick = function() {
-			playerteam = x.parentElement.getAttribute('team')
-			playername = x.parentElement.querySelector('.data_name').innerText
-			playerposition = x.parentElement.getAttribute('position')
-			//document.querySelector('.playerpopup').innerHTML = loadInfo(playername, playerposition, playerteam)
+			playerId = +x.parentElement.id
+			setPlayerData(playerId)
+			console.log(playerId)
+			document.querySelector('.playerpopup').innerHTML = loadInfo(playerId)
 			document.querySelector('.playerpopup').style.display = 'block'
-			document.body.style.overflow = 'hidden'
+			//document.body.style.overflow = 'hidden'
 			document.body.style.paddingRight = '17px'
 			popupclose = document.querySelector('.btn-player')
 			popupclose.addEventListener('click', function() {
@@ -482,21 +485,31 @@ function changeBenchOrder() {
 	inplayer = ''
 }
 
-function load_player(a) {
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-	captain = a.captain === true && !currentWeek[0].tcap ? returncaptain() : 
-			a.vcaptain === true && !currentWeek[0].tcap ? returnvcaptain() : 
+function load_player(a, player) {
+	//let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
+	//let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
+	/*captain = a.is_captain === true && !currentWeek[0].tcap ? returncaptain() : 
+			a.is_vice_captain === true && !currentWeek[0].tcap ? returnvcaptain() : 
 			a.captain && currentWeek[0].tcap ? returnTcaptain() : 
-			a.vcaptain && currentWeek[0].tcap ? returnvTcaptain() : ""
+			a.vcaptain && currentWeek[0].tcap ? returnvTcaptain() : ""*/
+	let teamObj = fTeams.find(x => x.id === player.team)
+	//let short_name = teamObj.short_name
+	let team_name = teamObj.name
+	let positionObj = elementTypes.find(x => x.id === player.element_type)
+	//let short_pos = positionObj.singular_name_short
+	//let pos_name = positionObj.singular_name
+	player.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
+		`./static/shirt_${teamObj.code}-66.webp`
+	captain = a.is_captain === true ? returncaptain() : 
+	a.is_vice_captain === true  ? returnvcaptain() : ""
 	return `
 	<div class="pitch_unit">
 	<div class="element_container">
-									<div size="element_container" class="element_container-two"  team="${a.playerteam}" position="${a.position}">
+									<div size="element_container" class="element_container-two"  team="${team_name}" position="${player.element_type}" id="${player.id}">
 										<button type="button" class="btn-details">
-											<img src="${a.image}" size="image">
+											<img src="${player.image}" size="image">
 											<div>
-												<div class="data_name">${a.name}</div>
+												<div class="data_name">${player.web_name}</div>
 												<div class="data_fixtures x-small">
 												<div class="next-fix">
 												<span>NEW</span>
@@ -531,18 +544,24 @@ function load_player(a) {
 					</div>`
 }
 
-function load_bench(a) {
-	order = a.benchOrder === 1 ? 'one' : a.benchOrder === 2 ? 'two' : a.benchOrder === 3 ? 'three' : 'goalie'
+function load_bench(a, player) {
+	let teamObj = fTeams.find(x => x.id === player.team)
+	let team_name = teamObj.name
+	let short_name = teamObj.short_name
+	let positionObj = elementTypes.find(x => x.id === player.element_type)
+	player.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
+		`./static/shirt_${teamObj.code}-66.webp`
+	order = a.position === 13 ? 'one' : a.position === 14 ? 'two' : a.position === 15 ? 'three' : a.position === 12 ? 'goalie' : ''
 	return `<div class="bench_unit ${order}" id="${a.position}" size='pitch'>
 								<h3 class="bench_unit_heading">
-									<span class="bean tooltip">${a.position_code}</span>
+									<span class="bean tooltip">${positionObj.singular_name_short}</span>
 								</h3>
 								<div class="bean1">
-									<div size="element_container" class="styledPitchElement" position="${a.position}" team="${a.playerteam}">
+									<div size="element_container" class="styledPitchElement" position="${player.element_type}" team="${team_name}" id="${player.id}">
 										<button type="button" class="btn-details">
-											<img src="${a.image}" size="image">
+											<img src="${player.image}" size="image">
 											<div>
-												<div class="data_name">${a.name}</div>
+												<div class="data_name">${player.web_name}</div>
 												<div class="data_fixtures x-small">
 												<div class="next-fix">
 												<span>NEW</span>
