@@ -267,23 +267,28 @@
 		}
 	}
 	.pitch {
-		min-height: 566px;
-		background: url('../static/pitch.png') center center / 855px 566px no-repeat;
+		min-height: 640px;
+		background: url('../static/pitch.png') center center / 956px 640px no-repeat;
 	}
 	/*.btn-details img {
 		width: 65px;
 	}*/
 	[size="image"] {
 		width: 65px;
+		height: 65px;
 	}
 	@media(max-width: 620px) {
 		[size="image"] {
-			width: 55px
+			width: 55px;
+			/*height: 72.5px;*/
+			height: 55px;
 		}
 	}
 	@media(max-width: 515px) {
 		[size="image"] {
-			width: 45px
+			width: 45px;
+			/*height: 59.3px;*/
+			height: 45px;
 		}
 	}
 	.image  img {
@@ -1258,8 +1263,8 @@
 			min-height: 6.8rem;
 		}
 		.pitch {
-			min-height: 515.5px;
-			background: url('../static/pitch.png') center center / 778.71px 515.5px no-repeat;
+			min-height: 545.5px;
+			background: url('../static/pitch.png') center center / 808.71px 545.5px no-repeat;
 		}
 		.player-info-button, .swap-button, .transfer-button {
 			display: none;
@@ -1287,8 +1292,8 @@
 			min-height: 6.0rem;
 		}
 		.pitch {
-			min-height: 515.6px;
-			background: url('../static/pitch.png') center center / 700.9px 515.6px no-repeat;
+			min-height: 545.6px;
+			background: url('../static/pitch.png') center center / 730.9px 545.6px no-repeat;
 		}
 	}
 	@media(max-width: 515px) {
