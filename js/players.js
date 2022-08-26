@@ -6,7 +6,7 @@
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/bootstrap-static/`, requestOptions)
+			fetch(`https://fantasy.premierleague.com/api/bootstrap-static/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				sessionStorage.removeItem('teams')
@@ -27,7 +27,7 @@
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/fixtures/`, requestOptions)
+			fetch(`https://fantasy.premierleague.com/api/fixtures/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				sessionStorage.removeItem('fixtures')

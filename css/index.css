@@ -1307,8 +1307,8 @@
 			font-size: 0.6rem;
 		}
 		.pitch {
-			min-height: 457.86px;
-			background: url('../static/pitch.png') center center / 650.4px 457.86px no-repeat;
+			min-height: 487.86px;
+			background: url('../static/pitch.png') center center / 680.4px 487.86px no-repeat;
 		}
 	}
 	@media(max-width: 475px) {
@@ -1341,8 +1341,8 @@
 			font-size: 0.5rem;
 		}
 		.pitch {
-			min-height: 438.86px;
-			background: url('../static/pitch.png') center center / 650.4px 438.86px no-repeat;
+			min-height: 468.86px;
+			background: url('../static/pitch.png') center center / 680.4px 468.86px no-repeat;
 			/*min-height: 323.889px;
 			background: url('../static/pitch.png') center center / 480.33px 323.889px no-repeat;*/
 		}

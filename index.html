@@ -381,7 +381,7 @@
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
+			fetch(`https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				gameweek.team = result.picks
@@ -398,7 +398,7 @@
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
+			fetch(`https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				gameweek.current = result.current
@@ -415,7 +415,7 @@
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/entry/${playerId}/`, requestOptions)
+			fetch(`https://fantasy.premierleague.com/api/entry/${playerId}/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				sessionStorage.removeItem('managerInfo')
@@ -437,7 +437,7 @@
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/element-summary/${a}/`, requestOptions)
+			fetch(`https://fantasy.premierleague.com/api/element-summary/${a}/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				console.log(result)
@@ -470,7 +470,7 @@
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsanywhere.herokuapp.com/https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
+			fetch(`https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				sessionStorage.removeItem('color')
