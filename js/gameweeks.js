@@ -81,20 +81,18 @@ let ayt = []
 function createGameweek() { 
     gameweeks.length = 0
     sessionStorage.removeItem('gameweeks')
-    fEvents.forEach(event => {
+    newfEvents = fEvents
+    .map(x => getManagerPicks(x))
+    .map(x => getManagerHistory(x))
+    gameweeks.push(...newfEvents)
+    console.log(gameweeks)/*
+    .forEach(event => {
         if(new Date(event.deadline_time) > new Date() && !event.finished) {
             gameweeks.push(event)
         } else {
             ayt.push(event)
         }
-    })
-    gameweeks.map(x => getManagerPicks(x))
-    gameweeks.map(x => getManagerHistory(x))
-    nGW = []
-    nGW.push(...gameweeks)
-    sessionStorage.setItem('gameweeks', JSON.stringify(nGW))
-
-            loadGameweek()
+    })*/
 }
 
 gameweeks.sort((a,b) => {
@@ -320,14 +318,13 @@ function nextGameweek() {
     }
 }
 
-window.on
-window.onload = function() {
+/*window.onload = function() {
     if(JSON.parse(sessionStorage.getItem('gameweeks')) === null) {
         console.log('Upload Team')
         } else {
             loadGameweek()
         }
-    }
+    }*/
 
 
 
@@ -335,7 +332,7 @@ function loadGameweek() {
     document.querySelector('.details-one').style.paddingBottom = '8px'
     let chips = document.querySelectorAll('.btn-chip')
     let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-    console.log(gameweeks)
+    console.log(retrievedGameweeks)
     //let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
    /* let currentChip = currentWeek[0].wcard ? 'wcard' : currentWeek[0].fhit ? 'fhit' :
                       currentWeek[0].tcap ? 'tcap' : currentWeek[0].bbench ? 'bbench' : ""
@@ -401,7 +398,7 @@ function loadGameweek() {
         document.querySelector('#nextGameweek').style.visibility = 'visible'
     }*/
 
-    team.length = 0
+   /* team.length = 0
     oldTeam.length = 0
     message.innerHTML = ''
     message.style.display = 'none'
@@ -413,9 +410,9 @@ function loadGameweek() {
         console.log(a)
         team.push(...a.team)
         oldTeam.push(...a.team)
-        load_team()
-        load_players()
-    })
+        loadTeam()
+        loadPlayers()
+    })*/
 }
 
 

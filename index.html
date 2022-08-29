@@ -374,38 +374,38 @@
 		}
 
 		//Get Manager Picks
-		function getManagerPicks(gameweek) {
+		function getManagerPicks(event) {
 			let eventId = Math.max(...eventIds)
 			var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
 			};
 
-			fetch(`https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
-				gameweek.team = result.picks
-				gameweek.transfers = [{"transfersOut":[]}, {"transfersIn":[]}]
-				return gameweek
+				event.team = result.picks
+				event.transfers = [{"transfersOut":[]}, {"transfersIn":[]}]
 			})
 			.catch(error => console.log('error', error));
+			return event
 		}
 
 		//Get Manager History
-		function getManagerHistory(gameweek) {
+		function getManagerHistory(event) {
 			var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
 			};
 
-			fetch(`https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
-				gameweek.current = result.current
-				gameweek.chips = result.chips
-				return gameweek
+				event.current = result.current
+				event.chips = result.chips
 			})
 			.catch(error => console.log('error', error));
+			return event
 		}
 
 		//Get Manager Info
@@ -415,7 +415,7 @@
 			redirect: 'follow'
 			};
 
-			fetch(`https://fantasy.premierleague.com/api/entry/${playerId}/`, requestOptions)
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				sessionStorage.removeItem('managerInfo')
@@ -427,8 +427,7 @@
 			})
 			.catch(error => console.log('error', error));
 		}	
-		retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
-		retrievedColor = JSON.parse(sessionStorage.getItem('color'))
+		
 
 		//set player Data
 		function setPlayerData(a) {
@@ -437,7 +436,7 @@
 			redirect: 'follow'
 			};
 
-			fetch(`https://fantasy.premierleague.com/api/element-summary/${a}/`, requestOptions)
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/element-summary/${a}/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				console.log(result)
@@ -447,7 +446,9 @@
 		}
 
 		window.onload = function() {
-			if(JSON.parse(sessionStorage.getItem('managerInfo')) === null) {
+			let retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
+			let retrievedColor = JSON.parse(sessionStorage.getItem('color'))
+			if(retrievedManager === null) {
 				document.querySelector('.tname').innerHTML = 'TEAM NAME'
 				document.querySelector('.trank').innerHTML = 'OVERALL RANK'
 			} else {
@@ -461,6 +462,22 @@
 				retrievedColor === 'green' ? riseInRank() : 
 				retrievedColor === 'red' ? dropInRank() : sameRank()
 			}
+			if(JSON.parse(sessionStorage.getItem('gameweeks')) === null) {
+        		console.log('Upload Team')
+        	} else {
+           		 loadGameweek()
+       		 }
+       		 setTeams() 
+			 setElementTypes()
+			 setEvents()
+			 setPlayers()
+			 setFixtures()
+			 loadTeamFixtures()
+			 //upload()
+			 upload().loadPrices()
+			 upload().loadPlayers()
+			 //loadTeam()
+			 //loadTeams()
 		}
 		
 		//Compare previous Gameweeks
@@ -470,7 +487,7 @@
 			redirect: 'follow'
 			};
 
-			fetch(`https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				sessionStorage.removeItem('color')

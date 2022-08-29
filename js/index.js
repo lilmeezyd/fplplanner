@@ -2,7 +2,7 @@ goal = document.getElementById('goal')
 defend = document.getElementById('defend')
 mid = document.getElementById('mid')
 forw = document.getElementById('forw')
-document.addEventListener('DOMContentLoaded', load_team, false)
+//document.addEventListener('DOMContentLoaded', load_team, false)
 benchelement = document.querySelector('.bench_element')
 let outplayer = ''
 let inplayer = ''
@@ -13,7 +13,7 @@ let tgoal1
 
 
 
-function load_team() {
+function loadTeam() {
 	document.querySelector('.player-num').innerHTML = team.length
 	result = ''
 	result1 = ''
@@ -25,28 +25,28 @@ function load_team() {
 		player = players.find(x => x.id === a.element)
 		console.log(player)
 		if(player.element_type === 1 && (a.multiplier === 1 || a.multiplier === 2)) {
-			result += load_player(a, player)
+			result += loadPlayer(a, player)
 		}
 		if(player.element_type === 1 && a.multiplier === 0) {
-			result4 += load_bench(a, player)
+			result4 += loadBench(a, player)
 		}
 		if(player.element_type === 2 && (a.multiplier === 1 || a.multiplier === 2)) {
-			result1 += load_player(a, player)
+			result1 += loadPlayer(a, player)
 		}
 		if(player.element_type === 2 && a.multiplier === 0) {
-			result4 += load_bench(a, player)
+			result4 += loadBench(a, player)
 		}
 		if(player.element_type === 3 && (a.multiplier === 1 || a.multiplier === 2)) {
-			result2 += load_player(a, player)
+			result2 += loadPlayer(a, player)
 		}
 		if(player.element_type === 3 && a.multiplier === 0) {
-			result4 += load_bench(a, player)
+			result4 += loadBench(a, player)
 		}
 		if(player.element_type === 4 && (a.multiplier === 1 || a.multiplier === 2)) {
-			result3 += load_player(a, player)
+			result3 += loadPlayer(a, player)
 		}
 		if(player.element_type === 4 && a.multiplier === 0) {
-			result4 += load_bench(a, player)
+			result4 += loadBench(a, player)
 		}
 	})
 	goal.innerHTML = result
@@ -86,7 +86,7 @@ function load_team() {
 			removedisabled(playername, teamimage, playerposition)
 			document.querySelector('.player-num').innerHTML = team.length
 			loadTransfersOut()
-			load_team()
+			loadTeam()
 			hideallswapbtn()
 	
 	})
@@ -160,7 +160,7 @@ function load_team() {
 			document.querySelector('.message').innerHTML = loadMessage(playername)
 			team.splice(playerIndex,1)
 			removedisabled(playername, teamimage, playerposition)
-			load_team()
+			loadTeam()
 			hideallswapbtn()
 			document.querySelector('.playerpopup').innerHTML = ''
 			document.querySelector('.playerpopup').style.display = 'none'
@@ -189,7 +189,7 @@ function load_team() {
 			document.querySelector('.playerpopup').style.display = 'none'
 			document.body.style.overflow = ''
 			document.body.style.paddingRight = ''
-			load_team()
+			loadTeam()
 		}
 		document.querySelector('.btn-vcap').onclick = function() {
 			let oldcaptain = team.find(x => x.vcaptain)
@@ -202,7 +202,7 @@ function load_team() {
 			document.querySelector('.playerpopup').style.display = 'none'
 			document.body.style.overflow = ''
 			document.body.style.paddingRight = ''
-			load_team()
+			loadTeam()
 		}
 		document.querySelector('.btn-player-info').onclick = function() {
 			//document.querySelector('.playerpopup').innerHTML = loadInfo(playername, playerposition, playerteam)
@@ -355,7 +355,7 @@ function swapButtonOut(a) {
 				showtransferbtn()
 				showswapbtn()
 				outplayer = ''
-				load_team()
+				loadTeam()
 			}
 		
 }
@@ -386,7 +386,7 @@ function swapButtonIn(a) {
 			    		outplayer.vcaptain = false
 			    		}
 					swapplayer(outplayer, inplayer)
-					load_team()
+					loadTeam()
 					tgoal.length = 0
 					inplayer = ''
 					outplayer = ''
@@ -480,12 +480,12 @@ function changeBenchOrder() {
 	let playerB = changeBench[1].benchOrder
 	changeBench[0].benchOrder = playerB
 	changeBench[1].benchOrder = playerA 
-	load_team()
+	loadTeam()
 	changeBench.length = 0
 	inplayer = ''
 }
 
-function load_player(a, player) {
+function loadPlayer(a, player) {
 	//let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
 	//let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
 	/*captain = a.is_captain === true && !currentWeek[0].tcap ? returncaptain() : 
@@ -544,7 +544,7 @@ function load_player(a, player) {
 					</div>`
 }
 
-function load_bench(a, player) {
+function loadBench(a, player) {
 	let teamObj = fTeams.find(x => x.id === player.team)
 	let team_name = teamObj.name
 	let short_name = teamObj.short_name
@@ -667,7 +667,7 @@ function swapplayer(a, b) {
 	a.benchOrder = bbenchOrder
 	b.bench = false
 	b.benchOrder = sbenchOrder
-	load_team()
+	loadTeam()
 	changeBench.length = 0
 }
 
