@@ -2,7 +2,6 @@ goal = document.getElementById('goal')
 defend = document.getElementById('defend')
 mid = document.getElementById('mid')
 forw = document.getElementById('forw')
-//document.addEventListener('DOMContentLoaded', load_team, false)
 benchelement = document.querySelector('.bench_element')
 let outplayer = ''
 let inplayer = ''
@@ -14,6 +13,7 @@ let tgoal1
 
 
 function loadTeam() {
+	console.log(playerState.players)
 	document.querySelector('.player-num').innerHTML = team.length
 	result = ''
 	result1 = ''

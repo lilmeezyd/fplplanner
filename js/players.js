@@ -72,6 +72,7 @@
 				loadTeams()
 			 	//loadPlayers()
 			 	upload().loadPrices()
+			 	loadTeam()
 			})
 			.catch(error => console.log('error', error));
 
