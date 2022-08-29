@@ -4,8 +4,6 @@ const tabItems = document.querySelectorAll('.tab-item');
 const buttonItems = document.querySelectorAll('.button-item');
 const playersOut = []
 const playersIn = []
-//const playersOutpurg = []
-//const playersInpurg = []
 let pointsCost = 0
 
 function selectButtons(e) {

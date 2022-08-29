@@ -242,46 +242,47 @@ function upload() {
 	players.filter(player => (player.now_cost/10).toFixed(1) <= maxPrice)
 		cost.addEventListener('change', function() {
 			let priceCut = +this.value
+			let filterPlayers
 			if(viewValue.length>0) {
 				if(positions.includes(viewValue)) {
-				players = cachedPlayers.filter(x => x.element_type === +viewValue.slice(9) && (x.now_cost/10).toFixed(1) <= priceCut)
+				filterPlayers = cachedPlayers.filter(x => x.element_type === +viewValue.slice(9) && (x.now_cost/10).toFixed(1) <= priceCut)
 			}
 			if(teams.includes(viewValue)) {
-				players = cachedPlayers.filter(x => x.team === +viewValue.slice(5) && (x.now_cost/10).toFixed(1) <= priceCut)
+				filterPlayers = cachedPlayers.filter(x => x.team === +viewValue.slice(5) && (x.now_cost/10).toFixed(1) <= priceCut)
 			}
 			if(viewValue.toLowerCase() === 'all players'.toLowerCase()) {
-				players = cachedPlayers.filter(x => (x.now_cost/10).toFixed(1) <= priceCut)
+				filterPlayers = cachedPlayers.filter(x => (x.now_cost/10).toFixed(1) <= priceCut)
 			}
 		   } else {
-		   		players = players.filter(player => (player.now_cost/10).toFixed(1) <= +this.value)
+		   		filterPlayers = players.filter(player => (player.now_cost/10).toFixed(1) <= +this.value)
 		   	}
-		   	selectedPlayers = players
-			curPage = players.length === 0 ? 0 : 1
-			players.sort((x,y) => {
+		   	selectedPlayers = filterPlayers
+			curPage = filterPlayers.length === 0 ? 0 : 1
+			filterPlayers.sort((x,y) => {
 					if(x[sortParam] > y[sortParam]) return -1
 					if(x[sortParam] < y[sortParam]) return 1	
 				})
-			document.querySelector('.number').innerHTML = `${players.length}`
-			document.querySelector('.numbers').innerHTML = players.length === 1 ? 'player shown' : 'players shown'
+			document.querySelector('.number').innerHTML = `${filterPlayers.length}`
+			document.querySelector('.numbers').innerHTML = filterPlayers.length === 1 ? 'player shown' : 'players shown'
 			document.querySelector('.current').innerHTML = `${curPage}`
-			document.querySelector('.total_pages').innerHTML = `${Math.ceil(players.length/pageSize)}`
-			loadPlayers()
+			document.querySelector('.total_pages').innerHTML = `${Math.ceil(filterPlayers.length/pageSize)}`
+			loadPlayers(filterPlayers)
 		})
 		/* search players */
 		document.querySelector('#search').oninput = function() {
 			let c = this.value
-			let players
-			players = selectedPlayers.filter(x => x.web_name.toLowerCase().startsWith(c.toLowerCase()))
-			curPage = players.length === 0 ? 0 : 1
-			document.querySelector('.numbers').innerHTML = players.length === 1 ? 'player shown' : 'players shown'
-			document.querySelector('.number').innerHTML = `${players.length}`
+			let searchPlayers
+			searchPlayers = selectedPlayers.filter(x => x.web_name.toLowerCase().startsWith(c.toLowerCase()))
+			curPage = searchPlayers.length === 0 ? 0 : 1
+			document.querySelector('.numbers').innerHTML = searchPlayers.length === 1 ? 'player shown' : 'players shown'
+			document.querySelector('.number').innerHTML = `${searchPlayers.length}`
 			document.querySelector('.current').innerHTML = `${curPage}`
-			document.querySelector('.total_pages').innerHTML = `${Math.ceil(players.length/pageSize)}`
-			players.sort((x,y) => {
+			document.querySelector('.total_pages').innerHTML = `${Math.ceil(searchPlayers.length/pageSize)}`
+			searchPlayers.sort((x,y) => {
 					if(x[sortParam] > y[sortParam]) return -1
 					if(x[sortParam] < y[sortParam]) return 1	
 				})
-			loadPlayers()
+			loadPlayers(searchPlayers)
 		}
 
 		/* Filter players by position or team */
@@ -290,7 +291,7 @@ function upload() {
 			teams = []
 			viewValue = this.value
 			priceCut = maxPrice
-			let players
+			let viewPlayers
 			document.querySelector('#search').value = ""
 			Array.from(this.children).forEach(child => {
 				if(child.label.toLowerCase() === 'By position'.toLowerCase()) {
@@ -306,28 +307,27 @@ function upload() {
 			})
 			if(positions.includes(this.value)) {
 				let pPosition = +this.value.slice(-1)
-				players = cachedPlayers.filter(x => x.element_type === pPosition)
+				viewPlayers = cachedPlayers.filter(x => x.element_type === pPosition)
 			}
 			if(teams.includes(this.value)) {
 				let pTeam = +this.value.slice(5)
-				players = cachedPlayers.filter(x => x.team === pTeam)
+				viewPlayers = cachedPlayers.filter(x => x.team === pTeam)
 			}
 			if(this.value.toLowerCase() === 'all players'.toLowerCase()) {
-				players = cachedPlayers
+				viewPlayers = cachedPlayers
 			}
-			selectedPlayers = players
-			console.log(selectedPlayers)
-			curPage = players.length === 0 ? 0 : 1
-			document.querySelector('.numbers').innerHTML = players.length === 1 ? 'player shown' : 'players shown'
-			document.querySelector('.number').innerHTML = `${players.length}`
+			selectedPlayers = viewPlayers
+			curPage = viewPlayers.length === 0 ? 0 : 1
+			document.querySelector('.numbers').innerHTML = viewPlayers.length === 1 ? 'player shown' : 'players shown'
+			document.querySelector('.number').innerHTML = `${viewPlayers.length}`
 			document.querySelector('.current').innerHTML = `${curPage}`
-			document.querySelector('.total_pages').innerHTML = `${Math.ceil(players.length/pageSize)}`
+			document.querySelector('.total_pages').innerHTML = `${Math.ceil(viewPlayers.length/pageSize)}`
 			selectedPlayers.sort((x,y) => {
 					if(x[sortParam] > y[sortParam]) return -1
 					if(x[sortParam] < y[sortParam]) return 1	
 				})
 			loadPrices()
-			loadPlayers()
+			loadPlayers(viewPlayers)
 		})
 
 		/* sort players */
@@ -387,12 +387,12 @@ function upload() {
 			loadPlayers()
 		}
 		
-		function loadPlayers() {
+		function loadPlayers(plyers=players) {
 			let result = ''
 			let result1 = ''
 			let result2 = ''
 			let result3 = ''
-			players.forEach(x => {
+			plyers.forEach(x => {
 				x.disabled = ''
 				if(team.length > 0) {
 					team.forEach(y => {
@@ -404,7 +404,7 @@ function upload() {
 					x.disabled = ''
 				}
 			})
-			players.filter((row, index) => {
+			plyers.filter((row, index) => {
 				let start = (curPage-1)*pageSize
 				let end = curPage*pageSize
 				if(index >= start && index < end) return true
