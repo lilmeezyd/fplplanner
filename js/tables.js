@@ -411,8 +411,8 @@ function upload() {
 			let result3 = ''
 			plyers.forEach(x => {
 				x.disabled = ''
-				if(team.length > 0) {
-					team.forEach(y => {
+				if(picks.length > 0) {
+					picks.forEach(y => {
 						if(x.name === y.name) {
 							x.disabled = 'disabled'
 						}

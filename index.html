@@ -336,6 +336,8 @@
 		let closeModal = document.getElementById('close_modal')
 		let playerId
 		let showModal = false
+		const picks = []
+   		const oldTeam = []
 		closeModal.onclick = function() {
 			showModal = !showModal
 		}
@@ -369,44 +371,55 @@
 			playerId = teamid.value
 			getManagerInfo()
 			redOrGreen()
+			getManagerHistory()
+			getManagerPicks()
 			//loadTeam()
 			//createGameweek()
 			teamid.value = ""
 		}
 
 		//Get Manager Picks
-		function getManagerPicks(a) {
+		function getManagerPicks() {
 			let eventId = Math.max(...eventIds)
 			var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${a}/event/${eventId}/picks/`, requestOptions)
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				const team = result.picks
 				const newResult = {team, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
 				sessionStorage.removeItem('managerPicks')
 				sessionStorage.setItem('managerPicks', JSON.stringify(newResult))
+				let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+				console.log(retrievedPicks)
+				picks.length = 0
+				oldTeam.length = 0
+				picks.push(...retrievedPicks.team)
+           		oldTeam.push(...retrievedPicks.team)
+				loadTeam()
 			})
 			.catch(error => console.log('error', error));
 		}
 
 		//Get Manager History
-		function getManagerHistory(a) {
+		function getManagerHistory() {
 			var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${a}/history/`, requestOptions)
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				const { current, chips } = result
 				const newResult = {current, chips }
 				sessionStorage.removeItem('managerHistory')
 				sessionStorage.setItem('managerHistory', JSON.stringify(newResult))
+				let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+				console.log(retrievedHistory)
 			})
 			.catch(error => console.log('error', error));
 		}
@@ -426,9 +439,6 @@
 				let retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
 				document.querySelector('.tname').innerHTML = retrievedManager.name
 				document.querySelector('.trank').innerHTML = retrievedManager.summary_overall_rank
-				getManagerHistory(playerId)
-				getManagerPicks(playerId)
-				loadGameweek()
 				
 			})
 			.catch(error => console.log('error', error));
@@ -454,12 +464,28 @@
 		window.onload = function() {
 			let retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
 			let retrievedColor = JSON.parse(sessionStorage.getItem('color'))
+			let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+			let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
 			if(retrievedManager === null) {
 				document.querySelector('.tname').innerHTML = 'TEAM NAME'
 				document.querySelector('.trank').innerHTML = 'OVERALL RANK'
 			} else {
 				document.querySelector('.tname').innerHTML = retrievedManager.name
 				document.querySelector('.trank').innerHTML = retrievedManager.summary_overall_rank
+			}
+			if(retrievedPicks === null) {
+				console.log(null)
+			} else {
+				picks.length = 0
+				oldTeam.length = 0
+				picks.push(...retrievedPicks.team)
+           		oldTeam.push(...retrievedPicks.team)
+				loadTeam()
+			}
+			if(retrievedHistory === null) {
+				console.log(null)
+			} else {
+				console.log('do something')
 			}
 
 			if(retrievedColor === null) {
@@ -468,7 +494,7 @@
 				retrievedColor === 'green' ? riseInRank() : 
 				retrievedColor === 'red' ? dropInRank() : sameRank()
 			}
-			if(JSON.parse(sessionStorage.getItem('gameweeks')) === null) {
+			if(JSON.parse(sessionStorage.getItem('managerInfo')) === null) {
         		console.log('Upload Team')
         	} else {
            		 loadGameweek()
@@ -482,6 +508,7 @@
 			 //upload()
 			 upload().loadPrices()
 			 upload().loadPlayers()
+			 loadGameweeks().loadGameweek()
 			 //loadTeam()
 			 //loadTeams()
 		}

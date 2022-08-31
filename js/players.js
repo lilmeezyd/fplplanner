@@ -15,6 +15,22 @@
 		let playerState = {
 			players: []
 		};
+		let gameweekState = {
+			gameweeks: []
+		};
+		setGameweek = function() {
+			/*gameweekState.gameweeks.length = 0
+			let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+			let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+			let retrievedEvents = JSON.parse(sessionStorage.getItem('events'))
+								.filter(x => new Date(x.deadline_time) >new Date() && !x.is_current)
+			
+			retrievedEvents[0].history = retrievedHistory
+			retrievedEvents[0].picks = retrievedPicks
+			let retrievedGameweeks = [retrievedEvents[0], ...retrievedEvents.splice(1)]	
+			gameweekState.gameweeks = retrievedGameweeks
+			return gameweekState	*/			
+		}
 		setTeams = function() {
 			teamState.teams.length = 0
 			let newTeams = [...JSON.parse(sessionStorage.getItem('teams'))]

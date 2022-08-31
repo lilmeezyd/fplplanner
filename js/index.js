@@ -13,15 +13,13 @@ let tgoal1
 
 
 function loadTeam() {
-    let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks')).team
-    console.log(retrievedPicks)
-	document.querySelector('.player-num').innerHTML = team.length
+	document.querySelector('.player-num').innerHTML = picks.length
 	result = ''
 	result1 = ''
 	result2 = ''
 	result3 = ''
 	result4 = ''
-	team.forEach(a => {
+	picks.forEach(a => {
 		console.log(a)
 		player = playerState.players.find(x => x.id === a.element)
 		console.log(player)
@@ -57,11 +55,11 @@ function loadTeam() {
 	benchelement.innerHTML = result4
 
 	remainBudget = document.querySelector('.remain-budget')
-	spent = team.reduce((x,y) => x+(+y.price), 0)
-	remainingBudget = budget-spent
-	remainBudget.textContent = remainingBudget.toFixed(1)+'m'
-	remainingBudget >= 0 ? remainBudget.classList.remove('info-danger') : remainBudget.classList.remove('info-success')
-	remainingBudget >= 0 ? remainBudget.classList.add('info-success') : remainBudget.classList.add('info-danger')
+	spent = picks.reduce((x,y) => x+(+y.price), 0)
+	//remainingBudget = budget-spent
+	//remainBudget.textContent = remainingBudget.toFixed(1)+'m'
+	//remainingBudget >= 0 ? remainBudget.classList.remove('info-danger') : remainBudget.classList.remove('info-success')
+	//remainingBudget >= 0 ? remainBudget.classList.add('info-success') : remainBudget.classList.add('info-danger')
 	/*if(remainingBudget < 0 || team.length < 15) {
     	document.querySelector('#nextGameweek').setAttribute('disabled', true)
 	} else {
