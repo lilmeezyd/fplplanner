@@ -13,7 +13,8 @@ let tgoal1
 
 
 function loadTeam() {
-	console.log(playerState.players)
+    let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks')).team
+    console.log(retrievedPicks)
 	document.querySelector('.player-num').innerHTML = team.length
 	result = ''
 	result1 = ''
@@ -22,7 +23,7 @@ function loadTeam() {
 	result4 = ''
 	team.forEach(a => {
 		console.log(a)
-		player = players.find(x => x.id === a.element)
+		player = playerState.players.find(x => x.id === a.element)
 		console.log(player)
 		if(player.element_type === 1 && (a.multiplier === 1 || a.multiplier === 2)) {
 			result += loadPlayer(a, player)
@@ -492,10 +493,10 @@ function loadPlayer(a, player) {
 			a.is_vice_captain === true && !currentWeek[0].tcap ? returnvcaptain() : 
 			a.captain && currentWeek[0].tcap ? returnTcaptain() : 
 			a.vcaptain && currentWeek[0].tcap ? returnvTcaptain() : ""*/
-	let teamObj = fTeams.find(x => x.id === player.team)
+	let teamObj = teamState.teams.find(x => x.id === player.team)
 	//let short_name = teamObj.short_name
 	let team_name = teamObj.name
-	let positionObj = elementTypes.find(x => x.id === player.element_type)
+	let positionObj = elementTypesState.elementTypes.find(x => x.id === player.element_type)
 	//let short_pos = positionObj.singular_name_short
 	//let pos_name = positionObj.singular_name
 	player.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
@@ -545,10 +546,10 @@ function loadPlayer(a, player) {
 }
 
 function loadBench(a, player) {
-	let teamObj = fTeams.find(x => x.id === player.team)
+	let teamObj = teamState.teams.find(x => x.id === player.team)
 	let team_name = teamObj.name
 	let short_name = teamObj.short_name
-	let positionObj = elementTypes.find(x => x.id === player.element_type)
+	let positionObj = elementTypesState.elementTypes.find(x => x.id === player.element_type)
 	player.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
 		`./static/shirt_${teamObj.code}-66.webp`
 	order = a.position === 13 ? 'one' : a.position === 14 ? 'two' : a.position === 15 ? 'three' : a.position === 12 ? 'goalie' : ''

@@ -78,22 +78,7 @@ const oldTeam = []
 let gameweeks = []
 let ayt = []
 
-function createGameweek() { 
-    gameweeks.length = 0
-    sessionStorage.removeItem('gameweeks')
-    newfEvents = fEvents
-    .map(x => getManagerPicks(x))
-    .map(x => getManagerHistory(x))
-    gameweeks.push(...newfEvents)
-    console.log(gameweeks)/*
-    .forEach(event => {
-        if(new Date(event.deadline_time) > new Date() && !event.finished) {
-            gameweeks.push(event)
-        } else {
-            ayt.push(event)
-        }
-    })*/
-}
+
 
 gameweeks.sort((a,b) => {
     if(a.gameweek > b.gameweek) return 1
@@ -331,8 +316,16 @@ function nextGameweek() {
 function loadGameweek() {
     document.querySelector('.details-one').style.paddingBottom = '8px'
     let chips = document.querySelectorAll('.btn-chip')
-    let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-    console.log(retrievedGameweeks)
+    let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+    let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+    let retrievedEvents = JSON.parse(sessionStorage.getItem('events'))
+                        .filter(x => new Date(x.deadline_time) >new Date() && !x.is_current)
+    //console.log(retrievedPicks)
+    //console.log(retrievedHistory)
+    //console.log(retrievedEvents)
+    retrievedEvents.map(x => x.history = retrievedHistory)
+                        .map(y => y.picks = retrievedPicks)
+    console.log(retrievedEvents)                    
     //let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
    /* let currentChip = currentWeek[0].wcard ? 'wcard' : currentWeek[0].fhit ? 'fhit' :
                       currentWeek[0].tcap ? 'tcap' : currentWeek[0].bbench ? 'bbench' : ""
@@ -398,21 +391,21 @@ function loadGameweek() {
         document.querySelector('#nextGameweek').style.visibility = 'visible'
     }*/
 
-   /* team.length = 0
+    team.length = 0
     oldTeam.length = 0
-    message.innerHTML = ''
-    message.style.display = 'none'
-    retrievedGameweeks.filter((row, index) => {
+    //message.innerHTML = ''
+    //message.style.display = 'none'
+    retrievedEvents.filter((row, index) => {
         let start = (curGameweek-1)*gameweekSize
         let end = curGameweek*gameweekSize
         if(index >= start && index < end) return true
     }).forEach(a => {
         console.log(a)
-        team.push(...a.team)
-        oldTeam.push(...a.team)
+        team.push(...a.history.picks.team)
+        oldTeam.push(...a.history.picks.team)
         loadTeam()
         loadPlayers()
-    })*/
+    })
 }
 
 

@@ -369,43 +369,46 @@
 			playerId = teamid.value
 			getManagerInfo()
 			redOrGreen()
-			createGameweek()
+			//loadTeam()
+			//createGameweek()
 			teamid.value = ""
 		}
 
 		//Get Manager Picks
-		function getManagerPicks(event) {
+		function getManagerPicks(a) {
 			let eventId = Math.max(...eventIds)
 			var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${a}/event/${eventId}/picks/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
-				event.team = result.picks
-				event.transfers = [{"transfersOut":[]}, {"transfersIn":[]}]
+				const team = result.picks
+				const newResult = {team, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
+				sessionStorage.removeItem('managerPicks')
+				sessionStorage.setItem('managerPicks', JSON.stringify(newResult))
 			})
 			.catch(error => console.log('error', error));
-			return event
 		}
 
 		//Get Manager History
-		function getManagerHistory(event) {
+		function getManagerHistory(a) {
 			var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
 			};
 
-			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${a}/history/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
-				event.current = result.current
-				event.chips = result.chips
+				const { current, chips } = result
+				const newResult = {current, chips }
+				sessionStorage.removeItem('managerHistory')
+				sessionStorage.setItem('managerHistory', JSON.stringify(newResult))
 			})
 			.catch(error => console.log('error', error));
-			return event
 		}
 
 		//Get Manager Info
@@ -423,6 +426,9 @@
 				let retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
 				document.querySelector('.tname').innerHTML = retrievedManager.name
 				document.querySelector('.trank').innerHTML = retrievedManager.summary_overall_rank
+				getManagerHistory(playerId)
+				getManagerPicks(playerId)
+				loadGameweek()
 				
 			})
 			.catch(error => console.log('error', error));
