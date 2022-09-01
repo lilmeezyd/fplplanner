@@ -20,10 +20,9 @@ function loadTeam() {
 	result3 = ''
 	result4 = ''
 	picks.forEach(a => {
-		console.log(a)
 		player = playerState.players.find(x => x.id === a.element)
-		console.log(player)
 		if(player.element_type === 1 && (a.multiplier === 1 || a.multiplier === 2)) {
+			console.log(player)
 			result += loadPlayer(a, player)
 		}
 		if(player.element_type === 1 && a.multiplier === 0) {
@@ -493,6 +492,7 @@ function loadPlayer(a, player) {
 			a.vcaptain && currentWeek[0].tcap ? returnvTcaptain() : ""*/
 	let teamObj = teamState.teams.find(x => x.id === player.team)
 	//let short_name = teamObj.short_name
+	let teamId = player.team
 	let team_name = teamObj.name
 	let positionObj = elementTypesState.elementTypes.find(x => x.id === player.element_type)
 	//let short_pos = positionObj.singular_name_short
@@ -510,14 +510,7 @@ function loadPlayer(a, player) {
 											<div>
 												<div class="data_name">${player.web_name}</div>
 												<div class="data_fixtures x-small">
-												<div class="next-fix">
-												<span>NEW</span>
-												</div>
-												<div class="up-fix">
-												<span>nfo</span>
-												<span>NEW</span>
-												<span>lee</span>
-												</div>
+												${nextFixtures(teamId)}
 												</div>
 											</div>
 										</button>
@@ -545,6 +538,7 @@ function loadPlayer(a, player) {
 
 function loadBench(a, player) {
 	let teamObj = teamState.teams.find(x => x.id === player.team)
+	let teamId = player.team
 	let team_name = teamObj.name
 	let short_name = teamObj.short_name
 	let positionObj = elementTypesState.elementTypes.find(x => x.id === player.element_type)
@@ -562,14 +556,7 @@ function loadBench(a, player) {
 											<div>
 												<div class="data_name">${player.web_name}</div>
 												<div class="data_fixtures x-small">
-												<div class="next-fix">
-												<span>NEW</span>
-												</div>
-												<div class="up-fix">
-												<span>nfo</span>
-												<span>NEW</span>
-												<span>lee</span>
-												</div>
+												${nextFixtures(teamId)}
 												</div>
 											</div>
 										</button>
@@ -592,6 +579,61 @@ function loadBench(a, player) {
 									</div>
 								</div>
 							</div>`			
+}
+
+function nextFixtures(a) {
+	let resultFix = ''
+	let resultFour = ''
+	let nextFix = fixtureState.fixtures
+					.filter(x => new Date(x.kickoff_time)>new Date && (x.team_a === a || x.team_h === a))
+					.splice(0,1)
+	let nextFour = fixtureState.fixtures
+					.filter(x => new Date(x.kickoff_time)>new Date && (x.team_a === a || x.team_h === a))
+					.splice(1,3)
+	nextFix.forEach(x => {
+		if(x.team_a === a) {
+			nameAway = teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
+			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
+			x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_a_difficulty === 4 ?
+			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
+			spanAway = `<span style="background: ${awayColor}">${nameAway}</span>`
+			resultFix+=spanAway
+		}
+		if(x.team_h === a) {
+			nameHome = teamState.teams.find(tname => tname.id === x.team_a).short_name
+			let homeColor = x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
+			x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_h_difficulty === 4 ?
+			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
+			spanHome = `<span style="background: ${homeColor}">${nameHome}</span>`
+			resultFix += spanHome
+		}
+	})
+	nextFour.forEach(x => {
+		if(x.team_a === a) {
+			nameAway = teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
+			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
+			x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_a_difficulty === 4 ?
+			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
+			spanAway = `<span style="background: ${awayColor}">${nameAway}</span>`
+			resultFour+=spanAway
+		}
+		if(x.team_h === a) {
+			nameHome = teamState.teams.find(tname => tname.id === x.team_a).short_name
+			let homeColor = x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
+			x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_h_difficulty === 4 ?
+			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
+			spanHome = `<span style="background: ${homeColor}">${nameHome}</span>`
+			resultFour += spanHome
+		}
+	})
+
+	result = `<div class="next-fix">
+					${resultFix}
+			  </div>
+			  <div class="up-fix">
+				   ${resultFour}
+			  </div>`
+	return result
 }
 
 function showtransferbtn() {

@@ -131,9 +131,9 @@ function load_popup(a,b) {
 
 function playerOpponent(a) {
 	let result = ''
-	fFixtures.forEach(x => {
+	fixtureState.fixtures.forEach(x => {
 		if(x.team_a === a && !eventIds.includes(x.event)) {
-			nameAway = fTeams.find(tname => tname.id === x.team_h).name
+			nameAway = teamState.teams.find(tname => tname.id === x.team_h).name
 			dateAway = new Date(x.kickoff_time).toDateString()
 			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
 			x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_a_difficulty === 4 ?
@@ -144,7 +144,7 @@ function playerOpponent(a) {
 			result += rowAway
 		}
 		if(x.team_h === a && !eventIds.includes(x.event)) {
-			nameHome = fTeams.find(tname => tname.id === x.team_a).name
+			nameHome = teamState.teams.find(tname => tname.id === x.team_a).name
 			dateHome = new Date(x.kickoff_time).toDateString()
 			let homeColor = x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
 			x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_h_difficulty === 4 ?
@@ -162,7 +162,7 @@ function playerHistory(a) {
 	let result = ''
 	let playerData = JSON.parse(sessionStorage.getItem('playerData'))
 	playerData.history.forEach(x => {
-		let hTeam = fTeams.find(tname => tname.id === x.opponent_team).name
+		let hTeam = teamState.teams.find(tname => tname.id === x.opponent_team).name
 		let home = x.was_home ? 'H':'A'
 		let row = `<tr><td class='table-sticky'>${x.round}</td>
 		<td class='table-sticky-1'>${hTeam}&nbsp;&nbsp;(${home}) </td>
@@ -183,12 +183,12 @@ function playerHistory(a) {
 //}
 
 function loadInfo(a) {
-	let player = players.find(x => x.id === a)
+	let player = playerState.players.find(x => x.id === a)
 	let teamId = player.team
 	let elementId = player.element_type
 	playerName = `${player.first_name} ${player.second_name}` 
-	pTeam = fTeams.find(x => x.id === teamId)
-	pElement = elementTypes.find(x => x.id === elementId)
+	pTeam = teamState.teams.find(x => x.id === teamId)
+	pElement = elementTypesState.elementTypes.find(x => x.id === elementId)
 	return `
 	<div class="playerpop1">
 		<div class="info-details">

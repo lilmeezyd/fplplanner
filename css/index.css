@@ -1371,8 +1371,8 @@
 	.data_fixtures span {
 		flex: 1 1 0%;
 		display: block;
-		border: 1px solid black;
-		padding: 0.1rem 0;
+		border: 1px solid rgba(255, 255, 255, 1.0);
+		padding: 0.1rem;
 	}
 	.show-btn {
 		display: block;
