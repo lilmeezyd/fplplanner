@@ -363,8 +363,12 @@
 	.btn-details:active {
 		border: 1px solid rgba(233, 0, 82, 100);;
 	}
+	.details-cont, .data_fixtures, .next-fix, .up-fix {
+		width: 100%;
+	}
 	.data_name {
 		/*border: 1px solid black;*/
+		width: 100%;
 		padding: 0.1rem 0.2rem;
 		background-color: rgba(0, 0, 55, 0.9);
 		color: white;

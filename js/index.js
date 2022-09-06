@@ -507,7 +507,7 @@ function loadPlayer(a, player) {
 									<div size="element_container" class="element_container-two"  team="${team_name}" position="${player.element_type}" id="${player.id}">
 										<button type="button" class="btn-details">
 											<img src="${player.image}" size="image">
-											<div>
+											<div class="details-cont">
 												<div class="data_name">${player.web_name}</div>
 												<div class="data_fixtures x-small">
 												${nextFixtures(teamId)}
@@ -553,7 +553,7 @@ function loadBench(a, player) {
 									<div size="element_container" class="styledPitchElement" position="${player.element_type}" team="${team_name}" id="${player.id}">
 										<button type="button" class="btn-details">
 											<img src="${player.image}" size="image">
-											<div>
+											<div class="details-cont">
 												<div class="data_name">${player.web_name}</div>
 												<div class="data_fixtures x-small">
 												${nextFixtures(teamId)}
