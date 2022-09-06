@@ -381,6 +381,7 @@
 		//Get Manager Picks
 		function getManagerPicks() {
 			let eventId = Math.max(...eventIds)
+			console.log(eventId)
 			var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
@@ -394,7 +395,6 @@
 				sessionStorage.removeItem('managerPicks')
 				sessionStorage.setItem('managerPicks', JSON.stringify(newResult))
 				let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
-				console.log(retrievedPicks)
 				picks.length = 0
 				oldTeam.length = 0
 				picks.push(...retrievedPicks.team)
@@ -476,11 +476,9 @@
 			if(retrievedPicks === null) {
 				console.log('Upload Picks')
 			} else {
-				picks.length = 0
-				oldTeam.length = 0
-				picks.push(...retrievedPicks.team)
-           		oldTeam.push(...retrievedPicks.team)
-				loadTeam()
+				let retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
+				playerId = retrievedManager.id
+				getManagerPicks()
 			}
 			if(retrievedHistory === null) {
 				console.log(null)
@@ -497,7 +495,7 @@
 			if(JSON.parse(sessionStorage.getItem('managerInfo')) === null) {
         		console.log('Upload Team')
         	} else {
-           		 loadGameweek()
+           		 console.log('Team Uploaded')
        		 }
        		 setTeams() 
 			 setElementTypes()
