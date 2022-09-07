@@ -365,6 +365,7 @@
 	}
 	.details-cont, .data_fixtures, .next-fix, .up-fix {
 		width: 100%;
+		font-weight: bolder;
 	}
 	.data_name {
 		/*border: 1px solid black;*/
@@ -492,8 +493,8 @@
 	.styledPitchElement {
 		position: relative;
 		margin: auto;
-		padding-right: 0.3rem;
-		padding-left: 0.3rem;
+		/*padding-right: 0.3rem;
+		padding-left: 0.3rem;*/
 		opacity: 1;
 	}
 	.buttons {
