@@ -380,8 +380,10 @@
 
 		//Get Manager Picks
 		function getManagerPicks() {
-			let eventId = Math.max(...eventIds)
-			console.log(eventId)
+			//let eventId = Math.max(...eventIds)
+			eventztream = JSON.parse(sessionStorage.getItem('events'))
+			filteredEvents = eventztream.filter(x => new Date(x.deadline_time) < new Date())
+			eventId = filteredEvents.length
 			var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
@@ -477,7 +479,7 @@
 				console.log('Upload Picks')
 			} else {
 				let retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
-				playerId = retrievedManager.id
+				playerId = retrievedManager.id+''
 				getManagerPicks()
 			}
 			if(retrievedHistory === null) {
