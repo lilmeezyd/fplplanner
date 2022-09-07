@@ -340,8 +340,8 @@
 	.element_container-two {
 		position: relative;
 		margin: auto;
-		padding-right: 0.3rem;
-		padding-left: 0.3rem;
+		/*padding-right: 0.3rem;
+		padding-left: 0.3rem;*/
 		text-align: center;
 		opacity: 1;
 	}
@@ -369,7 +369,7 @@
 	.data_name {
 		/*border: 1px solid black;*/
 		width: 100%;
-		padding: 0.1rem 0.2rem;
+		padding: 0.2rem;
 		background-color: rgba(0, 0, 55, 0.9);
 		color: white;
 		font-size: 0.8rem;
@@ -392,7 +392,7 @@
 		/*border: 1px solid black;*/
 		display: flex;
 		max-width: 720px;
-		min-height: 12rem;
+		min-height: 15rem;
 		margin: auto; 
 		position: relative;
 		justify-content: left;
@@ -401,7 +401,7 @@
 	
 	@media(max-width: 550px) {
 		.bench_element{
-			min-height: 7.5rem;
+			min-height: 13rem;
 		} 
 		/*.swap-button, .transfer-button, .player-info-button {
 			display: none;
@@ -681,7 +681,7 @@
 	.transfer-button {
 		position: absolute;
 		left: 0.4rem;
-		bottom: 52px;
+		bottom: 65px;
 		background: transparent;
 		border: 0;
 		outline: none;
@@ -702,7 +702,7 @@
 	.swap-button-in, .swap-button-out {
 		position: absolute;
 		right: 0.4rem;
-		bottom: 52px;
+		bottom: 65px;
 		outline: none;
 		background: transparent;
 		border: 0;
@@ -1311,8 +1311,8 @@
 			font-size: 0.6rem;
 		}
 		.pitch {
-			min-height: 487.86px;
-			background: url('../static/pitch.png') center center / 680.4px 487.86px no-repeat;
+			min-height: 515.86px;
+			background: url('../static/pitch.png') center center / 695.4px 515.86px no-repeat;
 		}
 	}
 	@media(max-width: 475px) {
@@ -1376,7 +1376,7 @@
 		flex: 1 1 0%;
 		display: block;
 		border: 1px solid rgba(255, 255, 255, 1.0);
-		padding: 0.1rem;
+		padding: 0.2rem 0;
 	}
 	.show-btn {
 		display: block;
