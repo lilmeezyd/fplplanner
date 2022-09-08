@@ -109,7 +109,6 @@ function loadTeam() {
 	Array.from(playerinfo).forEach(x => {
 		x.onclick = function() {
 			playerId = +x.parentElement.id
-			setPlayerData(playerId)
 			console.log(playerId)
 			document.querySelector('.playerpopup').innerHTML = loadInfo(playerId)
 			document.querySelector('.playerpopup').style.display = 'block'
@@ -130,16 +129,18 @@ function loadTeam() {
 
 	Array.from(document.querySelectorAll('.btn-details')).forEach(x => {
 	x.onclick = function() {
-		playername = x.querySelector('.data_name').innerText
-		teamimage = x.querySelector('img').getAttribute('src')
-		playerposition = x.parentElement.getAttribute('position')
-		playerteam = x.parentElement.getAttribute('team')
-		name = x.querySelector('.data_name').innerText
-		player = team.find(x => x.position === playerposition && x.name == playername && x.image === teamimage)
-		document.querySelector('.playerpopup').innerHTML = load_popup(name, player.bench)
+		//playername = x.querySelector('.data_name').innerText
+		//teamimage = x.querySelector('img').getAttribute('src')
+		//playerposition = x.parentElement.getAttribute('position')
+		//playerteam = x.parentElement.getAttribute('team')
+		//name = x.querySelector('.data_name').innerText
+		playerId = +x.parentElement.id
+		player = picks.find(x => x.element === playerId)
+		console.log(player)
+		document.querySelector('.playerpopup').innerHTML = load_popup(player)
 		document.querySelector('.playerpopup').style.display = 'block'
-		document.body.style.overflow = 'hidden'
-		document.body.style.paddingRight = '17px'
+		//document.body.style.overflow = 'hidden'
+		//document.body.style.paddingRight = '17px'
 		//playerpop = document.querySelector('.playerpop')
 		popupclose = document.querySelector('.btn-close')
 		popupclose.addEventListener('click', function() {
@@ -584,18 +585,54 @@ function loadBench(a, player) {
 function nextFixtures(a) {
 	let resultFix = ''
 	let resultFour = ''
+	eventztream = JSON.parse(sessionStorage.getItem('events'))
+	filteredEvents = eventztream.filter(x => new Date(x.deadline_time) < new Date())
+	newEventId = filteredEvents.length + 4
 	let nextFix = fixtureState.fixtures
-					.filter(x => new Date(x.kickoff_time)>new Date && (x.team_a === a || x.team_h === a))
+					.filter(x => new Date(x.kickoff_time)>new Date  && (x.team_a === a || x.team_h === a))
 					.splice(0,1)
 	let nextFour = fixtureState.fixtures
 					.filter(x => new Date(x.kickoff_time)>new Date && (x.team_a === a || x.team_h === a))
-					.splice(1,3)
-	nextFix.forEach(x => {
+					.splice(1,3)		
+
+	const realFour = {
+		'zero' : filteredEvents.length + 1,
+		'one': filteredEvents.length + 2,
+		'two': filteredEvents.length + 3,
+		'three': filteredEvents.length + 4
+	}
+	nextFixMap = nextFix.map((x, key) => {
+		if(x.team_a === a) {
+			if(key === nextFix.length-1 && x.event !== realFour['zero']) return {...x, event:null, team_a_difficulty:0 }
+			return x
+		}
+		if(x.team_h === a) {
+			if(key === nextFix.length-1 && x.event !== realFour['zero']) return {...x, event:null, team_h_difficulty:0 }
+			return x
+		}
+	}).sort((a,b)=>{
+		if(a.event > b.event) return 1
+		if(a.event < b.event) return -1	
+	})	
+	nextFourMap = nextFour.map((x,key) => {
+		if(x.team_a === a) {
+			if(key === nextFour.length-1 && x.event !== realFour['three']) return {...x, event:null, team_a_difficulty:0 }
+			return x
+		}
+		if(x.team_h === a) {
+			if(key === nextFour.length-1 && x.event !== realFour['three']) return {...x, event:null, team_h_difficulty:0 }
+			return x
+		}
+	}).sort((a,b)=>{
+		if(a.event > b.event) return 1
+		if(a.event < b.event) return -1	
+	})
+	nextFixMap.forEach(x => {
 		if(x.team_a === a) {
 			nameAway = teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
 			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
 			x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_a_difficulty === 4 ?
-			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
+			'rgb(255, 23, 81)' : x.team_a_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
 			spanAway = `<span style="background: ${awayColor}">${nameAway}</span>`
 			resultFix+=spanAway
 		}
@@ -603,17 +640,17 @@ function nextFixtures(a) {
 			nameHome = teamState.teams.find(tname => tname.id === x.team_a).short_name
 			let homeColor = x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
 			x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_h_difficulty === 4 ?
-			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
+			'rgb(255, 23, 81)' : x.team_h_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
 			spanHome = `<span style="background: ${homeColor}">${nameHome}</span>`
 			resultFix += spanHome
 		}
 	})
-	nextFour.forEach(x => {
+	nextFourMap.forEach((x,key) => {
 		if(x.team_a === a) {
 			nameAway = teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
 			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
 			x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_a_difficulty === 4 ?
-			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
+			'rgb(255, 23, 81)' : x.team_a_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
 			spanAway = `<span style="background: ${awayColor}">${nameAway}</span>`
 			resultFour+=spanAway
 		}
@@ -621,7 +658,7 @@ function nextFixtures(a) {
 			nameHome = teamState.teams.find(tname => tname.id === x.team_a).short_name
 			let homeColor = x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
 			x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_h_difficulty === 4 ?
-			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
+			'rgb(255, 23, 81)' : x.team_a_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
 			spanHome = `<span style="background: ${homeColor}">${nameHome}</span>`
 			resultFour += spanHome
 		}

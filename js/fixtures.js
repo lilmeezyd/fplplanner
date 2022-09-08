@@ -43,18 +43,20 @@ function loadOpponent(a) {
 	result = ''
 	fixtureState.fixtures.forEach(x => {
 		if(x.team_a === a && !eventIds.includes(x.event)) {
-			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
-			x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_a_difficulty === 4 ?
-			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
-			nameAway = teamState.teams.find(tname => tname.id === x.team_h).short_name
-			result +=`<td style="background: ${awayColor};">${nameAway} (A)</td>`
+			let awayColor = x.event !== null && x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
+			x.event !== null && x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.event !== null && x.team_a_difficulty === 4 ?
+			'rgb(255, 23, 81)' : x.event !== null && x.team_a_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
+			nameAway = x.event !== null ? teamState.teams.find(tname => tname.id === x.team_h).short_name : ''
+			eAway = x.event !== null? '(A)' : ''
+			result +=`<td style="background: ${awayColor};">${nameAway} ${eAway}</td>`
 		}
 		if(x.team_h === a && !eventIds.includes(x.event)) {
-			let homeColor = x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
-			x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_h_difficulty === 4 ?
-			'rgb(255, 23, 81)' : 'rgb(128, 7, 45)'
-			nameHome = teamState.teams.find(tname => tname.id === x.team_a).short_name
-			result+= `<td style="background: ${homeColor};">${nameHome} (H)</td>`
+			let homeColor = x.event !== null && x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
+			x.event !== null && x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.event !== null && x.team_h_difficulty === 4 ?
+			'rgb(255, 23, 81)' : x.event !== null && x.team_h_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
+			nameHome = x.event !== null ? teamState.teams.find(tname => tname.id === x.team_a).short_name : ''
+			eHome = x.event !== null ? '(H)' : ''
+			result+= `<td style="background: ${homeColor};">${nameHome} ${eHome}</td>`
 		}
 	})
 	return result
