@@ -102,12 +102,13 @@ function transferIn(a) {
 function load_popup(id) {
 	let hideInplayerButton
 	let hideOutplayerButton
+	let b = true
 	player = playerState.players.find(x => x.id === id)
-	switchBtn = (a === outplayer.name || a === inplayer.name) && 
-				(b === outplayer.bench || b === inplayer.bench) ? 'Cancel' : 'Switch'
+	switchBtn = (player.id === outplayer.element || player.id === inplayer.element) && 
+				(b === outplayer.multiplier === 0 || b === inplayer.multiplier === 0) ? 'Cancel' : 'Switch'
 	disabled = b === true ? 'hide-btn' : 'show-btn'
 	classname = b === true ? 'swap-button-out' :  'swap-button-in'
-	transferBtn = (a === outplayer.name || a === inplayer.name) && b === outplayer.bench ? 'hide-btn' : 'show-btn'
+	transferBtn = (player.id === outplayer.element || player.id === inplayer.element) && b === outplayer.multiplier === 0 ? 'hide-btn' : 'show-btn'
 	if(Object.keys(outplayer).length > 0 || Object.keys(inplayer).length > 0) {
 		hideInplayerButton = b === true ? 'hide-btn' : 'show-btn'
 	}
