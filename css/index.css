@@ -723,9 +723,9 @@
 		background: rgba(0, 0, 0, 0.1);
 	}
 	.playerpop {
-		/*position: fixed;
+		position: fixed;
 		top: 25%;
-		left: 25%;*/
+		left: 25%;
 		transform: translate(-5%, 25%);
 		border: 1px solid rgba(0, 0, 0, 0.2);
 		width: 300px;

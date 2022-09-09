@@ -99,9 +99,10 @@ function transferIn(a) {
 	`
 }
 
-function load_popup(a,b) {
+function load_popup(id) {
 	let hideInplayerButton
 	let hideOutplayerButton
+	player = playerState.players.find(x => x.id === id)
 	switchBtn = (a === outplayer.name || a === inplayer.name) && 
 				(b === outplayer.bench || b === inplayer.bench) ? 'Cancel' : 'Switch'
 	disabled = b === true ? 'hide-btn' : 'show-btn'
@@ -116,7 +117,7 @@ function load_popup(a,b) {
 	return `
 	<div class="playerpop">
 		<div class="namesection small">
-			<span>${a}</span>
+			<span>${player.first_name}&nbsp;${player.second_name}</span>
 			<button class="btn-info btn-close btn-danger">X</button>
 		</div>
 		<div class="infobuttons">
@@ -277,12 +278,15 @@ function loadMessage(a) {
 
 function loadMessage5(a) {
 	let msg = 'Subbed OFF'
-	return `<span>&nbsp;${a.name}&nbsp;${msg}</span>`
+	player = playerState.players.find(x => x.id === a.element)
+	return `<span>&nbsp;${player.web_name}&nbsp;${msg}</span>`
 }
 
 function loadMessage6(a) {
 	let msg = 'Subbed ON'
-	return `<span>&nbsp;${a.name}&nbsp;${msg}</span>`
+	console.log(a)
+	player = playerState.players.find(x => x.id === a.element)
+	return `<span>&nbsp;${player.web_name}&nbsp;${msg}</span>`
 }
 
 function loadMessage2(a,b) {

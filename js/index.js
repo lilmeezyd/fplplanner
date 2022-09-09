@@ -136,8 +136,7 @@ function loadTeam() {
 		//name = x.querySelector('.data_name').innerText
 		playerId = +x.parentElement.id
 		player = picks.find(x => x.element === playerId)
-		console.log(player)
-		document.querySelector('.playerpopup').innerHTML = load_popup(player)
+		document.querySelector('.playerpopup').innerHTML = load_popup(playerId)
 		document.querySelector('.playerpopup').style.display = 'block'
 		//document.body.style.overflow = 'hidden'
 		//document.body.style.paddingRight = '17px'
@@ -235,86 +234,94 @@ document.querySelector('.show-fpl').addEventListener('click', function() {
 })
 
 function swapButtonOut(a) {
-	teamimage = a.parentElement.querySelector('img').getAttribute('src')
-			playername = a.parentElement.querySelector('.data_name').innerText
-			playerposition = a.parentElement.getAttribute('position')
-			positonnumber = team.filter(x => x.position === playerposition && !x.bench).length
-			captain = team.find(x => x.captain)
-			vcaptain = team.find(x => x.vcaptain)
-			player = team.find(x => x.position === playerposition && x.name == playername && x.image === teamimage)
+			newPicks = []
+			picks.forEach(x => {
+				playerState.players.forEach(y => {
+					if(y.id === x.element) {
+						newPicks.push({...x, element_type:y.element_type})
+					}
+				})
+			})
+			playerId = +a.parentElement.id
+			playerposition = +a.parentElement.getAttribute('position')
+			positonnumber = newPicks.filter(x => x.element_type === playerposition && x.multiplier !== 0).length
+			captain = newPicks.find(x => x.is_captain)
+			vcaptain = newPicks.find(x => x.is_vice_captain)
+			player = newPicks.find(x => x.element === playerId)
 			let playerContainer = a.parentElement.parentElement.parentElement
 			playerContainer.classList.toggle('player-active')
 
-			if(playerposition === 'forward') {
+			if(playerposition === 4) {
 				elementWrapper = a.parentElement.parentElement.parentElement.parentElement
-				forwardElem = elementWrapper.querySelectorAll('[position="forward"]').length
+				forwardElem = elementWrapper.querySelectorAll('[position="4"]').length
 				if(forwardElem === 1) {
 					elementWrapper.querySelector('.pitch_unit').style.flexGrow = 0
 				}
 			}
-			if(playerposition === 'goalkeeper') {
+			if(playerposition === 1) {
 				elementWrapper = a.parentElement.parentElement.parentElement.parentElement
 				elementWrapper.querySelector('.pitch_unit').style.flexGrow = 0
 			}
 
 
 			function inout() {
-				playerIndex = team.findIndex(x => !x.bench && x.position === playerposition && x.name == playername && x.image === teamimage)
-				outplayer = team[playerIndex]
+				playerIndex = newPicks.findIndex(x => x.element === playerId)
+				player = playerState.players.find(x => x.id === a.element)
+				outplayer = newPicks[playerIndex]
 				document.querySelector('.message').style.display = 'block'
 				document.querySelector('.details-one').style.paddingBottom = 0
 				document.querySelector('.message').classList.add('danger')
 				document.querySelector('.message').classList.remove('success')
 				document.querySelector('.message').innerHTML = loadMessage5(outplayer)
-				if(playerposition === 'goalkeeper'){
-					tgoal = team.filter(x => x.position === 'goalkeeper' && x.bench)
-					tgoal1 = team.filter(x => x.position !== 'goalkeeper')
+				if(playerposition === 1){
+					tgoal = newPicks.filter(x => x.element_type === 1 && x.multiplier === 0)
+					tgoal1 = newPicks.filter(x => x.element_type !== 1)
 					addSwap(tgoal)
 					hideswapbtn(tgoal1)
 					return hidetransferbtn()
 				}
-				if(playerposition === 'defender'){
+				if(playerposition === 2){
 					if(positonnumber === 3) {
-						tgoal = team.filter(x => x.position === 'defender' && x.bench)
-						tgoal1 = team.filter(x => (!x.bench && x.name !== playername) || (x.bench && x.position !== 'defender'))
+						tgoal = newPicks.filter(x => x.element_type === 2 && x.multiplier === 0)
+						tgoal1 = newPicks.filter(x => (x.multiplier !== 0 && x.element !== playerId) || (x.multiplier === 0 && x.element_type  !== 2))
 						addSwap(tgoal)
 						hidetransferbtn()
 						return hideswapbtn(tgoal1)
 						
 					} else {
-						tgoal = team.filter(x => x.position !== 'goalkeeper' && x.bench)
-						tgoal1 = team.filter(x => x.position === 'goalkeeper' || (!x.bench && x.name !== playername))
+						tgoal = newPicks.filter(x => x.element_type !== 1 && x.multiplier === 0)
+						tgoal1 = newPicks.filter(x => x.element_type === 1 || (x.multiplier !== 0 && x.element !== playerId))
 						addSwap(tgoal)
 						hidetransferbtn()
 						return hideswapbtn(tgoal1)
 						
 					}
 				}
-				if(playerposition === 'midfielder'){
+				if(playerposition === 3){
 					if(positonnumber === 2) {
-						tgoal = team.filter(x => x.position === 'midfielder' && x.bench)
-						tgoal1 = team.filter(x => (!x.bench && x.name !== playername) || (x.bench && x.position !== 'midfielder'))
+						tgoal = newPicks.filter(x => x.element_type === 3 && x.multiplier === 0)
+						tgoal1 = newPicks.filter(x => (x.multiplier !== 0 && x.element !== playerId) || (x.multiplier === 0 && x.element_type !== 3))
 						addSwap(tgoal)
 						hideswapbtn(tgoal1)
 						hidetransferbtn()
 					} else {
-						tgoal = team.filter(x => x.position !== 'goalkeeper' && x.bench)
-						tgoal1 = team.filter(x => x.position === 'goalkeeper' || (!x.bench && x.name !== playername))
+						tgoal = newPicks.filter(x => x.element_type !== 1 && x.multiplier === 0)
+						tgoal1 = newPicks.filter(x => x.element_type === 1 || (x.multiplier !== 0 && x.element !== playerId))
 						addSwap(tgoal)
 						hideswapbtn(tgoal1)
 						hidetransferbtn()
 					}
 				}
-				if(playerposition === 'forward'){
+				if(playerposition === 4){
 					if(positonnumber === 1) {
-						tgoal = team.filter(x => x.position === 'forward' && x.bench)
-						tgoal1 = team.filter(x => (!x.bench && x.name !== playername) || (x.bench && x.position !== 'forward'))
+						tgoal = newPicks.filter(x => x.element_type === 4 && x.multiplier === 0)
+						tgoal1 = newPicks.filter(x => (x.multiplier !== 0 && x.element !== playerId) || (x.multiplier === 0 && x.element_type !== 4))
 						addSwap(tgoal)
 						hideswapbtn(tgoal1)
 						hidetransferbtn()
 					} else {
-						tgoal = team.filter(x => x.position !== 'goalkeeper' && x.bench)
-						tgoal1 = team.filter(x => x.position === 'goalkeeper' || (!x.bench && x.name !== playername))
+						tgoal = newPicks.filter(x => x.element_type !== 1 && x.multiplier === 0)
+						tgoal1 = newPicks.filter(x => x.element_type === 1 || (x.multiplier !== 0 && x.element !== playerId))
 						addSwap(tgoal)
 						hideswapbtn(tgoal1)
 						hidetransferbtn()
@@ -323,20 +330,20 @@ function swapButtonOut(a) {
 			}
 			
 			function outin() {
-				playerIndex = tgoal.findIndex(x => !x.bench && x.position === playerposition && x.name == playername && x.image === teamimage)
+				playerIndex = tgoal.findIndex(x => x.multiplier !== 0 && x.element_type === playerposition && x.element == playerId)
 			    outplayer = tgoal[playerIndex]
 			    document.querySelector('.message').style.display = 'block'
 				document.querySelector('.details-one').style.paddingBottom = 0
 				document.querySelector('.message').classList.add('danger')
 				document.querySelector('.message').classList.remove('success')
 				document.querySelector('.message').innerHTML = loadMessage5(outplayer)
-			    if(outplayer.captain) {
-			    	inplayer.captain = true;
-			    	outplayer.captain = false
+			    if(outplayer.is_captain) {
+			    	inplayer.is_captain = true;
+			    	outplayer.is_captain = false
 			    }
-			    if(outplayer.vcaptain) {
-			    	inplayer.vcaptain = true
-			    	outplayer.vcaptain = false
+			    if(outplayer.is_vice_captain) {
+			    	inplayer.is_vice_captain = true
+			    	outplayer.is_vice_captain = false
 			    }
 				swapplayer(outplayer, inplayer)
 				tgoal.length = 0
@@ -360,118 +367,126 @@ function swapButtonOut(a) {
 }
 
 function swapButtonIn(a) {
-	teamimage = a.parentElement.querySelector('img').getAttribute('src')
-				playername = a.parentElement.querySelector('.data_name').innerText
-				playerposition = a.parentElement.getAttribute('position')
-				teamdefenders = team.filter(x => !x.bench && x.position === 'defender').length
-				teammidfielders = team.filter(x => !x.bench && x.position === 'midfielder').length
-				teamforwards = team.filter(x => !x.bench && x.position === 'forward').length
-				let playerContainer = a.parentElement.parentElement.parentElement
-				playerContainer.classList.toggle('player-active')
-				function outin() {
-					playerIndex = tgoal.findIndex(x => x.bench && x.position === playerposition && x.name == playername && x.image === teamimage)
-				    inplayer = tgoal[playerIndex]
-				    document.querySelector('.message').style.display = 'block'
-					document.querySelector('.details-one').style.paddingBottom = 0
-					document.querySelector('.message').classList.remove('danger')
-					document.querySelector('.message').classList.add('success')
-					document.querySelector('.message').innerHTML = loadMessage6(inplayer)
-				    if(outplayer.captain) {
-				    	inplayer.captain = true;
-				    	outplayer.captain = false
-			    		}
-			    	if(outplayer.vcaptain) {
-			    		inplayer.vcaptain = true
-			    		outplayer.vcaptain = false
-			    		}
-					swapplayer(outplayer, inplayer)
-					loadTeam()
-					tgoal.length = 0
-					inplayer = ''
-					outplayer = ''
+	newPicks = []
+	picks.forEach(x => {
+		playerState.players.forEach(y => {
+		if(y.id === x.element) {
+			newPicks.push({...x, element_type:y.element_type})
+		}
+		})
+	})
+			playerId = +a.parentElement.id
+			playerposition = +a.parentElement.getAttribute('position')
+			teamdefenders = newPicks.filter(x => x.multiplier !== 0 && x.element_type === 2).length
+			teammidfielders = newPicks.filter(x => x.multiplier !== 0 && x.element_type === 3).length
+			teamforwards = newPicks.filter(x => x.multiplier !== 0 && x.element_type === 4).length
+			let playerContainer = a.parentElement.parentElement
+			playerContainer.classList.toggle('player-active')
+			function outin() {
+				playerIndex = newPicks.findIndex(x => x.multiplier === 0 && x.element_type === playerposition && x.element == playerId)
+			    inplayer = newPicks[playerIndex]
+			    document.querySelector('.message').style.display = 'block'
+				document.querySelector('.details-one').style.paddingBottom = 0
+				document.querySelector('.message').classList.remove('danger')
+				document.querySelector('.message').classList.add('success')
+				document.querySelector('.message').innerHTML = loadMessage6(inplayer)
+			    if(outplayer.is_captain) {
+			    	inplayer.is_captain = true;
+			    	outplayer.is_captain = false
+		    		}
+		    	if(outplayer.is_vice_captain) {
+		    		inplayer.is_vice_captain = true
+		    		outplayer.is_vice_captain = false
+		    		}
+				swapplayer(outplayer, inplayer)
+				loadTeam()
+				tgoal.length = 0
+				inplayer = ''
+				outplayer = ''
+			}
+			function inout() {
+				playerIndex = newPicks.findIndex(x => x.multiplier === 0 && x.element_type === playerposition && x.element == playerId)
+				inplayer = newPicks[playerIndex]
+				changeBench.push(inplayer)
+				console.log(inplayer)
+				document.querySelector('.message').style.display = 'block'
+				document.querySelector('.details-one').style.paddingBottom = 0
+				document.querySelector('.message').classList.remove('danger')
+				document.querySelector('.message').classList.add('success')
+				document.querySelector('.message').innerHTML = loadMessage6(inplayer)
+				if(playerposition === 1){
+					tgoal = newPicks.filter(x => x.element_type === 1 && x.multiplier !== 0)
+					tgoal1 = newPicks.filter(x => (x.multiplier === 0 && x.element !== playerId) || (x.multiplier !== 0 && x.element_type !== 1))
+					addSwap(tgoal)
+					hideswapbtn(tgoal1)
+					return hidetransferbtn()
 				}
-				function inout() {
-					playerIndex = team.findIndex(x => x.bench && x.position === playerposition && x.name == playername && x.image === teamimage)
-					inplayer = team[playerIndex]
-					changeBench.push(inplayer)
-					document.querySelector('.message').style.display = 'block'
-					document.querySelector('.details-one').style.paddingBottom = 0
-					document.querySelector('.message').classList.remove('danger')
-					document.querySelector('.message').classList.add('success')
-					document.querySelector('.message').innerHTML = loadMessage6(inplayer)
-					if(playerposition === 'goalkeeper'){
-						tgoal = team.filter(x => x.position === 'goalkeeper' && !x.bench)
-						tgoal1 = team.filter(x => (x.bench && x.name !== playername) || (!x.bench && x.position !== 'goalkeeper'))
-						addSwap(tgoal)
+				if(playerposition === 2){
+					if(teamforwards === 1) {
+						tgoal = newPicks.filter(x => x.element !== playerId && ( x.element_type !== 4 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
+						tgoal1 = newPicks.filter(x => x.element_type === 4 && x.multiplier !== 0 || x.element_type === 1)
 						hideswapbtn(tgoal1)
-						return hidetransferbtn()
-					}
-					if(playerposition === 'defender'){
-						if(teamforwards === 1) {
-							tgoal = team.filter(x => x.name !== playername && ( x.position !== 'forward' && x.position !== 'goalkeeper' || (x.bench && x.position !== 'goalkeeper')))
-							tgoal1 = team.filter(x => x.position === 'forward' && !x.bench || x.position === 'goalkeeper')
-							hideswapbtn(tgoal1)
-							addSwap(tgoal)
-							hidetransferbtn()
-						} else {
-							tgoal = team.filter(x => x.name !== playername && x.position !== 'goalkeeper')
-							tgoal1 = team.filter(x => x.position === 'goalkeeper')
-							hideswapbtn(tgoal1)
-							hidetransferbtn()
-							return addSwap(tgoal)
-						}
-					}
-					if(playerposition === 'midfielder'){
-						if(teamforwards === 1) {
-							tgoal = team.filter(x => x.name !== playername && (x.position !== 'forward' && x.position !== 'goalkeeper' || (x.bench && x.position !== 'goalkeeper')))
-							tgoal1 = team.filter(x => x.position === 'forward' && !x.bench || x.position === 'goalkeeper')
-							hideswapbtn(tgoal1)
-							addSwap(tgoal)
-							hidetransferbtn()
-						} else if(teamdefenders === 3) {
-							tgoal = team.filter(x => x.name !== playername &&  (x.position !== 'defender' && x.position !== 'goalkeeper' || (x.bench && x.position !== 'goalkeeper')))
-							tgoal1 = team.filter(x => x.position === 'defender' && !x.bench || x.position === 'goalkeeper')
-							hideswapbtn(tgoal1)
-							addSwap(tgoal)
-							hidetransferbtn()
-						} else {
-							tgoal = team.filter(x => (x.position !== 'goalkeeper' && !x.bench)||(x.name !== playername && x.position !== 'goalkeeper'))
-							tgoal1 = team.filter(x => x.position === 'goalkeeper')
-							hideswapbtn(tgoal1)
-							addSwap(tgoal)
-							hidetransferbtn()
-						}
-					}
-					if(playerposition === 'forward'){
-						if(teamdefenders === 3) {
-							tgoal =  team.filter(x => x.name !== playername &&  (x.position !== 'defender' && x.position !== 'goalkeeper' || (x.bench && x.position !== 'goalkeeper')))
-							tgoal1 = team.filter(x => x.position === 'defender' && !x.bench || x.position === 'goalkeeper')
-							hideswapbtn(tgoal1)
-							addSwap(tgoal)
-							hidetransferbtn()
-						} else {
-							tgoal = team.filter(x => (x.position !== 'goalkeeper' && !x.bench)||(x.name !== playername && x.position !== 'goalkeeper'))
-							tgoal1 = team.filter(x => x.position === 'goalkeeper')
-							hideswapbtn(tgoal1)
-							hidetransferbtn()
-							addSwap(tgoal)
-							
-						}
+						addSwap(tgoal)
+						hidetransferbtn()
+					} else {
+						tgoal = newPicks.filter(x => x.element !== playerId && x.element_type !== 1)
+						tgoal1 = newPicks.filter(x => x.element_type === 1)
+						hideswapbtn(tgoal1)
+						hidetransferbtn()
+						return addSwap(tgoal)
 					}
 				}
-				//tgoal = team.filter(x => x.position !== 'goalkeeper' && !x.bench)
-				//tgoal1 = team.filter(x => x.position === 'goalkeeper' || (x.bench && x.name !== playername))
-				//Object.keys(outplayer).length > 0 && outin()
-				if(Object.keys(outplayer).length > 0) {
-					outin();
-				} else {
-					inout()
+				if(playerposition === 3){
+					if(teamforwards === 1) {
+						tgoal = newPicks.filter(x => x.element !== playerId && (x.element_type !== 4 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
+						tgoal1 = newPicks.filter(x => x.element_type === 4 && x.multiplier !== 0 || x.element_type === 1)
+						hideswapbtn(tgoal1)
+						addSwap(tgoal)
+						hidetransferbtn()
+					} else if(teamdefenders === 3) {
+						tgoal = newPicks.filter(x => x.element !== playerId &&  (x.element_type !== 2 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
+						tgoal1 = newPicks.filter(x => x.element_type === 2 && x.multiplier !== 0 || x.element_type === 1)
+						hideswapbtn(tgoal1)
+						addSwap(tgoal)
+						hidetransferbtn()
+					} else {
+						tgoal = newPicks.filter(x => (x.element_type !== 1 && x.multiplier !== 0)||(x.element !== playerId && x.element_type !== 1))
+						tgoal1 = newPicks.filter(x => x.element_type === 1)
+						hideswapbtn(tgoal1)
+						addSwap(tgoal)
+						hidetransferbtn()
+					}
 				}
-				
-				
-			if(Object.keys(outplayer === 0) && changeBench.length === 2) {
-					changeBenchOrder();
+				if(playerposition === 4){
+					if(teamdefenders === 3) {
+						tgoal =  newPicks.filter(x => x.element !== playerId &&  (x.element_type !== 2 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
+						tgoal1 = newPicks.filter(x => x.element_type === 2 && x.multiplier !== 0 || x.element_type === 1)
+						hideswapbtn(tgoal1)
+						addSwap(tgoal)
+						hidetransferbtn()
+					} else {
+						tgoal = newPicks.filter(x => (x.element_type !== 1 && x.multiplier !== 0)||(x.element !== playerId && x.element_type !== 1))
+						tgoal1 = newPicks.filter(x => x.element_type === 1)
+						hideswapbtn(tgoal1)
+						hidetransferbtn()
+						addSwap(tgoal)
+						
+					}
 				}
+			}
+			//tgoal = team.filter(x => x.position !== 'goalkeeper' && !x.bench)
+			//tgoal1 = team.filter(x => x.position === 'goalkeeper' || (x.bench && x.name !== playername))
+			//Object.keys(outplayer).length > 0 && outin()
+			if(Object.keys(outplayer).length > 0) {
+				outin();
+			} else {
+				inout()
+			}
+			
+			
+		if(Object.keys(outplayer === 0) && changeBench.length === 2) {
+				changeBenchOrder();
+			}
 }
 
 function changeBenchOrder() {
@@ -695,16 +710,18 @@ function hideallswapbtn() {
 	Array.from(document.querySelectorAll('.swap-button')).forEach(x => {
 		x.style.display = 'none'
 	})
+	/*Array.from(document.querySelectorAll('.player-info-button'))forEach(x => {
+		x.style.display = 'none'
+	})*/
 }
 
 function hideswapbtn(a) {
 	Array.from(document.querySelectorAll('.swap-button')).forEach(x => {
-		teamimage = x.parentElement.querySelector('img').getAttribute('src')
-		playername = x.parentElement.querySelector('.data_name').innerText
+		playerId = +x.parentElement.id
 		playerposition = x.parentElement.getAttribute('position')
 
 		a.forEach(y => {
-			if(y.image === teamimage && y.name === playername && y.position === playerposition) {
+			if(y.element === playerId) {
 				x.style.display = 'none'
 				x.parentElement.querySelector('.btn-details').disabled = true
 				x.parentElement.querySelector('.btn-details').style.opacity = 0.5
@@ -714,21 +731,17 @@ function hideswapbtn(a) {
 }
 
 function addSwap(arr) {
-	console.log(arr)
-	forwardElem = arr.filter(x => x.position === 'forward' && !x.bench).length
-	goalkeeperElem = arr.filter(x => x.position === 'goalkeeper' && !x.bench).length
+	forwardElem = arr.filter(x => x.element_type === 4 && x.multiplier !== 0).length
+	goalkeeperElem = arr.filter(x => x.element_type === 1 && x.multiplier !== 0).length
 	Array.from(document.querySelectorAll('.btn-details')).forEach(x => {
-					let image = x.querySelector('img').getAttribute('src')
-					let name = x.querySelector('.data_name').textContent
-					let position = x.parentElement.getAttribute('position')
+					let playerId = +x.parentElement.id
+					let position = +x.parentElement.getAttribute('position')
 					arr.forEach(a => {
 						elementWrapper = x.parentElement.parentElement.parentElement.parentElement
-						if(a.image === image && a.name === name && a.position === position) {
+						if(a.element === playerId && a.element_type === position) {
 							x.parentElement.
-							parentElement.
 							parentElement.style.backgroundColor = 'rgba(255, 100, 0, 0.6)'
 							x.parentElement.
-							parentElement.
 							parentElement.style.borderRadius = '5px'
 							if(goalkeeperElem === 1 || forwardElem === 1) {
 								//elementWrapper.querySelector('.pitch_unit').style.flexGrow = 0
@@ -739,12 +752,14 @@ function addSwap(arr) {
 }
 
 function swapplayer(a, b) {
-	bbenchOrder = b.benchOrder
-	sbenchOrder = a.benchOrder
-	a.bench = true
-	a.benchOrder = bbenchOrder
-	b.bench = false
-	b.benchOrder = sbenchOrder
+	bbenchOrder = b.position
+	sbenchOrder = a.position
+	aMultiplier = a.multiplier
+	bMultiplier = b.multiplier
+	a.multiplier = bMultiplier
+	b.multiplier = aMultiplier
+	b.position = sbenchOrder
+	a.position = bbenchOrder
 	loadTeam()
 	changeBench.length = 0
 }
