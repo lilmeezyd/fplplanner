@@ -470,147 +470,16 @@ function upload() {
 
 			Array.from(player_cells).forEach(x => {
 				let player = {}
+				newPicks = []
+				picks.forEach(x => {
+					playerState.players.forEach(y => {
+						if(y.id === x.element) {
+							newPicks.push({...x, element_type:y.element_type, team:y.team})
+						}
+					})
+				})
 				x.addEventListener('click', function() {
-					let goalkeepers = team.filter(x => x.position === 'goalkeeper').length
-					let defenders = team.filter(x => x.position === 'defender').length
-					let midfielders = team.filter(x => x.position === 'midfielder').length
-					let forwards = team.filter(x => x.position === 'forward').length
-					let captain = team.find(x => x.captain)
-					let vcaptain = team.find(x => x.vcaptain)
-					let image = x.querySelector('img').getAttribute('src')
-					let playerteam = x.querySelector('.team').getAttribute('team')
-					let position = x.querySelector('.position').getAttribute('position')
-					let name = x.querySelector('.name').textContent
-					let price = x.parentElement.nextElementSibling.querySelector('.price').textContent
-					player.position = position
-					player.name = name
-					player.price = price
-					player.playerteam = playerteam
-					player.image = image
-					player.bench = false
-					player.benchOrder = 0
-					player.disabled = ''
-					player.position_code = position === 'goalkeeper' ? 'GKP' :
-										position === 'defender' ? 'DEF' :
-										position === 'midfielder' ? 'MID' : 'FWD'
-					b = team.filter(x => x.bench && x.position === 'goalkeeper').length
-					c = team.filter(x => !x.bench).length
-					g = team.filter(x => !x.bench && x.position === 'goalkeeper').length
-					d = team.filter(x => x.position === 'defender' && !x.bench).length
-					m = team.filter(x => x.position === 'midfielder' && !x.bench).length
-					f = team.filter(x => x.position === 'forward' && !x.bench).length
-					let num = position === 'goalkeeper' ? 2 : position === 'defender' ? 5 :
-					position === 'midfielder' ? 5 : 3
-					let fieldnum = position === 'goalkeeper' ? 'Goalkeepers' : position === 'defender' ? 'Defenders' :
-					position === 'midfielder' ? 'Midfielders' : 'Forwards'
-					teamcount = team.reduce((a,b) => {
-						a[b.playerteam] = a[b.playerteam] ? ++a[b.playerteam] : 1
-						return a				
-					}, {})
-					
-
-					if(team.length < 15) {
-						let orderOne = team.some(x => x.benchOrder === 1)
-						let orderTwo = team.some(x => x.benchOrder === 2)
-						let orderThree =team.some(x => x.benchOrder === 3)
-						if(captain === undefined) {
-							player.captain = true
-						} else 	if(vcaptain === undefined) {
-							player.vcaptain = true
-						} else	if(vcaptain === undefined && captain === undefined) {
-							player.captain = true
-						}
-						if(position === 'goalkeeper' && goalkeepers === 1) {
-							player.bench = b === 0 ? true : false
-							player.benchOrder = -1
-						}
-						if((position === 'defender' && c === 11) || 
-							(position === 'defender' && c === 9 && d===4 && m===5) ||
-							(position === 'defender' && c === 10 && g===0) ||
-							(position === 'defender' && c === 10 && f===0) ) {
-							player.bench = true
-							player.benchOrder = (!orderOne && !orderTwo && !orderThree) ? 1 : 
-							(orderOne && !orderTwo && !orderThree) ? 2 : 
-							(orderOne && orderTwo && !orderThree) ? 3 : 
-							(!orderOne && orderTwo && orderThree) ? 1 : 
-							(orderOne && !orderTwo && orderThree) ? 2 : 3
-						}
-						if(position === 'midfielder' && c === 11 ||
-							(position === 'midfielder' && c === 9 && m===4 && d===5) ||
-							(position === 'midfielder' && c === 10 && g===0) ||
-							(position === 'midfielder' && c === 10 && f==0) || 
-							(position === 'midfielder' && c === 10 && d==2)) {
-							player.bench = true
-							player.benchOrder = (!orderOne && !orderTwo && !orderThree) ? 1 : 
-							(orderOne && !orderTwo && !orderThree) ? 2 : 
-							(orderOne && orderTwo && !orderThree) ? 3 : 
-							(!orderOne && orderTwo && orderThree) ? 1 : 
-							(orderOne && !orderTwo && orderThree) ? 2 : 3
-						}
-						if(position === 'forward' && c === 11 || 
-							(position === 'forward' && c === 10 && g===0) ||
-							(position === 'forward' && c === 10 && d==2)) {
-							player.bench = true
-							player.benchOrder = (!orderOne && !orderTwo && !orderThree) ? 1 : 
-							(orderOne && !orderTwo && !orderThree) ? 2 : 
-							(orderOne && orderTwo && !orderThree) ? 3 : 
-							(!orderOne && orderTwo && orderThree) ? 1 : 
-							(orderOne && !orderTwo && orderThree) ? 2 : 3
-						}
-						if(position === 'goalkeeper' && goalkeepers < 2 || 
-							position === 'defender' && defenders < 5 ||
-							position === 'midfielder' && midfielders < 5 ||
-							position === 'forward' && forwards < 3
-						) {
-							if(teamcount[playerteam] !== 3){
-								let repeatedPlayer = []
-								x.setAttribute('disabled', true)
-								team.push(player)
-								for(let j = 0; j < playersOut.length; j++) {
-									if(player.name === playersOut[j].name) {
-										repeatedPlayer.push(...playersOut.splice(j,1))
-										console.log(repeatedPlayer)
-									}
-								}
-								if(repeatedPlayer.length === 1) {
-									playersIn.push()
-								} else {
-									playersIn.push(player)
-								}
-								loadTransfersIn()
-								trackTransfers()
-								
-								document.querySelector('.message').style.display = 'block'
-								document.querySelector('.details-one').style.paddingBottom = 0
-								document.querySelector('.message').classList.remove('danger')
-								document.querySelector('.message').classList.add('success')
-								document.querySelector('.message').innerHTML = loadMessage(name)
-								load_team()
-								document.querySelector('.player-num').innerHTML = team.length
-							} else {
-								document.querySelector('.message').style.display = 'block'
-								document.querySelector('.details-one').style.paddingBottom = 0
-								document.querySelector('.message').classList.remove('success')
-								document.querySelector('.message').classList.add('danger')
-								document.querySelector('.message').innerHTML = loadMessage1(playerteam.toUpperCase())
-							}
-						} else {
-								document.querySelector('.message').style.display = 'block'
-								document.querySelector('.details-one').style.paddingBottom = 0
-								document.querySelector('.message').classList.remove('success')
-								document.querySelector('.message').classList.add('danger')
-								document.querySelector('.message').innerHTML = loadMessage2(num, fieldnum)
-						}
-						/*remainingBudget = remainingBudget >= 0 ?  console.log(remainingBudget.toFixed(1)) :
-						console.error(remainingBudget.toFixed(1))*/
-
-						} else {
-							document.querySelector('.message').style.display = 'block'
-							document.querySelector('.details-one').style.paddingBottom = 0
-							document.querySelector('.message').classList.remove('success')
-							document.querySelector('.message').classList.add('danger')
-							document.querySelector('.message').innerHTML = 'Team Already Full'
-					}
+					console.log(x)
 					})
 				})
 		}
@@ -640,7 +509,7 @@ function upload() {
 									<span class="name">${a.web_name}</span>
 									<div class="player-cell-details">
 										<span class="team" team="${team_name}">${short_name}</span>
-										<span class="position" position="${pos_name}">${short_pos}</span>
+										<span class="position" element_type="${a.element_type}" position="${pos_name}">${short_pos}</span>
 									</div>
 								</div>
 							</button>

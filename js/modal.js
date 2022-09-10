@@ -66,54 +66,70 @@ function trackInRealtime() {
 
 function loadTransfersOut() {
 	let result = ''
-	playersOut.sort((a,b) => {
-		if(a.position < b.position) return 1
-		if(a.position > b.position) return -1	
+	newPlayersOut = []
+		playersOut.forEach(x => {
+		playerState.players.forEach(y => {
+			if(y.id === x.element) {
+				newPlayersOut.push({...x, element_type:y.element_type, web_name:y.web_name, team:y.team})
+			}
+		})
+	})
+	newPlayersOut.sort((a,b) => {
+		if(a.element_type < b.element_type) return 1
+		if(a.element_type > b.element_type) return -1	
 	}).forEach(x => result+=transferOut(x))
 	document.querySelector('.transfer-out').innerHTML = result
 }
 
 function loadTransfersIn() {
 	let result = ''
+	newPlayersIn = []
+		playersIn.forEach(x => {
+		playerState.players.forEach(y => {
+			if(y.id === x.element) {
+				newPlayersIn.push({...x, element_type:y.element_type, web_name:y.web_name, team:y.team})
+			}
+		})
+	})
 	playersIn.sort((a,b) => {
-		if(a.position < b.position) return 1
-		if(a.position > b.position) return -1
+		if(a.element_type < b.element_type) return 1
+		if(a.element_type > b.element_type) return -1
 	}).forEach(x => result+=transferIn(x))
 	document.querySelector('.transfer-in').innerHTML = result
 }
 
 function transferOut(a) {
+	playerTeam = teamState.teams.find(x => x.id === a.team).name
 	return `
-	<div class="trans-wrapper"><div class="trans small"><span>${a.name}</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkred" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+	<div class="trans-wrapper"><div class="trans small"><span>${a.web_name}</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkred" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
   <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
-</svg></span></div><div class="trans-team small">${a.playerteam}</div></div>
+</svg></span></div><div class="trans-team small">${playerTeam}</div></div>
 	`
 }
 function transferIn(a) {
+	playerTeam = teamState.teams.find(x => x.id === a.team).name
 	return `
 	<div class="trans-wrapper"><div class="trans small"><span>
 	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkGreen" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
   	<path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
 	</svg>
-    </span><span>${a.name}</span></div><div class="trans-team small">${a.playerteam}</div></div>
+    </span><span>${a.web_name}</span></div><div class="trans-team small">${playerTeam}</div></div>
 	`
 }
 
 function load_popup(id) {
 	let hideInplayerButton
 	let hideOutplayerButton
-	let b = true
 	player = playerState.players.find(x => x.id === id)
-	switchBtn = (player.id === outplayer.element || player.id === inplayer.element) && 
-				(b === outplayer.multiplier === 0 || b === inplayer.multiplier === 0) ? 'Cancel' : 'Switch'
-	disabled = b === true ? 'hide-btn' : 'show-btn'
-	classname = b === true ? 'swap-button-out' :  'swap-button-in'
-	transferBtn = (player.id === outplayer.element || player.id === inplayer.element) && b === outplayer.multiplier === 0 ? 'hide-btn' : 'show-btn'
+	switchBtn = (player.id === outplayer.element || player.id === inplayer.element) ? 'Cancel' : 'Switch'
+	disabled = inplayer.multiplier === 0 ? 'hide-btn' : 'show-btn'
+	classname = inplayer.multiplier === 0 ? 'swap-button-out' :  'swap-button-in'
+	transferBtn = (player.id === outplayer.element || player.id === inplayer.element) ? 'hide-btn' : 'show-btn'
 	if(Object.keys(outplayer).length > 0 || Object.keys(inplayer).length > 0) {
-		hideInplayerButton = b === true ? 'hide-btn' : 'show-btn'
+		hideInplayerButton = outplayer.multiplier !== 0 ? 'hide-btn' : 'show-btn'
 	}
 	if(Object.keys(inplayer).length > 0) {
-		hideOutplayerButton = b === true ? 'show-btn' : 'hide-btn'
+		//hideOutplayerButton = inplayer.multiplier === 0 ? 'show-btn' : 'hide-btn'
 	}
 	return `
 	<div class="playerpop">
@@ -271,8 +287,8 @@ function returnvTcaptain() {
 }
 
 
-function loadMessage(a) {
-	let found = playersOut.some(x => x.name === a)
+function loadMessage(a,b) {
+	let found = playersOut.some(x => x.element === b)
 	let msg = found ? 'Transferred OUT' : 'Transferred IN'
 	return `<span>&nbsp;${a}&nbsp;${msg}</span>`
 }

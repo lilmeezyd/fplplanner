@@ -69,20 +69,20 @@ function loadTeam() {
 	transfer = document.querySelectorAll('.transfer-button')
 	Array.from(transfer).forEach(x => 
 		x.onclick = function () {
-			playername = x.parentElement.querySelector('.data_name').innerText
-			teamimage = this.parentElement.querySelector('img').getAttribute('src')
+			playerId = +x.parentElement.id
 			playerposition = x.parentElement.getAttribute('position')
-			playerIndex = team.findIndex(x => x.position === playerposition && x.name == playername && x.image === teamimage)
+			playerIndex = picks.findIndex(x => x.element === playerId)
+			playername = playerState.players.find(x => x.id === playerId).web_name
 			//playersOutpurg.push(team[playerIndex])
-			playersOut.push(team[playerIndex])
+			playersOut.push(picks[playerIndex])
 			document.querySelector('.message').style.display = 'block'
 			document.querySelector('.details-one').style.paddingBottom = 0
 			document.querySelector('.message').classList.add('danger')
 			document.querySelector('.message').classList.remove('success')
 			document.querySelector('.message').innerHTML = loadMessage(playername)
-			team.splice(playerIndex,1)
-			removedisabled(playername, teamimage, playerposition)
-			document.querySelector('.player-num').innerHTML = team.length
+			picks.splice(playerIndex,1)
+			//removedisabled(playername, teamimage, playerposition)
+			document.querySelector('.player-num').innerHTML = picks.length
 			loadTransfersOut()
 			loadTeam()
 			hideallswapbtn()
@@ -110,6 +110,7 @@ function loadTeam() {
 		x.onclick = function() {
 			playerId = +x.parentElement.id
 			console.log(playerId)
+			setPlayerData(playerId)
 			document.querySelector('.playerpopup').innerHTML = loadInfo(playerId)
 			document.querySelector('.playerpopup').style.display = 'block'
 			//document.body.style.overflow = 'hidden'
@@ -149,15 +150,18 @@ function loadTeam() {
 			document.body.style.paddingRight = ''
 		})
 		document.querySelector('.transfer').onclick = function() {
-			playerIndex = team.findIndex(x => x.position === playerposition && x.name == playername && x.image === teamimage)
-			playersOut.push(team[playerIndex])
+			playerId = +x.parentElement.id
+			playerposition = x.parentElement.getAttribute('position')
+			playerIndex = picks.findIndex(x => x.element === playerId)
+			playername = playerState.players.find(x => x.id === playerId).web_name
+			playersOut.push(picks[playerIndex])
 			document.querySelector('.message').style.display = 'block'
 			document.querySelector('.details-one').style.paddingBottom = 0
 			document.querySelector('.message').classList.add('danger')
 			document.querySelector('.message').classList.remove('success')
-			document.querySelector('.message').innerHTML = loadMessage(playername)
-			team.splice(playerIndex,1)
-			removedisabled(playername, teamimage, playerposition)
+			document.querySelector('.message').innerHTML = loadMessage(playername, playerId)
+			picks.splice(playerIndex,1)
+			//removedisabled(playername, teamimage, playerposition)
 			loadTeam()
 			hideallswapbtn()
 			document.querySelector('.playerpopup').innerHTML = ''
@@ -177,12 +181,12 @@ function loadTeam() {
 
 		}
 		document.querySelector('.btn-cap').onclick = function() {
-			let oldcaptain = team.find(x => x.captain)
-			player = team.find(x => x.position === playerposition && x.name == playername && x.image === teamimage)
-			oldcaptain.captain = false
-			oldcaptain.vcaptain = player.vcaptain === true ? true : false 
-			player.captain = true
-			player.vcaptain = false
+			let oldcaptain = picks.find(x => x.is_captain)
+			player = picks.find(x => x.element === playerId)
+			oldcaptain.is_captain = false
+			oldcaptain.is_vice_captain = player.is_vice_captain === true ? true : false 
+			player.is_captain = true
+			player.is_vice_captain = false
 			document.querySelector('.playerpopup').innerHTML = ''
 			document.querySelector('.playerpopup').style.display = 'none'
 			document.body.style.overflow = ''
@@ -190,12 +194,12 @@ function loadTeam() {
 			loadTeam()
 		}
 		document.querySelector('.btn-vcap').onclick = function() {
-			let oldcaptain = team.find(x => x.vcaptain)
-			player = team.find(x => x.position === playerposition && x.name == playername && x.image === teamimage)
-			oldcaptain.vcaptain = false
-			oldcaptain.captain = player.captain === true ? true : false
-			player.vcaptain = true
-			player.captain = false
+			let oldcaptain = picks.find(x => x.is_vice_captain)
+			player = picks.find(x => x.element === playerId)
+			oldcaptain.is_vice_captain = false
+			oldcaptain.is_captain = player.is_captain === true ? true : false
+			player.is_vice_captain = true
+			player.is_captain = false
 			document.querySelector('.playerpopup').innerHTML = ''
 			document.querySelector('.playerpopup').style.display = 'none'
 			document.body.style.overflow = ''
@@ -203,7 +207,7 @@ function loadTeam() {
 			loadTeam()
 		}
 		document.querySelector('.btn-player-info').onclick = function() {
-			//document.querySelector('.playerpopup').innerHTML = loadInfo(playername, playerposition, playerteam)
+			document.querySelector('.playerpopup').innerHTML = loadInfo(playerId)
 			document.querySelector('.playerpopup').style.display = 'block'
 			popupclose = document.querySelector('.btn-player')
 			popupclose.addEventListener('click', function() {
@@ -490,10 +494,10 @@ function swapButtonIn(a) {
 }
 
 function changeBenchOrder() {
-	let playerA = changeBench[0].benchOrder
-	let playerB = changeBench[1].benchOrder
-	changeBench[0].benchOrder = playerB
-	changeBench[1].benchOrder = playerA 
+	let playerA = changeBench[0].position
+	let playerB = changeBench[1].position
+	changeBench[0].position = playerB
+	changeBench[1].position = playerA 
 	loadTeam()
 	changeBench.length = 0
 	inplayer = ''
