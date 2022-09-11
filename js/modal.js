@@ -121,9 +121,10 @@ function load_popup(id) {
 	let hideInplayerButton
 	let hideOutplayerButton
 	player = playerState.players.find(x => x.id === id)
+	pickedPlayer = picks.find(x => x.element === id)
 	switchBtn = (player.id === outplayer.element || player.id === inplayer.element) ? 'Cancel' : 'Switch'
-	disabled = inplayer.multiplier === 0 ? 'hide-btn' : 'show-btn'
-	classname = inplayer.multiplier === 0 ? 'swap-button-out' :  'swap-button-in'
+	disabled = pickedPlayer.multiplier === 0 ? 'hide-btn' : 'show-btn'
+	classname = pickedPlayer.multiplier === 0 ? 'swap-button-out' :  'swap-button-in'
 	transferBtn = (player.id === outplayer.element || player.id === inplayer.element) ? 'hide-btn' : 'show-btn'
 	if(Object.keys(outplayer).length > 0 || Object.keys(inplayer).length > 0) {
 		hideInplayerButton = outplayer.multiplier !== 0 ? 'hide-btn' : 'show-btn'

@@ -184,8 +184,10 @@ function loadTeam() {
 			let oldcaptain = picks.find(x => x.is_captain)
 			player = picks.find(x => x.element === playerId)
 			oldcaptain.is_captain = false
+			oldcaptain.multiplier = 1
 			oldcaptain.is_vice_captain = player.is_vice_captain === true ? true : false 
 			player.is_captain = true
+			player.multiplier = 2
 			player.is_vice_captain = false
 			document.querySelector('.playerpopup').innerHTML = ''
 			document.querySelector('.playerpopup').style.display = 'none'
@@ -496,6 +498,8 @@ function swapButtonIn(a) {
 function changeBenchOrder() {
 	let playerA = changeBench[0].position
 	let playerB = changeBench[1].position
+	changeBench[0].position = 0 
+	changeBench[1].position = 0
 	changeBench[0].position = playerB
 	changeBench[1].position = playerA 
 	loadTeam()
@@ -601,6 +605,7 @@ function loadBench(a, player) {
 							</div>`			
 }
 
+/* Load Each Player's Fixtures */
 function nextFixtures(a) {
 	let resultFix = ''
 	let resultFour = ''
@@ -612,7 +617,12 @@ function nextFixtures(a) {
 					.splice(0,1)
 	let nextFour = fixtureState.fixtures
 					.filter(x => new Date(x.kickoff_time)>new Date && (x.team_a === a || x.team_h === a))
-					.splice(1,3)		
+					.splice(1,3)
+	let nextFourFix = fixtureState.fixtures
+					.filter(x => new Date(x.kickoff_time)>new Date && (x.team_a === a || x.team_h === a))
+					.splice(0,4)
+	let newNextFour = []
+	//let newNextFourOne = []													
 
 	const realFour = {
 		'zero' : filteredEvents.length + 1,
@@ -620,33 +630,28 @@ function nextFixtures(a) {
 		'two': filteredEvents.length + 3,
 		'three': filteredEvents.length + 4
 	}
-	nextFixMap = nextFix.map((x, key) => {
-		if(x.team_a === a) {
-			if(key === nextFix.length-1 && x.event !== realFour['zero']) return {...x, event:null, team_a_difficulty:0 }
-			return x
+	nextFourFix.forEach((x, key) => {
+		if(key === 0 && x.event !== realFour['zero']) {
+			newNextFour.push({...x, event:realFour['zero'], team_a_difficulty:0, team_h_difficulty:0})
 		}
-		if(x.team_h === a) {
-			if(key === nextFix.length-1 && x.event !== realFour['zero']) return {...x, event:null, team_h_difficulty:0 }
-			return x
+		/*
+		if(key === 2 && x.event !== realFour['two']) {
+			newNextFour.push({...x, event:realFour['two'], team_a_difficulty:0, team_h_difficulty:0})
 		}
-	}).sort((a,b)=>{
-		if(a.event > b.event) return 1
-		if(a.event < b.event) return -1	
-	})	
-	nextFourMap = nextFour.map((x,key) => {
-		if(x.team_a === a) {
-			if(key === nextFour.length-1 && x.event !== realFour['three']) return {...x, event:null, team_a_difficulty:0 }
-			return x
-		}
-		if(x.team_h === a) {
-			if(key === nextFour.length-1 && x.event !== realFour['three']) return {...x, event:null, team_h_difficulty:0 }
-			return x
-		}
-	}).sort((a,b)=>{
-		if(a.event > b.event) return 1
-		if(a.event < b.event) return -1	
+		if(key === 3 && x.event !== realFour['three']) {
+			newNextFour.push({...x, event:realFour['three'], team_a_difficulty:0, team_h_difficulty:0})
+		}*/
+		newNextFour.push(x) 
 	})
-	nextFixMap.forEach(x => {
+	/*newNextFour.forEach((x, key) => {
+		if(key === 1 && x.event !== realFour['one']) {
+			newNextFour.splice(1,1,{...x, event:realFour['one'], team_a_difficulty:0, team_h_difficulty:0})
+		}
+	})*/
+	nextOne = newNextFour.splice(0,1)
+	nextThree = newNextFour.splice(0,3)
+	console.log(nextThree)
+	nextOne.forEach(x => {
 		if(x.team_a === a) {
 			nameAway = teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
 			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
@@ -664,7 +669,7 @@ function nextFixtures(a) {
 			resultFix += spanHome
 		}
 	})
-	nextFourMap.forEach((x,key) => {
+	nextThree.forEach((x,key) => {
 		if(x.team_a === a) {
 			nameAway = teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
 			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 

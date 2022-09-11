@@ -24,8 +24,15 @@ function fixtureHeader() {
 //Load Fixture Body
 function fixtureBody() {
 	let result = ''
+	let eventztream = JSON.parse(sessionStorage.getItem('events'))
+	let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) < new Date())
+	const nextFixturesObj = {}
+	for(let i=filteredEvents.length+1; i <= 38; i++) {
+		nextFixturesObj[i] = i
+	}
+	console.log(nextFixturesObj)
 	teamState.teams.forEach(team => {
-		let opponents = loadOpponent(team.id)
+		let opponents = loadOpponent(team.id, nextFixturesObj, filteredEvents.length+1)
 		result += `<tr><td>
 		<span class="ticker-image">
 		<img src="./static/t${team.code}.png" alt="${team.name}">
@@ -39,23 +46,36 @@ function fixtureBody() {
 	return tableBody
 }
 
-function loadOpponent(a) {
-	result = ''
-	fixtureState.fixtures.forEach(x => {
+function loadOpponent(a, b, c) {
+	let result = ''
+	let nextFixtures = []
+	validFixtures = fixtureState.fixtures
+   					.filter(x => x.event !== null && !eventIds.includes(x.event) && (x.team_a === a || x.team_h === a))
+	validFixtures.forEach((x, key) => {
+		if(key === 0 && x.event !== b[c]) {
+			nextFixtures.push({...x, event:b[c], 
+				team_a_difficulty:0, team_h_difficulty:0
+			})
+		}
+		nextFixtures.push(x)
+	})
+	console.log(nextFixtures)
+	nextFixtures
+	.forEach(x => {
 		if(x.team_a === a && !eventIds.includes(x.event)) {
-			let awayColor = x.event !== null && x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
-			x.event !== null && x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.event !== null && x.team_a_difficulty === 4 ?
-			'rgb(255, 23, 81)' : x.event !== null && x.team_a_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
-			nameAway = x.event !== null ? teamState.teams.find(tname => tname.id === x.team_h).short_name : ''
-			eAway = x.event !== null? '(A)' : ''
+			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
+			x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_a_difficulty === 4 ?
+			'rgb(255, 23, 81)' : x.team_a_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
+			nameAway = x.team_a_difficulty !== 0 ? teamState.teams.find(tname => tname.id === x.team_h).short_name : ''
+			eAway = x.team_a_difficulty !== 0 ? '(A)' : ''
 			result +=`<td style="background: ${awayColor};">${nameAway} ${eAway}</td>`
 		}
 		if(x.team_h === a && !eventIds.includes(x.event)) {
-			let homeColor = x.event !== null && x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
-			x.event !== null && x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.event !== null && x.team_h_difficulty === 4 ?
-			'rgb(255, 23, 81)' : x.event !== null && x.team_h_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
-			nameHome = x.event !== null ? teamState.teams.find(tname => tname.id === x.team_a).short_name : ''
-			eHome = x.event !== null ? '(H)' : ''
+			let homeColor = x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
+			x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_h_difficulty === 4 ?
+			'rgb(255, 23, 81)' : x.team_h_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
+			nameHome =  x.team_h_difficulty !== 0 ? teamState.teams.find(tname => tname.id === x.team_a).short_name : ''
+			eHome = x.team_h_difficulty !== 0 ? '(H)': ''
 			result+= `<td style="background: ${homeColor};">${nameHome} ${eHome}</td>`
 		}
 	})
