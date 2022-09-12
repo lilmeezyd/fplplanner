@@ -20,7 +20,7 @@ function loadTeam() {
 	result3 = ''
 	result4 = ''
 	picks.forEach(a => {
-		player = playerState.players.find(x => x.id === a.element)
+		let player = playerState.players.find(x => x.id === a.element)
 		if(player.element_type === 1 && (a.multiplier === 1 || a.multiplier === 2)) {
 			result += loadPlayer(a, player)
 			goal.innerHTML = result
@@ -47,6 +47,7 @@ function loadTeam() {
 			result4 += loadBench(a, player)
 		}
 	})
+	console.log(goal)
 	//goal.innerHTML = result
 	defend.innerHTML = result1
 	mid.innerHTML = result2
