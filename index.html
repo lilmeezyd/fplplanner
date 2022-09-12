@@ -394,15 +394,23 @@
 			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
-				const team = result.picks
-				const newResult = {team, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
+				//const team = result.picks
+				newPicks = []
+				result.picks.forEach(x => {
+					playerState.players.forEach(y => {
+						if(y.id === x.element) {
+							newPicks.push({...x, element_type:y.element_type})
+						}
+					})
+				})
+				const newResult = {newPicks, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
 				sessionStorage.removeItem('managerPicks')
 				sessionStorage.setItem('managerPicks', JSON.stringify(newResult))
 				let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
 				picks.length = 0
 				oldTeam.length = 0
-				picks.push(...retrievedPicks.team)
-           		oldTeam.push(...retrievedPicks.team)
+				picks.push(...retrievedPicks.newPicks)
+           		oldTeam.push(...retrievedPicks.newPicks)
 				loadTeam()
 			})
 			.catch(error => console.log('error', error));

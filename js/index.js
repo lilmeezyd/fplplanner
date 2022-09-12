@@ -79,7 +79,7 @@ function loadTeam() {
 			document.querySelector('.details-one').style.paddingBottom = 0
 			document.querySelector('.message').classList.add('danger')
 			document.querySelector('.message').classList.remove('success')
-			document.querySelector('.message').innerHTML = loadMessage(playername)
+			document.querySelector('.message').innerHTML = loadMessage(playerId)
 			picks.splice(playerIndex,1)
 			//removedisabled(playername, teamimage, playerposition)
 			document.querySelector('.player-num').innerHTML = picks.length
@@ -130,11 +130,6 @@ function loadTeam() {
 
 	Array.from(document.querySelectorAll('.btn-details')).forEach(x => {
 	x.onclick = function() {
-		//playername = x.querySelector('.data_name').innerText
-		//teamimage = x.querySelector('img').getAttribute('src')
-		//playerposition = x.parentElement.getAttribute('position')
-		//playerteam = x.parentElement.getAttribute('team')
-		//name = x.querySelector('.data_name').innerText
 		playerId = +x.parentElement.id
 		player = picks.find(x => x.element === playerId)
 		document.querySelector('.playerpopup').innerHTML = load_popup(playerId)
@@ -240,20 +235,12 @@ document.querySelector('.show-fpl').addEventListener('click', function() {
 })
 
 function swapButtonOut(a) {
-			newPicks = []
-			picks.forEach(x => {
-				playerState.players.forEach(y => {
-					if(y.id === x.element) {
-						newPicks.push({...x, element_type:y.element_type})
-					}
-				})
-			})
 			playerId = +a.parentElement.id
 			playerposition = +a.parentElement.getAttribute('position')
-			positonnumber = newPicks.filter(x => x.element_type === playerposition && x.multiplier !== 0).length
-			captain = newPicks.find(x => x.is_captain)
-			vcaptain = newPicks.find(x => x.is_vice_captain)
-			player = newPicks.find(x => x.element === playerId)
+			positonnumber = picks.filter(x => x.element_type === playerposition && x.multiplier !== 0).length
+			captain = picks.find(x => x.is_captain)
+			vcaptain = picks.find(x => x.is_vice_captain)
+			player = picks.find(x => x.element === playerId)
 			let playerContainer = a.parentElement.parentElement.parentElement
 			playerContainer.classList.toggle('player-active')
 
@@ -271,32 +258,32 @@ function swapButtonOut(a) {
 
 
 			function inout() {
-				playerIndex = newPicks.findIndex(x => x.element === playerId)
+				playerIndex = picks.findIndex(x => x.element === playerId)
 				player = playerState.players.find(x => x.id === a.element)
-				outplayer = newPicks[playerIndex]
+				outplayer = picks[playerIndex]
 				document.querySelector('.message').style.display = 'block'
 				document.querySelector('.details-one').style.paddingBottom = 0
 				document.querySelector('.message').classList.add('danger')
 				document.querySelector('.message').classList.remove('success')
 				document.querySelector('.message').innerHTML = loadMessage5(outplayer)
 				if(playerposition === 1){
-					tgoal = newPicks.filter(x => x.element_type === 1 && x.multiplier === 0)
-					tgoal1 = newPicks.filter(x => x.element_type !== 1)
+					tgoal = picks.filter(x => x.element_type === 1 && x.multiplier === 0)
+					tgoal1 = picks.filter(x => x.element_type !== 1)
 					addSwap(tgoal)
 					hideswapbtn(tgoal1)
 					return hidetransferbtn()
 				}
 				if(playerposition === 2){
 					if(positonnumber === 3) {
-						tgoal = newPicks.filter(x => x.element_type === 2 && x.multiplier === 0)
-						tgoal1 = newPicks.filter(x => (x.multiplier !== 0 && x.element !== playerId) || (x.multiplier === 0 && x.element_type  !== 2))
+						tgoal = picks.filter(x => x.element_type === 2 && x.multiplier === 0)
+						tgoal1 = picks.filter(x => (x.multiplier !== 0 && x.element !== playerId) || (x.multiplier === 0 && x.element_type  !== 2))
 						addSwap(tgoal)
 						hidetransferbtn()
 						return hideswapbtn(tgoal1)
 						
 					} else {
-						tgoal = newPicks.filter(x => x.element_type !== 1 && x.multiplier === 0)
-						tgoal1 = newPicks.filter(x => x.element_type === 1 || (x.multiplier !== 0 && x.element !== playerId))
+						tgoal = picks.filter(x => x.element_type !== 1 && x.multiplier === 0)
+						tgoal1 = picks.filter(x => x.element_type === 1 || (x.multiplier !== 0 && x.element !== playerId))
 						addSwap(tgoal)
 						hidetransferbtn()
 						return hideswapbtn(tgoal1)
@@ -305,14 +292,14 @@ function swapButtonOut(a) {
 				}
 				if(playerposition === 3){
 					if(positonnumber === 2) {
-						tgoal = newPicks.filter(x => x.element_type === 3 && x.multiplier === 0)
-						tgoal1 = newPicks.filter(x => (x.multiplier !== 0 && x.element !== playerId) || (x.multiplier === 0 && x.element_type !== 3))
+						tgoal = picks.filter(x => x.element_type === 3 && x.multiplier === 0)
+						tgoal1 = picks.filter(x => (x.multiplier !== 0 && x.element !== playerId) || (x.multiplier === 0 && x.element_type !== 3))
 						addSwap(tgoal)
 						hideswapbtn(tgoal1)
 						hidetransferbtn()
 					} else {
-						tgoal = newPicks.filter(x => x.element_type !== 1 && x.multiplier === 0)
-						tgoal1 = newPicks.filter(x => x.element_type === 1 || (x.multiplier !== 0 && x.element !== playerId))
+						tgoal = picks.filter(x => x.element_type !== 1 && x.multiplier === 0)
+						tgoal1 = picks.filter(x => x.element_type === 1 || (x.multiplier !== 0 && x.element !== playerId))
 						addSwap(tgoal)
 						hideswapbtn(tgoal1)
 						hidetransferbtn()
@@ -320,14 +307,14 @@ function swapButtonOut(a) {
 				}
 				if(playerposition === 4){
 					if(positonnumber === 1) {
-						tgoal = newPicks.filter(x => x.element_type === 4 && x.multiplier === 0)
-						tgoal1 = newPicks.filter(x => (x.multiplier !== 0 && x.element !== playerId) || (x.multiplier === 0 && x.element_type !== 4))
+						tgoal = picks.filter(x => x.element_type === 4 && x.multiplier === 0)
+						tgoal1 = picks.filter(x => (x.multiplier !== 0 && x.element !== playerId) || (x.multiplier === 0 && x.element_type !== 4))
 						addSwap(tgoal)
 						hideswapbtn(tgoal1)
 						hidetransferbtn()
 					} else {
-						tgoal = newPicks.filter(x => x.element_type !== 1 && x.multiplier === 0)
-						tgoal1 = newPicks.filter(x => x.element_type === 1 || (x.multiplier !== 0 && x.element !== playerId))
+						tgoal = picks.filter(x => x.element_type !== 1 && x.multiplier === 0)
+						tgoal1 = picks.filter(x => x.element_type === 1 || (x.multiplier !== 0 && x.element !== playerId))
 						addSwap(tgoal)
 						hideswapbtn(tgoal1)
 						hidetransferbtn()
@@ -373,24 +360,16 @@ function swapButtonOut(a) {
 }
 
 function swapButtonIn(a) {
-	newPicks = []
-	picks.forEach(x => {
-		playerState.players.forEach(y => {
-		if(y.id === x.element) {
-			newPicks.push({...x, element_type:y.element_type})
-		}
-		})
-	})
 			playerId = +a.parentElement.id
 			playerposition = +a.parentElement.getAttribute('position')
-			teamdefenders = newPicks.filter(x => x.multiplier !== 0 && x.element_type === 2).length
-			teammidfielders = newPicks.filter(x => x.multiplier !== 0 && x.element_type === 3).length
-			teamforwards = newPicks.filter(x => x.multiplier !== 0 && x.element_type === 4).length
+			teamdefenders = picks.filter(x => x.multiplier !== 0 && x.element_type === 2).length
+			teammidfielders = picks.filter(x => x.multiplier !== 0 && x.element_type === 3).length
+			teamforwards = picks.filter(x => x.multiplier !== 0 && x.element_type === 4).length
 			let playerContainer = a.parentElement.parentElement
 			playerContainer.classList.toggle('player-active')
 			function outin() {
-				playerIndex = newPicks.findIndex(x => x.multiplier === 0 && x.element_type === playerposition && x.element == playerId)
-			    inplayer = newPicks[playerIndex]
+				playerIndex = picks.findIndex(x => x.multiplier === 0 && x.element_type === playerposition && x.element == playerId)
+			    inplayer = picks[playerIndex]
 			    document.querySelector('.message').style.display = 'block'
 				document.querySelector('.details-one').style.paddingBottom = 0
 				document.querySelector('.message').classList.remove('danger')
@@ -404,6 +383,7 @@ function swapButtonIn(a) {
 		    		inplayer.is_vice_captain = true
 		    		outplayer.is_vice_captain = false
 		    		}
+
 				swapplayer(outplayer, inplayer)
 				loadTeam()
 				tgoal.length = 0
@@ -411,8 +391,8 @@ function swapButtonIn(a) {
 				outplayer = ''
 			}
 			function inout() {
-				playerIndex = newPicks.findIndex(x => x.multiplier === 0 && x.element_type === playerposition && x.element == playerId)
-				inplayer = newPicks[playerIndex]
+				playerIndex = picks.findIndex(x => x.multiplier === 0 && x.element_type === playerposition && x.element == playerId)
+				inplayer = picks[playerIndex]
 				changeBench.push(inplayer)
 				console.log(inplayer)
 				document.querySelector('.message').style.display = 'block'
@@ -421,22 +401,22 @@ function swapButtonIn(a) {
 				document.querySelector('.message').classList.add('success')
 				document.querySelector('.message').innerHTML = loadMessage6(inplayer)
 				if(playerposition === 1){
-					tgoal = newPicks.filter(x => x.element_type === 1 && x.multiplier !== 0)
-					tgoal1 = newPicks.filter(x => (x.multiplier === 0 && x.element !== playerId) || (x.multiplier !== 0 && x.element_type !== 1))
+					tgoal = picks.filter(x => x.element_type === 1 && x.multiplier !== 0)
+					tgoal1 = picks.filter(x => (x.multiplier === 0 && x.element !== playerId) || (x.multiplier !== 0 && x.element_type !== 1))
 					addSwap(tgoal)
 					hideswapbtn(tgoal1)
 					return hidetransferbtn()
 				}
 				if(playerposition === 2){
 					if(teamforwards === 1) {
-						tgoal = newPicks.filter(x => x.element !== playerId && ( x.element_type !== 4 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
-						tgoal1 = newPicks.filter(x => x.element_type === 4 && x.multiplier !== 0 || x.element_type === 1)
+						tgoal = picks.filter(x => x.element !== playerId && ( x.element_type !== 4 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
+						tgoal1 = picks.filter(x => x.element_type === 4 && x.multiplier !== 0 || x.element_type === 1)
 						hideswapbtn(tgoal1)
 						addSwap(tgoal)
 						hidetransferbtn()
 					} else {
-						tgoal = newPicks.filter(x => x.element !== playerId && x.element_type !== 1)
-						tgoal1 = newPicks.filter(x => x.element_type === 1)
+						tgoal = picks.filter(x => x.element !== playerId && x.element_type !== 1)
+						tgoal1 = picks.filter(x => x.element_type === 1)
 						hideswapbtn(tgoal1)
 						hidetransferbtn()
 						return addSwap(tgoal)
@@ -444,20 +424,20 @@ function swapButtonIn(a) {
 				}
 				if(playerposition === 3){
 					if(teamforwards === 1) {
-						tgoal = newPicks.filter(x => x.element !== playerId && (x.element_type !== 4 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
-						tgoal1 = newPicks.filter(x => x.element_type === 4 && x.multiplier !== 0 || x.element_type === 1)
+						tgoal = picks.filter(x => x.element !== playerId && (x.element_type !== 4 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
+						tgoal1 = picks.filter(x => x.element_type === 4 && x.multiplier !== 0 || x.element_type === 1)
 						hideswapbtn(tgoal1)
 						addSwap(tgoal)
 						hidetransferbtn()
 					} else if(teamdefenders === 3) {
-						tgoal = newPicks.filter(x => x.element !== playerId &&  (x.element_type !== 2 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
-						tgoal1 = newPicks.filter(x => x.element_type === 2 && x.multiplier !== 0 || x.element_type === 1)
+						tgoal = picks.filter(x => x.element !== playerId &&  (x.element_type !== 2 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
+						tgoal1 = picks.filter(x => x.element_type === 2 && x.multiplier !== 0 || x.element_type === 1)
 						hideswapbtn(tgoal1)
 						addSwap(tgoal)
 						hidetransferbtn()
 					} else {
-						tgoal = newPicks.filter(x => (x.element_type !== 1 && x.multiplier !== 0)||(x.element !== playerId && x.element_type !== 1))
-						tgoal1 = newPicks.filter(x => x.element_type === 1)
+						tgoal = picks.filter(x => (x.element_type !== 1 && x.multiplier !== 0)||(x.element !== playerId && x.element_type !== 1))
+						tgoal1 = picks.filter(x => x.element_type === 1)
 						hideswapbtn(tgoal1)
 						addSwap(tgoal)
 						hidetransferbtn()
@@ -465,14 +445,14 @@ function swapButtonIn(a) {
 				}
 				if(playerposition === 4){
 					if(teamdefenders === 3) {
-						tgoal =  newPicks.filter(x => x.element !== playerId &&  (x.element_type !== 2 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
-						tgoal1 = newPicks.filter(x => x.element_type === 2 && x.multiplier !== 0 || x.element_type === 1)
+						tgoal =  picks.filter(x => x.element !== playerId &&  (x.element_type !== 2 && x.element_type !== 1 || (x.multiplier === 0 && x.element_type !== 1)))
+						tgoal1 = picks.filter(x => x.element_type === 2 && x.multiplier !== 0 || x.element_type === 1)
 						hideswapbtn(tgoal1)
 						addSwap(tgoal)
 						hidetransferbtn()
 					} else {
-						tgoal = newPicks.filter(x => (x.element_type !== 1 && x.multiplier !== 0)||(x.element !== playerId && x.element_type !== 1))
-						tgoal1 = newPicks.filter(x => x.element_type === 1)
+						tgoal = picks.filter(x => (x.element_type !== 1 && x.multiplier !== 0)||(x.element !== playerId && x.element_type !== 1))
+						tgoal1 = picks.filter(x => x.element_type === 1)
 						hideswapbtn(tgoal1)
 						hidetransferbtn()
 						addSwap(tgoal)
@@ -508,19 +488,10 @@ function changeBenchOrder() {
 }
 
 function loadPlayer(a, player) {
-	//let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	//let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-	/*captain = a.is_captain === true && !currentWeek[0].tcap ? returncaptain() : 
-			a.is_vice_captain === true && !currentWeek[0].tcap ? returnvcaptain() : 
-			a.captain && currentWeek[0].tcap ? returnTcaptain() : 
-			a.vcaptain && currentWeek[0].tcap ? returnvTcaptain() : ""*/
 	let teamObj = teamState.teams.find(x => x.id === player.team)
-	//let short_name = teamObj.short_name
 	let teamId = player.team
 	let team_name = teamObj.name
 	let positionObj = elementTypesState.elementTypes.find(x => x.id === player.element_type)
-	//let short_pos = positionObj.singular_name_short
-	//let pos_name = positionObj.singular_name
 	player.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
 		`./static/shirt_${teamObj.code}-66.webp`
 	captain = a.is_captain === true ? returncaptain() : 
@@ -650,7 +621,6 @@ function nextFixtures(a) {
 	})*/
 	nextOne = newNextFour.splice(0,1)
 	nextThree = newNextFour.splice(0,3)
-	console.log(nextThree)
 	nextOne.forEach(x => {
 		if(x.team_a === a) {
 			nameAway = teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
