@@ -42,9 +42,9 @@ function loadResults() {
 	})
 }
 
-function trackTransfers() {
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let a = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
+function trackTransfers(curGameweek) {
+	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
+	let a = retrievedGameweeks.filter(x => x.id === curGameweek)
 	let fts = a[0].fts
 	let playersInL = playersIn.length
 	let playersOutL = playersOut.length
@@ -56,9 +56,9 @@ function trackTransfers() {
 	}
 }
 
-function trackInRealtime() {
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let a = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
+function trackInRealtime(curGameweek) {
+	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
+	let a = retrievedGameweeks.filter(x => x.id === curGameweek)
 	let outLength = a[0].transfers[0].transfersOut.length
 	playersOut.push(...a[0].transfers[0].transfersOut)
 	playersIn.push(...a[0].transfers[1].transfersIn)
@@ -91,7 +91,7 @@ function loadTransfersIn() {
 			}
 		})
 	})
-	playersIn.sort((a,b) => {
+	newPlayersIn.sort((a,b) => {
 		if(a.element_type < b.element_type) return 1
 		if(a.element_type > b.element_type) return -1
 	}).forEach(x => result+=transferIn(x))

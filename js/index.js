@@ -47,7 +47,6 @@ function loadTeam() {
 			result4 += loadBench(a, player)
 		}
 	})
-	console.log(goal)
 	//goal.innerHTML = result
 	defend.innerHTML = result1
 	mid.innerHTML = result2

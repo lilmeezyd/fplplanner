@@ -1,7 +1,7 @@
 function loadGameweeks() {
     let teamReset = document.querySelector('.reset')
     const gameweekSize = 1
-    let curGameweek = 1
+    let curGameweek = Math.max(...eventIds) + 1
     const bdiff = []
     const sdiff = []
     /*const gameweeks = [
@@ -94,8 +94,7 @@ function loadGameweeks() {
     teamReset.addEventListener('click', resetTeam)
     document.querySelector('#nextGameweek').addEventListener('click', nextGameweek, false)
     document.querySelector('#prevGameweek').addEventListener('click', previousGameweek, false)
-    let realCurrentGW = Math.max(...eventIds) + curGameweek
-    gameweekNum.textContent = `Gameweek ${realCurrentGW}`
+    gameweekNum.textContent = `Gameweek ${curGameweek}`
 
 
 
@@ -141,7 +140,7 @@ function loadGameweeks() {
             const nTeam = [...team]
             let bnTeam = nTeam.filter(x => x.bench)
             let snTeam = nTeam.filter(x => !x.bench)*/
-            if(realCurrentGW > 1) realCurrentGW--
+            if(curGameweek > Math.max(...eventIds) + 1) curGameweek--
             /*let previousWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
             let previousCaptain = previousWeek[0].team.find(x => x.captain)
             let previousVCaptain = previousWeek[0].team.find(x => x.vcaptain)
@@ -199,7 +198,7 @@ function loadGameweeks() {
                 }
                 sessionStorage.setItem('gameweeks', JSON.stringify(retrievedGameweeks))
             }*/
-            gameweekNum.textContent = `Gameweek ${realCurrentGW}`
+            gameweekNum.textContent = `Gameweek ${curGameweek}`
             loadGameweek()
             //sdiff.length = 0
             //bdiff.length = 0
@@ -211,13 +210,14 @@ function loadGameweeks() {
         if(picks.length < 15) {
             console.log(`Team not full or Budget not enough`)
         } else {
-            if((curGameweek*gameweekSize) < retrievedGameweeks.length) realCurrentGW++
-            gameweekNum.textContent = `Gameweek ${realCurrentGW}`
-            /*previousWeek = retrievedGameweeks.filter(x => x.id === realCurrentGW - 1)
+            if((curGameweek*gameweekSize) < retrievedGameweeks.length) curGameweek++
+            gameweekNum.textContent = `Gameweek ${curGameweek}`
+            previousWeek = retrievedGameweeks.filter(x => x.id === curGameweek - 1)
             let sideArray = []
             let pTransfercount = previousWeek[0].transfers[0].transfersOut.length
-            previousWeek[0].team.length = 0
-            previousWeek[0].team.push(...team)*/
+            previousWeek[0].newPicks.length = 0
+            previousWeek[0].newPicks.push(...picks)
+            console.log(previousWeek)
             /*let playersOutSet = new Set(playersOut)
             let playersOutSetArray = Array.from(playersOutSet)
             let playersInSet = new Set(playersIn)
@@ -252,10 +252,10 @@ function loadGameweeks() {
             
 
 
-            newWeek = retrievedGameweeks.filter(x => x.id === realCurrentGW)
+            newWeek = retrievedGameweeks.filter(x => x.id === curGameweek)
 
             if(previousWeek[0].bbench === true || previousWeek[0].tcap === true) {
-                let index = retrievedGameweeks.findIndex(x => x.id === realCurrentGW)
+                let index = retrievedGameweeks.findIndex(x => x.id === curGameweek)
                 for(let i=0; i<retrievedGameweeks.length; i++) {
                     if(i>=index) {
                         if(previousWeek[0].bbench === true) {
@@ -271,8 +271,8 @@ function loadGameweeks() {
             }
             
             if(pTransfercount !== nTransfercount || previousWeek[0].wcard === true || previousWeek[0].fhit === true) {
-                let index = retrievedGameweeks.findIndex(x => x.id === realCurrentGW)
-                let prevTeam = retrievedGameweeks.find(x => x.id === realCurrentGW - 2)
+                let index = retrievedGameweeks.findIndex(x => x.id === curGameweek)
+                let prevTeam = retrievedGameweeks.find(x => x.id === curGameweek - 2)
                 for(let i=0; i<retrievedGameweeks.length; i++) {
                 if(i>=index) {
                     retrievedGameweeks[i].newPicks.length = 0
@@ -388,13 +388,13 @@ function loadGameweeks() {
         trackInRealtime()
         trackTransfers()
         if(currentWeek[0].fts === 'unlimited') transferNumber.innerHTML = '∞'*/
-        if(realCurrentGW === Math.max(...eventIds) + curGameweek) {
+        if(curGameweek === Math.max(...eventIds) + 1) {
             document.querySelector('#prevGameweek').style.visibility = 'hidden'
-        } /*else {
+        } else {
             document.querySelector('#prevGameweek').style.visibility = 'visible'
-            transferNumber.innerHTML = currentWeek[0].fts === 'unlimited' ? '∞' : currentWeek[0].fts
+            //transferNumber.innerHTML = currentWeek[0].fts === 'unlimited' ? '∞' : currentWeek[0].fts
         }
-        if((curGameweek*gameweekSize) === retrievedGameweeks.length) {
+        /*if((curGameweek*gameweekSize) === retrievedGameweeks.length) {
             document.querySelector('#nextGameweek').style.visibility = 'hidden'
         } else {
             document.querySelector('#nextGameweek').style.visibility = 'visible'
@@ -405,11 +405,10 @@ function loadGameweeks() {
         //message.innerHTML = ''
         //message.style.display = 'none'
         retrievedPicks.filter((row, index) => {
-            let start = (curGameweek-1)*gameweekSize
-            let end = curGameweek*gameweekSize
+            let start = (curGameweek-(Math.max(...eventIds) + 1))*gameweekSize
+            let end = (curGameweek-Math.max(...eventIds))*gameweekSize
             if(index >= start && index < end) return true
         }).forEach(a => {
-            console.log(a)
             picks.push(...a.newPicks)
             oldTeam.push(...a.newPicks)
             loadTeam()
@@ -420,7 +419,7 @@ function loadGameweeks() {
 
     function getTime() {
         let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
-        let currentWeek = retrievedGameweeks.filter(x => x.id === realCurrentGW)
+        let currentWeek = retrievedGameweeks.filter(x => x.id === curGameweek)
         let deadline = currentWeek[0].deadline_time
         let millis = new Date(deadline_time)-new Date()
         let seconds = Math.floor(millis/1000)
@@ -448,5 +447,5 @@ function loadGameweeks() {
     }
     //setInterval(getTime, 1000)
 
-    return { loadGameweek }
+    return { loadGameweek, curGameweek }
 }

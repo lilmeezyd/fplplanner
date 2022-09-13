@@ -397,13 +397,12 @@
 				let eventztream = JSON.parse(sessionStorage.getItem('events'))
 				let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) > new Date())
 				//const { id, name, deadline_time } = filteredEvents
-				console.log(filteredEvents)
 				newPicks = []
 				gameweekPicks = []
 				result.picks.forEach(x => {
 					playerState.players.forEach(y => {
 						if(y.id === x.element) {
-							newPicks.push({...x, element_type:y.element_type})
+							newPicks.push({...x, disabled:true, element_type:y.element_type, team:y.team})
 						}
 					})
 				})
