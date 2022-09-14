@@ -605,15 +605,10 @@ function nextFixtures(a) {
 		if(key === 0 && x.event !== realFour['zero']) {
 			newNextFour.push({...x, event:realFour['zero'], team_a_difficulty:0, team_h_difficulty:0})
 		}
-		/*
-		if(key === 2 && x.event !== realFour['two']) {
-			newNextFour.push({...x, event:realFour['two'], team_a_difficulty:0, team_h_difficulty:0})
-		}
-		if(key === 3 && x.event !== realFour['three']) {
-			newNextFour.push({...x, event:realFour['three'], team_a_difficulty:0, team_h_difficulty:0})
-		}*/
 		newNextFour.push(x) 
 	})
+
+	// Loading Blank Fixtures
 	/*newNextFour.forEach((x, key) => {
 		if(key === 1 && x.event !== realFour['one']) {
 			newNextFour.splice(1,1,{...x, event:realFour['one'], team_a_difficulty:0, team_h_difficulty:0})

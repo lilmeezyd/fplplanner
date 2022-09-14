@@ -210,7 +210,7 @@ function loadGameweeks() {
         if(picks.length < 15) {
             console.log(`Team not full or Budget not enough`)
         } else {
-            if((curGameweek*gameweekSize) < retrievedGameweeks.length) curGameweek++
+            if((curGameweek*gameweekSize) < retrievedGameweeks.length) curGameweek++   
             gameweekNum.textContent = `Gameweek ${curGameweek}`
             previousWeek = retrievedGameweeks.filter(x => x.id === curGameweek - 1)
             let sideArray = []
@@ -385,7 +385,7 @@ function loadGameweeks() {
         })
 
 
-        trackInRealtime()
+        trackInRealtime(curGameweek)
         trackTransfers()
         if(currentWeek[0].fts === 'unlimited') transferNumber.innerHTML = '∞'*/
         if(curGameweek === Math.max(...eventIds) + 1) {
@@ -446,6 +446,7 @@ function loadGameweeks() {
     }
     }
     //setInterval(getTime, 1000)
+    console.log(curGameweek) 
 
     return { loadGameweek, curGameweek }
 }

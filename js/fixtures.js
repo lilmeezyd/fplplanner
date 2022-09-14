@@ -30,9 +30,8 @@ function fixtureBody() {
 	for(let i=filteredEvents.length+1; i <= 38; i++) {
 		nextFixturesObj[i] = i
 	}
-	console.log(nextFixturesObj)
 	teamState.teams.forEach(team => {
-		let opponents = loadOpponent(team.id, nextFixturesObj, filteredEvents.length+1)
+		let opponents = loadOpponent(team.id, nextFixturesObj, filteredEvents.length)
 		result += `<tr><td>
 		<span class="ticker-image">
 		<img src="./static/t${team.code}.png" alt="${team.name}">
@@ -52,14 +51,21 @@ function loadOpponent(a, b, c) {
 	validFixtures = fixtureState.fixtures
    					.filter(x => x.event !== null && !eventIds.includes(x.event) && (x.team_a === a || x.team_h === a))
 	validFixtures.forEach((x, key) => {
-		if(key === 0 && x.event !== b[c]) {
-			nextFixtures.push({...x, event:b[c], 
+		if(key === 0 && x.event !== b[c+1]) {
+			nextFixtures.push({...x, event:b[c+1], 
 				team_a_difficulty:0, team_h_difficulty:0
 			})
 		}
 		nextFixtures.push(x)
 	})
-	console.log(nextFixtures)
+
+	//Loading Blank Gameweek
+	nextFixtures.forEach((x, key) => {
+		if(key === 4 && x.event !== b[c+5]) {
+			nextFixtures.splice(4,1, {...x, event:b[c+5], 
+				team_a_difficulty:0, team_h_difficulty:0}, x)
+		}
+	})
 	nextFixtures
 	.forEach(x => {
 		if(x.team_a === a && !eventIds.includes(x.event)) {
