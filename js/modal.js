@@ -43,6 +43,7 @@ function loadResults() {
 }
 
 function trackTransfers(curGameweek) {
+	console.log(curGameweek)
 	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
 	let a = retrievedGameweeks.filter(x => x.id === curGameweek)
 	let fts = a[0].fts
@@ -57,6 +58,7 @@ function trackTransfers(curGameweek) {
 }
 
 function trackInRealtime(curGameweek) {
+	console.log(curGameweek)
 	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
 	let a = retrievedGameweeks.filter(x => x.id === curGameweek)
 	let outLength = a[0].transfers[0].transfersOut.length
@@ -309,7 +311,6 @@ function loadMessage5(a) {
 
 function loadMessage6(a) {
 	let msg = 'Subbed ON'
-	console.log(a)
 	player = playerState.players.find(x => x.id === a.element)
 	return `<span>&nbsp;${player.web_name}&nbsp;${msg}</span>`
 }
@@ -319,5 +320,6 @@ function loadMessage2(a,b) {
 }
 
 function loadMessage1(a) {
-	return `<span>&nbsp;You Already have 3 players from ${a}</span>`
+	aTeam = teamState.teams(x => x.id === a).name
+	return `<span>&nbsp;You Already have 3 players from ${aTeam}</span>`
 }

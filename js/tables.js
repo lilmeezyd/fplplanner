@@ -225,8 +225,8 @@ function upload() {
 		if(players.length) {
 			actualMax = Math.max(...players.map(x => (x.now_cost/10).toFixed(1)))
 			bMax = actualMax % 0.5 === 0 ? actualMax : 
-			Math.ceil(actualMax)-actualMax <= 0.5 ? Math.ceil(actualMax) : 
-			Math.ceil(actualMax)-0.5
+			Math.ceil(actualMax)-actualMax <= 0.5 ? actualMax : 
+			actualMax-0.5
 		} else {
 			bMax = priceCut
 		}
@@ -409,18 +409,18 @@ function upload() {
 			let result1 = ''
 			let result2 = ''
 			let result3 = ''
-			/*plyers.forEach(x => {
+			plyers.forEach(x => {
 				x.disabled = ''
 				if(picks.length > 0) {
 					picks.forEach(y => {
-						if(x.name === y.name) {
+						if(x.id === y.element) {
 							x.disabled = 'disabled'
 						}
-					})/*
+					})
 				} else {
 					x.disabled = ''
 				}
-			})*/
+			})
 			plyers.filter((row, index) => {
 				let start = (curPage-1)*pageSize
 				let end = curPage*pageSize
@@ -475,8 +475,8 @@ function upload() {
 					let defenders = picks.filter(x => x.element_type === 2).length
 					let midfielders = picks.filter(x => x.element_type === 3).length
 					let forwards = picks.filter(x => x.element_type === 4).length
-					let isCaptain = picks.filter(x => x.is_captain)
-					let isViceCaptain = picks.filter(x => x.is_vice_captain)
+					let isCaptain = picks.filter(x => x.is_captain)[0]
+					let isViceCaptain = picks.filter(x => x.is_vice_captain)[0]
 					let playerId = +x.parentElement.id
 					let elementType = +x.querySelector('.position').getAttribute('element_type')
 					let team = +x.querySelector('.team').getAttribute('team_id')
@@ -484,7 +484,7 @@ function upload() {
 					player.element_type = elementType
 					player.element = playerId
 					player.team = team
-					player.disabled = ''
+					player.disabled = true
 					player.position = 0
 					player.multiplier = 1
 					enchGoalie = picks.filter(x => x.multiplier === 0 && x.element_type === 1).length
@@ -494,6 +494,11 @@ function upload() {
 					playingMid = picks.filter(x => x.multiplier !== 0 && x.element_type === 3).length
 					playingFwd = picks.filter(x => x.multiplier !==0 && x.element_type === 4).length
 
+					let num = elementType === 1 ? 2 : elementType === 2 ? 3 : 
+					elementType === 3 ? 5 : 3
+					let fieldnum = elementType === 1 ? 'Goalkeepers' : 
+					elementType === 2 ?	'Defenders' : elementType === 3 ? 'Midfielder' : 'Forwards'	
+					
 					teamCount = picks.reduce((a,b) => {
 						a[b.team] = a[b.team] ? ++a[b.team] : 1
 						return a
@@ -510,7 +515,7 @@ function upload() {
 						} else if(isViceCaptain === undefined) {
 							player.is_vice_captain = true
 							player.is_captain = false
-						} else if(isViceCaptain === undefined && is_captain === undefined) {
+						} else if(isViceCaptain === undefined && isCaptain === undefined) {
 							player.is_captain = true
 							player.is_vice_captain = false
 						} else {
@@ -573,9 +578,10 @@ function upload() {
 								} else {
 									playersIn.push(player)
 								}
-								loadTransfersIn(loadGameweeks().curGameweek)
+								loadTransfersIn()
 								trackTransfers(loadGameweeks().curGameweek)
 
+								picks.push(player)
 								document.querySelector('.message').style.display = 'block'
 								document.querySelector('.details-one').style.paddingBottom = 0
 								document.querySelector('.message').classList.remove('danger')
@@ -588,14 +594,14 @@ function upload() {
 								document.querySelector('.details-one').style.paddingBottom = 0
 								document.querySelector('.message').classList.add('danger')
 								document.querySelector('.message').classList.remove('success')
-								document.querySelector('.message').innerHTML = loadMessage1(playerId)
+								document.querySelector('.message').innerHTML = loadMessage1(team)
 							}
 						} else {
 							document.querySelector('.message').style.display = 'block'
 								document.querySelector('.details-one').style.paddingBottom = 0
 								document.querySelector('.message').classList.add('danger')
 								document.querySelector('.message').classList.remove('success')
-								document.querySelector('.message').innerHTML = loadMessage2(playerId, playerId)
+								document.querySelector('.message').innerHTML = loadMessage2(num, fieldnum)
 						}
 					} else {
 						document.querySelector('.message').style.display = 'block'

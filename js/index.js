@@ -81,7 +81,7 @@ function loadTeam() {
 			document.querySelector('.message').classList.remove('success')
 			document.querySelector('.message').innerHTML = loadMessage(playerId)
 			picks.splice(playerIndex,1)
-			//removedisabled(playername, teamimage, playerposition)
+			removedisabled(playerId)
 			document.querySelector('.player-num').innerHTML = picks.length
 			loadTransfersOut()
 			loadTeam()
@@ -745,16 +745,14 @@ function swapplayer(a, b) {
 
 
 
-function removedisabled(a,b,c) {
-	Array.from(player_cells).forEach(x => {
-		let image = x.querySelector('img').getAttribute('src')
-		let name = x.querySelector('.name').textContent
-		let position = x.querySelector('.position').getAttribute('position')
-		if(a === name && b === image && c === position) {
+function removedisabled(a) {
+	Array.from(document.querySelectorAll('.player-cell')).forEach(x => {
+		let playerId = +x.parentElement.id
+		if(a === playerId) {
 			x.removeAttribute('disabled')
 		}
-		newindex = cachedPlayers.findIndex(x => x.name === a && x.image === b && x.position === c)
-		cachedPlayers[newindex].disabled = ''
+		//newindex = cachedPlayers.findIndex(x => x.name === a && x.image === b && x.position === c)
+		//cachedPlayers[newindex].disabled = ''
 	})
 }
 
