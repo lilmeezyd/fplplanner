@@ -330,9 +330,8 @@
 	#goal .pitch_unit{
 	}
 	.element_container {
-		/*border: 1px solid black;*/
 		margin: 0 0.2rem;
-		padding: 0.4rem;
+		padding: 0.4rem 0rem;
 		border-radius: 0.4rem;
 		-webkit-box-align: stretch;
 		align-items: stretch;
@@ -1376,7 +1375,7 @@
 	.data_fixtures span {
 		flex: 1 1 0%;
 		display: block;
-		border: 1px solid rgba(255, 255, 255, 1.0);
+		/*border: 1px solid rgba(255, 255, 255, 1.0);*/
 		padding: 0.2rem 0;
 	}
 	.show-btn {
