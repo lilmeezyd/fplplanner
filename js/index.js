@@ -154,9 +154,9 @@ function loadTeam() {
 			document.querySelector('.details-one').style.paddingBottom = 0
 			document.querySelector('.message').classList.add('danger')
 			document.querySelector('.message').classList.remove('success')
-			document.querySelector('.message').innerHTML = loadMessage(playername, playerId)
+			document.querySelector('.message').innerHTML = loadMessage(playerId)
 			picks.splice(playerIndex,1)
-			//removedisabled(playername, teamimage, playerposition)
+			removedisabled(playerId)
 			loadTeam()
 			hideallswapbtn()
 			document.querySelector('.playerpopup').innerHTML = ''

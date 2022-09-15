@@ -66,6 +66,11 @@ function loadOpponent(a, b, c) {
 				team_a_difficulty:0, team_h_difficulty:0}, x)
 		}
 	})
+	/*for(let i = 1; i < nextFixtures.length-1; i++ ) {
+		if(i && nextFixtures[i-1].event !== b[c+1]) {
+			nextFixtures.splice(i,1, {...nextFixtures[i-1], event:b[c+1], 
+				team_a_difficulty:0, team_h_difficulty:0}, nextFixtures[i-1])}
+	}*/
 	nextFixtures
 	.forEach(x => {
 		if(x.team_a === a && !eventIds.includes(x.event)) {
