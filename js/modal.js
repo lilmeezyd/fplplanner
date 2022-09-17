@@ -129,10 +129,10 @@ function load_popup(id) {
 	classname = pickedPlayer.multiplier === 0 ? 'swap-button-out' :  'swap-button-in'
 	transferBtn = (player.id === outplayer.element || player.id === inplayer.element) ? 'hide-btn' : 'show-btn'
 	if(Object.keys(outplayer).length > 0 || Object.keys(inplayer).length > 0) {
-		hideInplayerButton = outplayer.multiplier !== 0 ? 'hide-btn' : 'show-btn'
+		hideInplayerButton = 'hide-btn'
 	}
 	if(Object.keys(inplayer).length > 0) {
-		//hideOutplayerButton = inplayer.multiplier === 0 ? 'show-btn' : 'hide-btn'
+		hideOutplayerButton =  'hide-btn'
 	}
 	return `
 	<div class="playerpop">
@@ -145,7 +145,7 @@ function load_popup(id) {
 			<button class="btn-info btn-info-block btn-warn substitute">${switchBtn}</button>
 			<button class="btn-info btn-info-block btn-cap ${disabled} ${transferBtn} ${hideOutplayerButton}">Make Captain</button>
 			<button class="btn-info btn-info-block btn-vcap ${disabled} ${transferBtn} ${hideOutplayerButton}" >Make Vice Captain</button>
-			<button class="btn-info btn-info-block btn-light btn-player-info ${transferBtn}">View Information</button>
+			<button class="btn-info btn-info-block btn-light btn-player-info ${transferBtn} ${hideInplayerButton} ${hideOutplayerButton}">View Information</button>
 		</div>
 	`
 }
@@ -320,6 +320,6 @@ function loadMessage2(a,b) {
 }
 
 function loadMessage1(a) {
-	aTeam = teamState.teams(x => x.id === a).name
+	aTeam = teamState.teams.find(x => x.id === a).name
 	return `<span>&nbsp;You Already have 3 players from ${aTeam}</span>`
 }

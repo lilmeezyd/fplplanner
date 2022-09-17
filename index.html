@@ -408,7 +408,7 @@
 				})
 				filteredEvents.forEach(x => {
 					const { id, name, deadline_time } = x
-					const newResult = {id, name, deadline_time, newPicks, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
+					const newResult = {id, name, deadline_time, newPicks, fts:1, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
 					gameweekPicks.push(newResult)
 				})
 

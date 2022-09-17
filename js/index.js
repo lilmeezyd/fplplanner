@@ -584,14 +584,15 @@ function nextFixtures(a) {
 	filteredEvents = eventztream.filter(x => new Date(x.deadline_time) < new Date())
 	newEventId = filteredEvents.length + 4
 	let nextFix = fixtureState.fixtures
-					.filter(x => new Date(x.kickoff_time)>new Date  && (x.team_a === a || x.team_h === a))
+					.filter(x => x.event > Math.max(...eventIds)  && (x.team_a === a || x.team_h === a))
 					.splice(0,1)
 	let nextFour = fixtureState.fixtures
-					.filter(x => new Date(x.kickoff_time)>new Date && (x.team_a === a || x.team_h === a))
+					.filter(x => x.event > Math.max(...eventIds) && (x.team_a === a || x.team_h === a))
 					.splice(1,3)
 	let nextFourFix = fixtureState.fixtures
-					.filter(x => new Date(x.kickoff_time)>new Date && (x.team_a === a || x.team_h === a))
+					.filter(x => x.event > Math.max(...eventIds) && (x.team_a === a || x.team_h === a))
 					.splice(0,4)
+	console.log(nextFourFix)				
 	let newNextFour = []
 	//let newNextFourOne = []													
 
@@ -601,11 +602,32 @@ function nextFixtures(a) {
 		'two': filteredEvents.length + 3,
 		'three': filteredEvents.length + 4
 	}
+
+	// Highghting blank gameweeks
 	nextFourFix.forEach((x, key) => {
 		if(key === 0 && x.event !== realFour['zero']) {
 			newNextFour.push({...x, event:realFour['zero'], team_a_difficulty:0, team_h_difficulty:0})
 		}
 		newNextFour.push(x) 
+	})
+
+	newNextFour.forEach((x, key) => {
+		if(key === 1 && x.event !== realFour['one']) {
+			newNextFour.splice(1,1, {...x, event:realFour['one'], 
+				team_a_difficulty:0, team_h_difficulty:0}, x)
+		}
+	})
+	newNextFour.forEach((x, key) => {
+		if(key === 2 && x.event !== realFour['two']) {
+			newNextFour.splice(2,1, {...x, event:realFour['two'], 
+				team_a_difficulty:0, team_h_difficulty:0}, x)
+		}
+	})
+	newNextFour.forEach((x, key) => {
+		if(key === 3 && x.event !== realFour['three']) {
+			newNextFour.splice(3,1, {...x, event:realFour['three'], 
+				team_a_difficulty:0, team_h_difficulty:0}, x)
+		}
 	})
 
 	// Loading Blank Fixtures
