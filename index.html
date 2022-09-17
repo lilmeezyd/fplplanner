@@ -84,7 +84,7 @@
 							</div>
 							<div class="free-transfers large">
 								<h4 title="Free Transfers large">FT</h4>
-								<span class="transfer-number"></span>
+								<span class="transfer-number">N/A</span>
 							</div>
 							<div class="cost-transfers large">
 								<h4 title="Transfer Cost large">TC</h4>
@@ -92,7 +92,7 @@
 							</div>
 							<div class="remain large">
 								<h4 class="large">Remaining Budget</h4>
-								<span class="remain-budget">0.5m</span>
+								<span class="remain-budget">N/A</span>
 							</div>
 						</div>
 					</div>
@@ -397,8 +397,9 @@
 				let eventztream = JSON.parse(sessionStorage.getItem('events'))
 				let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) > new Date())
 				//const { id, name, deadline_time } = filteredEvents
-				newPicks = []
-				gameweekPicks = []
+				let newPicks = []
+				let gameweekPicks = []
+				let bank, value
 				result.picks.forEach(x => {
 					playerState.players.forEach(y => {
 						if(y.id === x.element) {
@@ -406,9 +407,11 @@
 						}
 					})
 				})
+				bank = (result.entry_history.bank/10).toFixed(1)
+				value = (result.entry_history.value/10).toFixed(1)
 				filteredEvents.forEach(x => {
 					const { id, name, deadline_time } = x
-					const newResult = {id, name, deadline_time, newPicks, fts:1, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
+					const newResult = {id, name, deadline_time, newPicks, bank, value, fts:1, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
 					gameweekPicks.push(newResult)
 				})
 
@@ -442,7 +445,6 @@
 				sessionStorage.removeItem('managerHistory')
 				sessionStorage.setItem('managerHistory', JSON.stringify(newResult))
 				let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
-				console.log(retrievedHistory)
 			})
 			.catch(error => console.log('error', error));
 		}

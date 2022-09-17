@@ -3,6 +3,9 @@
 		padding: 0;
 		box-sizing: border-box;
 	}
+	html {
+		scroll-behavior: smooth;
+	}
 	body {
 		overflow-x: hidden;
 		font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, 'Arial', sans-serif;
@@ -267,26 +270,26 @@
 		}
 	}
 	.pitch {
-		min-height: 640px;
-		background: url('../static/pitch.png') center center / 956px 640px no-repeat;
+		min-height: 597px;
+		background: url('../static/pitch.png') center center / 892px 597px no-repeat;
 	}
 	/*.btn-details img {
 		width: 65px;
 	}*/
 	[size="image"] {
-		width: 65px;
+		width: 55px;
 		height: 65px;
 	}
 	@media(max-width: 620px) {
 		[size="image"] {
-			width: 55px;
+			width: 46.54px;
 			/*height: 72.5px;*/
 			height: 55px;
 		}
 	}
 	@media(max-width: 515px) {
 		[size="image"] {
-			width: 45px;
+			width: 38.08px;
 			/*height: 59.3px;*/
 			height: 45px;
 		}
@@ -299,7 +302,7 @@
 		display: flex;
 		max-width: 550px;
 		margin: auto;
-		margin-top: 0.9rem;
+		/*margin-top: 0.9rem;*/
 		padding-bottom: 0.3rem;
 		align-items: center;
 		justify-content: center;
@@ -401,7 +404,7 @@
 	
 	@media(max-width: 550px) {
 		.bench_element{
-			min-height: 13rem;
+			min-height: 7rem;
 		} 
 		/*.swap-button, .transfer-button, .player-info-button {
 			display: none;
@@ -473,8 +476,8 @@
 	.bench_unit_heading {
 		/*border: 1px solid black;*/
 		order: 2;
-		margin: 0.2rem 0;
-		padding-top: 0.3rem;
+		margin: 0.1rem 0;
+		padding: 0.1rem;
 		font-size: 0.8rem;
 		text-align: center;
 	}
@@ -484,7 +487,7 @@
 	.bean1 {
 		/*border: 1px solid black;*/
 		margin: 0 0.2rem;
-		padding: 0.4rem 0;
+		padding: 0.2rem 0;
 		border-radius: 0.4rem;
 	 	-webkit-box-align: stretch;
 	 	align-items: stretch;
@@ -1296,8 +1299,8 @@
 			min-height: 6.0rem;
 		}
 		.pitch {
-			min-height: 575.6px;
-			background: url('../static/pitch.png') center center / 760.9px 575.6px no-repeat;
+			min-height: 532.4px;
+			background: url('../static/pitch.png') center center / 760.9px 532.4px no-repeat;
 		}
 	}
 	@media(max-width: 515px) {
@@ -1311,8 +1314,8 @@
 			font-size: 0.6rem;
 		}
 		.pitch {
-			min-height: 515.86px;
-			background: url('../static/pitch.png') center center / 695.4px 515.86px no-repeat;
+			min-height: 462.66px;
+			background: url('../static/pitch.png') center center / 695.4px 462.66px no-repeat;
 		}
 	}
 	@media(max-width: 475px) {
@@ -1344,12 +1347,7 @@
 		.data_name, .data_points, .bean, .x-small  {
 			font-size: 0.5rem;
 		}
-		.pitch {
-			/*min-height: 468.86px;
-			background: url('../static/pitch.png') center center / 680.4px 468.86px no-repeat;
-			min-height: 323.889px;
-			background: url('../static/pitch.png') center center / 480.33px 323.889px no-repeat;*/
-		}
+		
 	}
 	@media(max-width: 374px) {
 		[size="element_container"], [size="pitch"] {
@@ -1358,10 +1356,6 @@
 		[size="pitch"] {
 			min-height: 4.0rem;
 		}
-		/*.pitch {
-			min-height: 294.44px;
-			background: url('../static/pitch.png') center center / 436.66px 294.44px no-repeat;
-		}*/
 	} 
 	.data_fixtures .next-fix {
 		background: ghostwhite;

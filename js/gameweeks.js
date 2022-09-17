@@ -318,23 +318,31 @@ function loadGameweeks() {
 
     function loadGameweek() {
         document.querySelector('.details-one').style.paddingBottom = '8px'
-        let chips = document.querySelectorAll('.btn-chip')
+        let chipsz = document.querySelectorAll('.btn-chip')
         let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
-        //let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
-        //let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
-        //let retrievedEvents = JSON.parse(sessionStorage.getItem('events'))
-                        // .filter(x => new Date(x.deadline_time) >new Date() && !x.is_current)
-        //console.log(retrievedPicks)
-        //console.log(retrievedHistory)
-        //console.log(retrievedEvents)
-        //retrievedEvents[0].history = retrievedHistory
-        //retrievedEvents[0].picks = retrievedPicks
-        //let retrievedGameweeks = [retrievedEvents[0], ...retrievedEvents.splice(1)]
-    // retrievedEvents.map(x => x.history = retrievedHistory)
-        //                    .map(x => x.picks = retrievedPicks)
+        let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
+        const { current, chips } = retrievedHistory
+        axe = current.splice(1)
+        let wildcard
+        if(chips.length > 0) {
+            wildcard = chips.filter(x => x.name === 'wildcard')[0].event
+        }
         
-        //console.log(retrievedEvents[0])
-        //console.log(retrievedGameweeks)                    
+        let ftz = 0
+        for(let i = 0; i <= axe.length-2; i++) {
+            if(axe[i].event_transfers === 0 && axe[i].event !== wildcard && axe[i+1].event_transfers === 0) {
+                ftz = 2
+            }
+            if(axe[i].event_transfers === 1 && ftz == 2) {
+                ftz = 2
+            }
+            if(axe[i].event_transfers === 2) {
+                ftz = 1
+            }
+        }
+
+       
+
         //let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
     /* let currentChip = currentWeek[0].wcard ? 'wcard' : currentWeek[0].fhit ? 'fhit' :
                         currentWeek[0].tcap ? 'tcap' : currentWeek[0].bbench ? 'bbench' : ""
@@ -411,6 +419,8 @@ function loadGameweeks() {
         }).forEach(a => {
             picks.push(...a.newPicks)
             oldTeam.push(...a.newPicks)
+            document.querySelector('.transfer-number').innerHTML = ftz
+            document.querySelector('.remain-budget').innerHTML = a.bank
             loadTeam()
             upload().loadPlayers()
         })
@@ -446,7 +456,6 @@ function loadGameweeks() {
     }
     }
     //setInterval(getTime, 1000)
-    console.log(curGameweek) 
 
     return { loadGameweek, curGameweek }
 }
