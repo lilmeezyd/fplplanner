@@ -24,10 +24,12 @@ function loadGameweeks() {
             "fts": 1,
             "rolledft": false,
             "tc": 0,
-            "wcard": false,
-            "bbench": false,
-            "fhit": false,
-            "tcap": false,
+            "chips": [
+                "wcard": false,
+                "bbench": false,
+                "fhit": false,
+                "tcap": false
+             ]
             "transfers": [{"transfersOut":[]}, {"transfersIn":[]}],
             "deadline" : 'Sat, 13 Aug 2022 11:30:00 GMT'
         },
@@ -321,7 +323,7 @@ function loadGameweeks() {
         let chipsz = document.querySelectorAll('.btn-chip')
         let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
-        const { current, chips } = retrievedHistory
+        /*const { current, chips } = retrievedHistory
         axe = current.splice(1)
         let wildcard
         if(chips.length > 0) {
@@ -339,7 +341,7 @@ function loadGameweeks() {
             if(axe[i].event_transfers === 2) {
                 ftz = 1
             }
-        }
+        }*/
 
        
 
@@ -419,7 +421,6 @@ function loadGameweeks() {
         }).forEach(a => {
             picks.push(...a.newPicks)
             oldTeam.push(...a.newPicks)
-            document.querySelector('.transfer-number').innerHTML = ftz
             document.querySelector('.remain-budget').innerHTML = a.bank
             loadTeam()
             upload().loadPlayers()

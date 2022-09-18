@@ -334,10 +334,16 @@
 	}
 	.element_container {
 		margin: 0 0.2rem;
-		padding: 0.4rem 0rem;
+		padding: 0.4rem 0.3rem;
 		border-radius: 0.4rem;
 		-webkit-box-align: stretch;
 		align-items: stretch;
+	}
+	@media (max-width: 545px) {
+		.element_container {
+			margin: 0 0.1rem;
+			padding: 0.4rem 0.1rem;
+		}
 	}
 	.element_container-two {
 		position: relative;

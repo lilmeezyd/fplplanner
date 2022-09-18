@@ -487,7 +487,7 @@ function upload() {
 					player.disabled = true
 					player.position = 0
 					player.multiplier = 1
-					enchGoalie = picks.filter(x => x.multiplier === 0 && x.element_type === 1).length
+					benchGoalie = picks.filter(x => x.multiplier === 0 && x.element_type === 1).length
 					nonBench = picks.filter(x => x.multiplier !== 0).length
 					playingGoalie = picks.filter(x => x.multiplier !== 0 && x.element_type === 1).length
 					playingDef = picks.filter(x => x.multiplier !== 0 && x.element_type === 2).length
@@ -522,11 +522,15 @@ function upload() {
 							player.is_captain = false
 							player.is_vice_captain = false
 						}
-						if(elementType === 1 && goalkeepers === 1) {
+						if(elementType === 1 && playingGoalie === 1) {
 							//
 							player.position = 12
 							player.multiplier = 0
+						} else {
+							player.position = 1
+							player.multiplier = 1
 						}
+
 						if((elementType === 2 && nonBench === 11) ||
 							(elementType === 2 && nonBench === 9 && playingDef === 4 && playingMid === 5) || 
 							(elementType === 2 && nonBench === 10 && playingGoalie === 0)||

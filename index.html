@@ -420,12 +420,6 @@
 				sessionStorage.setItem('managerPicks', JSON.stringify(gameweekPicks))
 				
 				loadGameweeks().loadGameweek()
-				//let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
-				//picks.length = 0
-				//oldTeam.length = 0
-				//picks.push(...retrievedPicks[0].newPicks)
-           		//oldTeam.push(...retrievedPicks[0].newPicks)
-				//loadTeam()
 			})
 			.catch(error => console.log('error', error));
 		}
@@ -440,10 +434,60 @@
 			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/history/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
+				let eventztream = JSON.parse(sessionStorage.getItem('events'))
+				let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) > new Date())
 				const { current, chips } = result
-				const newResult = {current, chips }
+				let wildcard = chips.some(x => x.name === 'wildcard') ? true : false
+				let bboost = chips.some(x => x.name === 'bboost') ? true : false
+				let freehit = chips.some(x => x.name === 'freehit') ? true : false
+				let tcap = chips.some(x => x.name === '3xc') ? true : false
+				let wEvent = wildcard === true ? chips.filter(x => x.name === 'wildcard')[0].event : 0
+				let bEvent = bboost === true ? chips.filter(x => x.name === 'bboost')[0].event : 0
+				let fEvent = freehit === true ? chips.filter(x => x.name === 'freehit')[0].event : 0
+				let tEvent = tcap === true ? chips.filter(x => x.name === '3xc')[0].event : 0
+				let fts
+				returnFt(1, current.length, 1, current)
+				rolledft = fts  === 1 ? false : true
+				function returnFt(a, b, c) {
+					if(a === b) {
+						return;
+					}
+					if(current[a-1].event_transfers === 0 && current[a].event_transfers === 0) {
+						if(current[a].event !== wEvent || current[a].event !== fEvent) {
+							c = 2
+						} else {
+							c = 1
+						}
+					}
+					if(current[a-1].event_transfers === 0 && current[a].event_transfers === 1) {
+						if(c === 2) c = 2
+
+					}
+					if(current[a].event_transfers > 1) c = 1
+					if(current[a].event_transfers_cost > 0) c = 1
+					fts = c
+					returnFt(a+1, b, c)
+				}
+				const newManagerHistory = []
+				const newHistory = {
+					tc: 0,
+					fts,
+					rolledft,
+					wildcard:{is_used:wildcard,event:wEvent},
+					bboost:{is_used:bboost, event:bEvent}, 
+					freehit:{is_used:freehit, event:fEvent}, 
+					tcap:{is_used:tcap, event:tEvent}}
+				filteredEvents.forEach(x => {
+					const { id, name, deadline_time } = x
+					const newResult = {id, name, deadline_time, ...newHistory }
+					newManagerHistory.push(newResult)
+				})	
+
+				document.querySelector('.transfer-number').innerHTML = fts	
+
+				console.log(`${wildcard}: ${bboost}: ${freehit}: ${tcap}`)
 				sessionStorage.removeItem('managerHistory')
-				sessionStorage.setItem('managerHistory', JSON.stringify(newResult))
+				sessionStorage.setItem('managerHistory', JSON.stringify(newManagerHistory))
 				let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
 			})
 			.catch(error => console.log('error', error));

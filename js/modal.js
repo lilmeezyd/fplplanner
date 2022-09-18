@@ -45,6 +45,7 @@ function loadResults() {
 function trackTransfers(curGameweek) {
 	console.log(curGameweek)
 	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
+	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
 	let a = retrievedGameweeks.filter(x => x.id === curGameweek)
 	let fts = a[0].fts
 	let playersInL = playersIn.length

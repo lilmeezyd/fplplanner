@@ -14,40 +14,39 @@ let tgoal1
 
 function loadTeam() {
 	document.querySelector('.player-num').innerHTML = picks.length
-	result = ''
+	result0 = ''
 	result1 = ''
 	result2 = ''
 	result3 = ''
 	result4 = ''
 	picks.forEach(a => {
 		let player = playerState.players.find(x => x.id === a.element)
-		if(player.element_type === 1 && (a.multiplier === 1 || a.multiplier === 2)) {
-			result += loadPlayer(a, player)
-			goal.innerHTML = result
+		if(player.element_type === 1 && (a.multiplier !== 0)) {
+			result0 += loadPlayer(a, player)
 		}
 		if(player.element_type === 1 && a.multiplier === 0) {
 			result4 += loadBench(a, player)
 		}
-		if(player.element_type === 2 && (a.multiplier === 1 || a.multiplier === 2)) {
+		if(player.element_type === 2 && (a.multiplier !== 0)) {
 			result1 += loadPlayer(a, player)
 		}
 		if(player.element_type === 2 && a.multiplier === 0) {
 			result4 += loadBench(a, player)
 		}
-		if(player.element_type === 3 && (a.multiplier === 1 || a.multiplier === 2)) {
+		if(player.element_type === 3 && (a.multiplier !== 0)) {
 			result2 += loadPlayer(a, player)
 		}
 		if(player.element_type === 3 && a.multiplier === 0) {
 			result4 += loadBench(a, player)
 		}
-		if(player.element_type === 4 && (a.multiplier === 1 || a.multiplier === 2)) {
+		if(player.element_type === 4 && (a.multiplier !== 0)) {
 			result3 += loadPlayer(a, player)
 		}
 		if(player.element_type === 4 && a.multiplier === 0) {
 			result4 += loadBench(a, player)
 		}
 	})
-	//goal.innerHTML = result
+	goal.innerHTML = result0
 	defend.innerHTML = result1
 	mid.innerHTML = result2
 	forw.innerHTML = result3
@@ -591,8 +590,7 @@ function nextFixtures(a) {
 					.splice(1,3)
 	let nextFourFix = fixtureState.fixtures
 					.filter(x => x.event > Math.max(...eventIds) && (x.team_a === a || x.team_h === a))
-					.splice(0,4)
-	console.log(nextFourFix)				
+					.splice(0,4)			
 	let newNextFour = []
 	//let newNextFourOne = []													
 
