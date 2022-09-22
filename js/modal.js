@@ -43,11 +43,11 @@ function loadResults() {
 }
 
 function trackTransfers(curGameweek) {
-	console.log(curGameweek)
 	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
 	let a = retrievedGameweeks.filter(x => x.id === curGameweek)
-	let fts = a[0].fts
+	let b = retrievedHistory.filter(x => x.id === curGameweek)
+	let fts = b[0].fts
 	let playersInL = playersIn.length
 	let playersOutL = playersOut.length
 	if(fts !== 'unlimited') {
@@ -59,7 +59,6 @@ function trackTransfers(curGameweek) {
 }
 
 function trackInRealtime(curGameweek) {
-	console.log(curGameweek)
 	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
 	let a = retrievedGameweeks.filter(x => x.id === curGameweek)
 	let outLength = a[0].transfers[0].transfersOut.length

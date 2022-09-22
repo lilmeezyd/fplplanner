@@ -409,9 +409,10 @@
 				})
 				bank = (result.entry_history.bank/10).toFixed(1)
 				value = (result.entry_history.value/10).toFixed(1)
-				filteredEvents.forEach(x => {
+				filteredEvents.forEach((x, key) => {
 					const { id, name, deadline_time } = x
-					const newResult = {id, name, deadline_time, newPicks, bank, value, fts:1, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
+					const brandNewPicks = key === 0 ? newPicks : []
+					const newResult = {id, name, deadline_time, newPicks:brandNewPicks, bank, value, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
 					gameweekPicks.push(newResult)
 				})
 
@@ -548,6 +549,7 @@
 				let retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
 				playerId = retrievedManager.id+''
 				getManagerPicks()
+				getManagerHistory()
 			}
 			if(retrievedHistory === null) {
 				console.log(null)

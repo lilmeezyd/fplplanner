@@ -108,7 +108,6 @@ function loadTeam() {
 	Array.from(playerinfo).forEach(x => {
 		x.onclick = function() {
 			playerId = +x.parentElement.id
-			console.log(playerId)
 			setPlayerData(playerId)
 			document.querySelector('.playerpopup').innerHTML = loadInfo(playerId)
 			document.querySelector('.playerpopup').style.display = 'block'
@@ -488,6 +487,7 @@ function changeBenchOrder() {
 
 function loadPlayer(a, player) {
 	let teamObj = teamState.teams.find(x => x.id === player.team)
+	let news = player.chance_of_playing_next_round
 	let teamId = player.team
 	let team_name = teamObj.name
 	let positionObj = elementTypesState.elementTypes.find(x => x.id === player.element_type)
@@ -495,6 +495,10 @@ function loadPlayer(a, player) {
 		`./static/shirt_${teamObj.code}-66.webp`
 	captain = a.is_captain === true ? returncaptain() : 
 	a.is_vice_captain === true  ? returnvcaptain() : ""
+	let backgroundColor = news == 0 ? 'darkred' : news == 25 ? 'darkorange' :
+			news == 50 ? 'orange' : news == 75 ? 'yellow' : 'rgba(0,0,55,0.9)'
+	let color = news == 25 ? 'rgba(0,0,55,0.9)' :
+			news == 50 ? 'rgba(0,0,55,0.9)' : news == 75 ? 'rgba(0,0,55,0.9)' :'white'		
 	return `
 	<div class="pitch_unit">
 	<div class="element_container">
@@ -502,7 +506,8 @@ function loadPlayer(a, player) {
 										<button type="button" class="btn-details">
 											<img src="${player.image}" size="image">
 											<div class="details-cont">
-												<div class="data_name">${player.web_name}</div>
+												<div class="data_name"
+												style="background:${backgroundColor}; color:${color};">${player.web_name}</div>
 												<div class="data_fixtures x-small">
 												${nextFixtures(teamId)}
 												</div>
@@ -532,6 +537,7 @@ function loadPlayer(a, player) {
 
 function loadBench(a, player) {
 	let teamObj = teamState.teams.find(x => x.id === player.team)
+	let news = player.chance_of_playing_next_round
 	let teamId = player.team
 	let team_name = teamObj.name
 	let short_name = teamObj.short_name
@@ -539,6 +545,10 @@ function loadBench(a, player) {
 	player.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
 		`./static/shirt_${teamObj.code}-66.webp`
 	order = a.position === 13 ? 'one' : a.position === 14 ? 'two' : a.position === 15 ? 'three' : a.position === 12 ? 'goalie' : ''
+	let backgroundColor = news == 0 ? 'darkred' : news == 25 ? 'darkorange' :
+			news == 50 ? 'orange' : news == 75 ? 'yellow' : 'rgba(0,0,55,0.9)'
+	let color = news == 25 ? 'rgba(0,0,55,0.9)' :
+			news == 50 ? 'rgba(0,0,55,0.9)' : news == 75 ? 'rgba(0,0,55,0.9)' :'white'		
 	return `<div class="bench_unit ${order}" id="${a.position}" size='pitch'>
 								<h3 class="bench_unit_heading">
 									<span class="bean tooltip">${positionObj.singular_name_short}</span>
@@ -548,7 +558,7 @@ function loadBench(a, player) {
 										<button type="button" class="btn-details">
 											<img src="${player.image}" size="image">
 											<div class="details-cont">
-												<div class="data_name">${player.web_name}</div>
+												<div class="data_name" style="background:${backgroundColor}; color:${color};">${player.web_name}</div>
 												<div class="data_fixtures x-small">
 												${nextFixtures(teamId)}
 												</div>
@@ -580,16 +590,16 @@ function nextFixtures(a) {
 	let resultFix = ''
 	let resultFour = ''
 	eventztream = JSON.parse(sessionStorage.getItem('events'))
-	filteredEvents = eventztream.filter(x => new Date(x.deadline_time) < new Date())
+	filteredEvents = eventztream.filter(x => new Date(x.deadline_time) < new Date(weekNdeadline[0]))
 	newEventId = filteredEvents.length + 4
 	let nextFix = fixtureState.fixtures
-					.filter(x => x.event > Math.max(...eventIds)  && (x.team_a === a || x.team_h === a))
+					.filter(x => x.event > weekNdeadline[1]-1  && (x.team_a === a || x.team_h === a))
 					.splice(0,1)
 	let nextFour = fixtureState.fixtures
-					.filter(x => x.event > Math.max(...eventIds) && (x.team_a === a || x.team_h === a))
+					.filter(x => x.event > weekNdeadline[1]-1 && (x.team_a === a || x.team_h === a))
 					.splice(1,3)
 	let nextFourFix = fixtureState.fixtures
-					.filter(x => x.event > Math.max(...eventIds) && (x.team_a === a || x.team_h === a))
+					.filter(x => x.event > weekNdeadline[1]-1 && (x.team_a === a || x.team_h === a))
 					.splice(0,4)			
 	let newNextFour = []
 	//let newNextFourOne = []													

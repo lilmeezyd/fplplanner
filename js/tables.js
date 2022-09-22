@@ -583,7 +583,7 @@ function upload() {
 									playersIn.push(player)
 								}
 								loadTransfersIn()
-								trackTransfers(loadGameweeks().curGameweek)
+								//trackTransfers(loadGameweeks().curGameweek)
 
 								picks.push(player)
 								document.querySelector('.message').style.display = 'block'
@@ -620,6 +620,7 @@ function upload() {
 
 		function loadBody(a) {
 			let teamObj = teamState.teams.find(x => x.id === a.team)
+			let news = a. chance_of_playing_next_round
 			let short_name = teamObj.short_name
 			let team_name = teamObj.name
 			let positionObj = elementTypesState.elementTypes.find(x => x.id === a.element_type)
@@ -627,9 +628,15 @@ function upload() {
 			let pos_name = positionObj.singular_name
 			a.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
 			`./static/shirt_${teamObj.code}-66.webp`
+			let backgroundColor = news == 0 ? 'darkred' : news == 25 ? 'darkorange' :
+			news == 50 ? 'orange' : news == 75 ? 'yellow' : 'white'
+			let color = news == 0 ? 'white' : news == 25 ? 'white' :
+			news == 50 ? 'white' : 'black'
 			return `<tr class="player-tbh">
 						<td class="info">
-							<button class="player-info-button-table">
+							<button
+							style="background: ${backgroundColor}; color:${color}"
+									 class="player-info-button-table">
 								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-square" viewBox="0 0 16 16">
 								  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
 								  <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
