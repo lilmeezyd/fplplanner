@@ -47,111 +47,179 @@ function enableOtherChips(a) {
 
 
 function playWildcard() {
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-	currentFts = currentWeek[0].fts
-	rolled = currentWeek[0].rolledft
-	currentWeek[0].fts = 'unlimited'
-	currentWeek[0].wcard = true
-	currentWeek[0].rolledft = false
-	sessionStorage.setItem('gameweeks', JSON.stringify(retrievedGameweeks))
-	loadGameweek()
+	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+  let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
+	currentHistory[0].wildcard.is_used = true
+	currentHistory[0].wildcard.event = weekNdeadline[1]
+	//currentWeek[0].fts = 'unlimited'
+	//currentWeek[0].wcard = true
+	//currentWeek[0].rolledft = false
+	for(let i=0; i<retrievedHistory.length; i++) {
+        if(i>=index) {
+            retrievedHistory[i].wildcard.is_used = true
+            retrievedHistory[i].wildcard.event = weekNdeadline[1]
+        } else {
+            retrievedHistory[i].wildcard.is_used = false
+            retrievedHistory[i].wildcard.event = null
+           }
+      }
+	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
+	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
+	loadTeam()
 }
 
 function cancelWildcard() {
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-	currentWeek[0].wcard = false
-	currentWeek[0].fts = currentFts 
-	currentWeek[0].rolledft = rolled
-	index = retrievedGameweeks.findIndex(x => x.gameweek === curGameweek)
-        for(let i=0; i<retrievedGameweeks.length; i++) {
+	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+  let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
+	currentHistory[0].wildcard.is_used = false
+	currentHistory[0].wildcard.event = null
+	//currentWeek[0].fts = currentFts 
+	//currentWeek[0].rolledft = rolled
+	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
+        for(let i=0; i<retrievedHistory.length; i++) {
         if(i>=index) {
-              retrievedGameweeks[i].wCardUsed = false
+              retrievedHistory[i].wildcard.is_used = false
+              retrievedHistory[i].wildcard.event = null
         }
     }
-	sessionStorage.setItem('gameweeks', JSON.stringify(retrievedGameweeks))
-	loadGameweek()
+	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
+	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
+	loadTeam()
 }
 
 function playFreeHit() {
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-	currentFts = currentWeek[0].fts
-	rolled = currentWeek[0].rolledft
-	currentWeek[0].fts = 'unlimited'
-	currentWeek[0].fhit = true
-	currentWeek[0].rolledft = false
-	index = retrievedGameweeks.findIndex(x => x.gameweek === curGameweek - 1)
-	prevTeam = retrievedGameweeks.find(x => x.gameweek === curGameweek - 1)
-	newIndex = index+2
-	for(let i = 0; i < retrievedGameweeks.length; i++) {
+  trackInRealtime(weekNdeadline[1])
+  trackTransfers(weekNdeadline[1])
+	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+  let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
+	//currentFts = currentWeek[0].fts
+	//rolled = currentWeek[0].rolledft
+	//currentWeek[0].fts = 'unlimited'
+	currentHistory[0].freehit.is_used = true
+	currentHistory[0].freehit.event = weekNdeadline[1]
+	//currentHistory[0].rolledft = false
+	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
+	prevIndex = retrievedPicks.findIndex(x => x.id === weekNdeadline[1] - 1)
+	prevTeam = retrievedPicks.find(x => x.id === weekNdeadline[1] - 1).newPicks
+	newIndex = prevIndex+2
+	for(let i = 0; i < retrievedPicks.length; i++) {
 		if(i===newIndex) {
-			//retrievedGameweeks[i].team.length = 0
-			//retrievedGameweeks[i].team.push(...prevTeam)
-			console.log(retrievedGameweeks[i].team)
+			retrievedPicks[i].newPicks.length = 0
+			retrievedPicks[i].newPicks.push(...prevTeam)
 		}
 	}
-	sessionStorage.setItem('gameweeks', JSON.stringify(retrievedGameweeks))
-	loadGameweek()
+	for(let i=0; i<retrievedHistory.length; i++) {
+        if(i>=index) {
+              retrievedHistory[i].freehit.is_used = true
+              retrievedHistory[i].freehit.event = weekNdeadline[1]
+        } else {
+              retrievedHistory[i].freehit.is_used = false
+              retrievedHistory[i].freehit.event = null
+            }
+      }    
+	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
+	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
+	loadTeam()
 }
 
 function cancelFreeHit() {
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-	currentWeek[0].fhit = false
-	currentWeek[0].fts = currentFts 
-	currentWeek[0].rolledft = rolled
-	index = retrievedGameweeks.findIndex(x => x.gameweek === curGameweek)
-        for(let i=0; i<retrievedGameweeks.length; i++) {
-        if(i>=index) {
-              retrievedGameweeks[i].fhitUsed = false
-        }
-    }
-	sessionStorage.setItem('gameweeks', JSON.stringify(retrievedGameweeks))
-	loadGameweek()
+  trackTransfers(weekNdeadline[1]) 
+	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+  let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
+	currentHistory[0].freehit.is_used = false
+	currentHistory[0].freehit.event = null
+	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
+	prevIndex = retrievedPicks.findIndex(x => x.id === weekNdeadline[1])
+	prevTeam = retrievedPicks.find(x => x.id === weekNdeadline[1]).newPicks
+
+	for(let i = 0; i < retrievedPicks.length; i++) {
+		if(i>index) {
+			retrievedPicks[i].newPicks.length = 0
+			retrievedPicks[i].newPicks.push(...prevTeam)
+		}
+	}
+  for(let i=0; i<retrievedHistory.length; i++) {
+  if(i>=index) {
+        retrievedHistory[i].freehit.is_used = false
+        retrievedHistory[i].freehit.event = null
+  }
+    }  
+	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
+	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
+	loadTeam()
 }
 function playBboost() {
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-	currentWeek[0].bbench = true
+	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
+	currentHistory[0].bboost.is_used = true
+	currentHistory[0].bboost.event = weekNdeadline[1]
 	bench.classList.add('bench_boost')
 	bench.classList.remove('bench')
-	sessionStorage.setItem('gameweeks', JSON.stringify(retrievedGameweeks))
-	loadGameweek()
+	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
+	 for(let i=0; i<retrievedHistory.length; i++) {
+        if(i>=index) {
+              retrievedHistory[i].bboost.is_used = true
+              retrievedHistory[i].bboost.event = weekNdeadline[1]
+        } else {
+              retrievedHistory[i].bboost.is_used = false
+              retrievedHistory[i].bboost.event = null
+            }
+      }
+	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
+	loadTeam()
 }
 function cancelBboost(){
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-	currentWeek[0].bbench = false
+	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
+	currentHistory[0].bboost.is_used = false
+	currentHistory[0].bboost.event = null
 	bench.classList.add('bench')
 	bench.classList.remove('bench_boost')
-	index = retrievedGameweeks.findIndex(x => x.gameweek === curGameweek)
-        for(let i=0; i<retrievedGameweeks.length; i++) {
+	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
+        for(let i=0; i<retrievedHistory.length; i++) {
         if(i>=index) {
-              retrievedGameweeks[i].bbenchUsed = false
+              retrievedHistory[i].bboost.is_used = false
+              retrievedHistory[i].bboost.event = null
         }
     }
-	sessionStorage.setItem('gameweeks', JSON.stringify(retrievedGameweeks))
-	loadGameweek()
+	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
+	loadTeam()
 }
 function playTcap() {
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-	currentWeek[0].tcap = true
-	sessionStorage.setItem('gameweeks', JSON.stringify(retrievedGameweeks))
-	loadGameweek()
+	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
+	currentHistory[0].tcap.is_used = true
+	currentHistory[0].tcap.event = weekNdeadline[1]
+	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
+	for(let i=0; i<retrievedHistory.length; i++) {
+        if(i>=index) {
+              retrievedHistory[i].tcap.is_used = true
+              retrievedHistory[i].tcap.event = weekNdeadline[1]
+        } else {
+              retrievedHistory[i].tcap.is_used = false
+              retrievedHistory[i].tcap.event = null
+            }
+      }
+
+	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
+	loadTeam()
 }
 function cancelTcap() {
-	let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-	let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
-	currentWeek[0].tcap = false
-	index = retrievedGameweeks.findIndex(x => x.gameweek === curGameweek)
-        for(let i=0; i<retrievedGameweeks.length; i++) {
+	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
+	currentHistory[0].tcap.is_used = false
+	currentHistory[0].tcap.event = null
+	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
+        for(let i=0; i<retrievedHistory.length; i++) {
         if(i>=index) {
-              retrievedGameweeks[i].tCapUsed = false
+              retrievedHistory[i].tcap.is_used = false
+              retrievedHistory[i].tcap.event = null
         }
     }
-	sessionStorage.setItem('gameweeks', JSON.stringify(retrievedGameweeks))
-	loadGameweek()
+	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
+	loadTeam()
 }

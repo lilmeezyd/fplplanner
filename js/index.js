@@ -485,6 +485,8 @@ function changeBenchOrder() {
 }
 
 function loadPlayer(a, player) {
+	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
 	let teamObj = teamState.teams.find(x => x.id === player.team)
 	let news = player.chance_of_playing_next_round
 	let teamId = player.team
@@ -492,8 +494,10 @@ function loadPlayer(a, player) {
 	let positionObj = elementTypesState.elementTypes.find(x => x.id === player.element_type)
 	player.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
 		`./static/shirt_${teamObj.code}-66.webp`
-	captain = a.is_captain === true ? returncaptain() : 
-	a.is_vice_captain === true  ? returnvcaptain() : ""
+	captain = a.is_captain === true && currentHistory[0].tcap.event !== weekNdeadline[1] ? returncaptain() : 
+	a.is_vice_captain === true && currentHistory[0].tcap.event !== weekNdeadline[1]  ? returnvcaptain() : 
+	a.is_captain === true && currentHistory[0].tcap.event === weekNdeadline[1] ? returnTcaptain() :
+	a.is_vice_captain === true && currentHistory[0].tcap.event === weekNdeadline[1] ? returnvTcaptain() :""
 	let backgroundColor = news == 0 ? 'darkred' : news == 25 ? 'darkorange' :
 			news == 50 ? 'orange' : news == 75 ? 'yellow' : 'rgba(0,0,55,0.9)'
 	let color = news == 25 ? 'rgba(0,0,55,0.9)' :

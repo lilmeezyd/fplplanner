@@ -338,7 +338,6 @@
 		let showModal = false
 		const picks = []
    		const oldTeam = []
-   		const realPicks = []
 		closeModal.onclick = function() {
 			showModal = !showModal
 		}
@@ -399,6 +398,7 @@
 				let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) > new Date())
 
 				let newPicks = []
+   				const realPicks = []
 				let gameweekPicks = []
 				let bank, value
 				result.picks.forEach(x => {
@@ -421,6 +421,8 @@
 				
 				sessionStorage.removeItem('managerPicks')
 				sessionStorage.setItem('managerPicks', JSON.stringify(gameweekPicks))
+				sessionStorage.removeItem('realPicks')
+				sessionStorage.setItem('realPicks', JSON.stringify(realPicks))
 				
 				loadGameweeks().loadGameweek()
 			})
@@ -549,8 +551,8 @@
 			} else {
 				let retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
 				playerId = retrievedManager.id+''
-				getManagerPicks()
-				getManagerHistory()
+				//getManagerPicks()
+				//getManagerHistory()
 			}
 			if(retrievedHistory === null) {
 				console.log(null)

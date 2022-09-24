@@ -104,6 +104,7 @@ function loadGameweeks() {
     function resetTeam() {
         let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
+        let realPicks = JSON.parse(sessionStorage.getItem('realPicks'))
         let newWeek = retrievedGameweeks.filter(x => x.id === curGameweek)
         let previousWeek = retrievedGameweeks.filter(x => x.id === curGameweek-1)
         let index = retrievedGameweeks.findIndex(x => x.id === curGameweek)
@@ -112,6 +113,7 @@ function loadGameweeks() {
             newWeek[0].transfers[0].transfersOut.length = 0
             newWeek[0].transfers[1].transfersIn.length = 0
             newWeek[0].newPicks.push(...realPicks)
+            transferCost.innerHTML = 0
 
             //Added piece of code
             for(let i=0; i<retrievedGameweeks.length; i++) {
@@ -128,6 +130,7 @@ function loadGameweeks() {
             newWeek[0].transfers[0].transfersOut.length = 0
             newWeek[0].transfers[1].transfersIn.length = 0
             newWeek[0].newPicks.push(...previousWeek[0].newPicks)
+            transferCost.innerHTML = 0
             for(let i=0; i<retrievedGameweeks.length; i++) {
                 if(i>index) {
                     retrievedGameweeks[i].newPicks.length = 0
@@ -284,11 +287,11 @@ function loadGameweeks() {
                     if(i>=index) {
                         if(previousHistory[0].bboost.is_used === true) {
                             retrievedHistory[i].bboost.is_used = true
-                            //retrievedGameweeks[i].bbench = false
+                            //retrievedHistory[i].bboost.event = curGameweek
                         }
                         if(previousHistory[0].tcap.is_used === true) {
                             retrievedHistory[i].tcap.is_used = true
-                            //retrievedGameweeks[i].tcap = false
+                            //retrievedHistory[i].tcap.event = curGameweek
                         }
                     }
                 }
@@ -296,7 +299,7 @@ function loadGameweeks() {
             
             if(pTransfercount !== nTransfercount || (previousHistory[0].wildcard.event === curGameweek-1) || previousHistory[0].freehit.event === curGameweek-1) {
                 let index = retrievedHistory.findIndex(x => x.id === curGameweek)
-                let prevTeam = retrievedHistory.find(x => x.id === curGameweek - 2)
+                let prevTeam = retrievedGameweeks.find(x => x.id === curGameweek - 2)
                 for(let i=0; i<retrievedHistory.length; i++) {
                 if(i>=index) {
                     retrievedGameweeks[i].newPicks.length = 0
@@ -305,11 +308,11 @@ function loadGameweeks() {
                     retrievedHistory[i].fts = 1
                     if(previousHistory[0].wildcard.is_used === true) {
                         retrievedHistory[i].wildcard.is_used = true
-                        //retrievedGameweeks[i].wcard = false
+                        //retrievedHistory[i].wildcard.event = curGameweek
                     }
                     if(previousHistory[0].freehit.is_used === true) {
                         retrievedHistory[i].freehit.is_used = true
-                        //retrievedGameweeks[i].fhit = false
+                        //retrievedHistory[i].freehit.event = curGameweek
                         retrievedGameweeks[i].newPicks.push(...prevTeam.newPicks)
                     }
                 }
@@ -344,39 +347,54 @@ function loadGameweeks() {
         document.querySelector('.details-one').style.paddingBottom = '8px'
         let chipsz = document.querySelectorAll('.btn-chip')
         let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
-        let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
+        let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+        let currentHistory = retrievedHistory.filter(x => x.id === curGameweek)
 
         playersIn.length = 0
         playersOut.length = 0
 
-        let currentHistory = retrievedHistory.filter(x => x.id === curGameweek)
-    /* let currentChip = currentWeek[0].wcard ? 'wcard' : currentWeek[0].fhit ? 'fhit' :
-                        currentWeek[0].tcap ? 'tcap' : currentWeek[0].bbench ? 'bbench' : ""
+        let currentChip = currentHistory[0].wildcard.event === curGameweek ? 'wcard' : 
+                         currentHistory[0].freehit.event === curGameweek ? 'fhit' :
+                         currentHistory[0].tcap.event === curGameweek ? 'tcap' : 
+                         currentHistory[0].bboost.event === curGameweek ? 'bbench' : ""
         let usedChips = []
-        currentWeek[0].wcardUsed ? usedChips.push('wcard') : usedChips.push()
-        currentWeek[0].fhitUsed ? usedChips.push('fhit') : usedChips.push()
-        currentWeek[0].tcapUsed ? usedChips.push('tcap') : usedChips.push()
-        currentWeek[0].bbenchUsed ? usedChips.push('bbench') : usedChips.push()
+        currentHistory[0].wildcard.is_used === true ? usedChips.push('wcard') : usedChips.push()
+        currentHistory[0].freehit.is_used === true ? usedChips.push('fhit') : usedChips.push()
+        currentHistory[0].tcap.is_used === true ? usedChips.push('tcap') : usedChips.push()
+        currentHistory[0].bboost.is_used === true ? usedChips.push('bbench') : usedChips.push()
         
         document.querySelector('.transfer-rows').classList.remove('show')
-        currentWeek[0].wcardUsed === true ? wcard.innerHTML = 'Wildcard Played' : wcard.innerHTML = 'Wildcard'
-        currentWeek[0].wcardUsed === true ? wcard.classList.add('chip-inactive') : wcard.classList.remove('chip-inactive')
-        currentWeek[0].wcardUsed === true ? wcard.setAttribute('disabled', true) : wcard.removeAttribute('disabled')
 
-        currentWeek[0].fhitUsed === true ? fhit.innerHTML = 'FreeHit Played' : fhit.innerHTML = 'FreeHit'
-        currentWeek[0].fhitUsed === true ? fhit.classList.add('chip-inactive') : fhit.classList.remove('chip-inactive')
-        currentWeek[0].fhitUsed === true ? fhit.setAttribute('disabled', true) : fhit.removeAttribute('disabled')
+        //Controlling the wildcard button
+        currentHistory[0].wildcard.is_used === true && currentHistory[0].wildcard.event !== curGameweek ? 
+        wcard.innerHTML = `<div>Wildcard Played</div>
+        <div class="gw">GW&nbsp;${currentHistory[0].wildcard.event}</div>` : wcard.innerHTML = 'Wildcard'
+        currentHistory[0].wildcard.is_used === true && currentHistory[0].wildcard.event !== curGameweek ? wcard.classList.add('chip-inactive') : wcard.classList.remove('chip-inactive')
+        currentHistory[0].wildcard.is_used === true && currentHistory[0].wildcard.event !== curGameweek ? wcard.setAttribute('disabled', true) : wcard.removeAttribute('disabled')
 
-        currentWeek[0].bbenchUsed === true ? bbench.innerHTML = 'Bench Boost Played' : bbench.innerHTML = 'Bench Boost'
-        currentWeek[0].bbenchUsed === true ? bbench.classList.add('chip-inactive') : bbench.classList.remove('chip-inactive')
-        currentWeek[0].bbenchUsed === true ? bbench.setAttribute('disabled', true) : bbench.removeAttribute('disabled')
+        //Controlling the freehit button
+        currentHistory[0].freehit.is_used === true && currentHistory[0].freehit.event !== curGameweek ? 
+        fhit.innerHTML = `<div>FreeHit Played</div>
+        <div class="gw">GW&nbsp;${currentHistory[0].freehit.event}</div>` : fhit.innerHTML = 'FreeHit'
+        currentHistory[0].freehit.is_used === true && currentHistory[0].freehit.event !== curGameweek ? fhit.classList.add('chip-inactive') : fhit.classList.remove('chip-inactive')
+        currentHistory[0].freehit.is_used === true && currentHistory[0].freehit.event !== curGameweek ? fhit.setAttribute('disabled', true) : fhit.removeAttribute('disabled')
 
-        currentWeek[0].tcapUsed === true ? tcap.innerHTML = 'Triple Captain Played' : tcap.innerHTML = 'Triple Captain'
-        currentWeek[0].tcapUsed === true ? tcap.classList.add('chip-inactive') : tcap.classList.remove('chip-inactive')
-        currentWeek[0].tcapUsed === true ? tcap.setAttribute('disabled', true) : tcap.removeAttribute('disabled')
+        //Controlling the bboost button
+        currentHistory[0].bboost.is_used === true && currentHistory[0].bboost.event !== curGameweek ? 
+        bbench.innerHTML = `<div>Bench Boost Played</div>
+        <div class="gw">GW&nbsp;${currentHistory[0].bboost.event}</div>` : bbench.innerHTML = 'Bench Boost'
+        currentHistory[0].bboost.is_used === true && currentHistory[0].bboost.event !== curGameweek ? bbench.classList.add('chip-inactive') : bbench.classList.remove('chip-inactive')
+        currentHistory[0].bboost.is_used === true && currentHistory[0].bboost.event !== curGameweek ? bbench.setAttribute('disabled', true) : bbench.removeAttribute('disabled')
+
+        //Controlling the tcap
+        currentHistory[0].tcap.is_used === true && currentHistory[0].tcap.event !== curGameweek ? 
+        tcap.innerHTML = `Triple Captain Played
+        <div class="gw">GW&nbsp;${currentHistory[0].tcap.event}</div>` : tcap.innerHTML = 'Triple Captain'
+        currentHistory[0].tcap.is_used === true && currentHistory[0].tcap.event !== curGameweek ? tcap.classList.add('chip-inactive') : tcap.classList.remove('chip-inactive')
+        currentHistory[0].tcap.is_used === true && currentHistory[0].tcap.event !== curGameweek ? tcap.setAttribute('disabled', true) : tcap.removeAttribute('disabled')
         
-        currentWeek[0].bbench ? bench.classList.add('bench_boost') : bench.classList.remove('bench_boost')
-        currentWeek[0].bbench ? bench.classList.remove('bench') : bench.classList.add('bench')
+        currentHistory[0].bboost.event === curGameweek ? bench.classList.add('bench_boost') : bench.classList.remove('bench_boost')
+        currentHistory[0].bboost.event === curGameweek ? bench.classList.remove('bench') : bench.classList.add('bench')
 
         Array.from(chips)
         .filter(x => usedChips.includes(x.getAttribute('id')))
@@ -398,15 +416,17 @@ function loadGameweeks() {
         })
 
 
+        
+        
+       /* if(currentWeek[0].fts === 'unlimited') transferNumber.innerHTML = '∞'*/
         trackInRealtime(curGameweek)
-        trackTransfers()
-        if(currentWeek[0].fts === 'unlimited') transferNumber.innerHTML = '∞'*/
-        trackInRealtime(curGameweek)
+        trackTransfers(curGameweek)
+        document.querySelector('.transfer-number').innerHTML = currentHistory[0].fts  
+
         if(curGameweek === Math.max(...eventIds) + 1) {
             document.querySelector('#prevGameweek').style.visibility = 'hidden'
         } else {
             document.querySelector('#prevGameweek').style.visibility = 'visible'
-            document.querySelector('.transfer-number').innerHTML = currentHistory[0].fts  
             //transferNumber.innerHTML = currentWeek[0].fts === 'unlimited' ? '∞' : currentWeek[0].fts
         }
         /*if((curGameweek*gameweekSize) === retrievedGameweeks.length) {

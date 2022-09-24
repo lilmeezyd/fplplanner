@@ -50,11 +50,14 @@ function trackTransfers(curGameweek) {
 	let fts = b[0].fts
 	let playersInL = playersIn.length
 	let playersOutL = playersOut.length
-	if(b[0].wildcard.event !== curGameweek || a[0].freehit.event !== curGameweek) {
+	if(b[0].wildcard.event !== curGameweek || b[0].freehit.event !== curGameweek) {
 		pointsCost = (fts - playersInL)*4
 		transferCost.innerHTML = pointsCost > 0 ? 0 : pointsCost
-	} else {
-		transferCost.innerHTML = 0
+	} 
+
+	if(b[0].wildcard.event === curGameweek || b[0].freehit.event === curGameweek) {
+		pointsCost = (1000 - playersInL)*4
+		transferCost.innerHTML = pointsCost >= 0 ? 0 : pointsCost
 	}
 }
 
