@@ -111,7 +111,16 @@ function loadGameweeks() {
             newWeek[0].newPicks.length = 0
             newWeek[0].transfers[0].transfersOut.length = 0
             newWeek[0].transfers[1].transfersIn.length = 0
-            newWeek[0].newPicks.push(...teamz)
+            newWeek[0].newPicks.push(...realPicks)
+
+            //Added piece of code
+            for(let i=0; i<retrievedGameweeks.length; i++) {
+                if(i>index) {
+                    retrievedGameweeks[i].newPicks.length = 0
+                    retrievedGameweeks[i].transfers[0].transfersOut.length = 0
+                    retrievedGameweeks[i].transfers[1].transfersIn.length = 0
+                }
+            }
             sessionStorage.setItem('managerPicks', JSON.stringify(retrievedGameweeks))
             loadGameweek()
         } else {
@@ -136,7 +145,7 @@ function loadGameweeks() {
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
         const newWeekIndex = retrievedGameweeks.findIndex(x => x.id === curGameweek)
         const newHistoryIndex = retrievedHistory.findIndex(x => x.id === curGameweek)
-        //remainingBudget < 0 || 
+
         if(picks.length < 15) {
             console.log(`Team not full or Budget not enough`)
         } else { 
@@ -175,10 +184,7 @@ function loadGameweeks() {
                 let sideArray = []
                 newWeek[0].newPicks.length = 0
                 newWeek[0].newPicks.push(...picks)
-                /*let playersOutSet = new Set(playersOut)
-                let playersOutSetArray = Array.from(playersOutSet)
-                let playersInSet = new Set(playersIn)
-                let playersInSetArray = Array.from(playersInSet)*/
+
                 if(newWeek[0].transfers[0].transfersOut.length === playersOut.length) {
                     sideArray.push()
                 }
@@ -272,7 +278,7 @@ function loadGameweeks() {
            const newWeek = retrievedGameweeks.filter(x => x.id === curGameweek)
            const newHistory = retrievedHistory.filter(x => x.id === curGameweek)
 
-           if(previousHistory[0].bboost.is_used === true || previousHistory[0].tcap.is_used === true) {
+           if(previousHistory[0].bboost.event === curGameweek-1 || previousHistory[0].tcap.event === curGameweek-1) {
                 let index = retrievedHistory.findIndex(x => x.id === curGameweek)
                 for(let i=0; i<retrievedHistory.length; i++) {
                     if(i>=index) {
@@ -288,7 +294,7 @@ function loadGameweeks() {
                 }
             }
             
-            if(pTransfercount !== nTransfercount || previousHistory[0].wildcard.is_used === true || previousHistory[0].freehit.is_used === true) {
+            if(pTransfercount !== nTransfercount || (previousHistory[0].wildcard.event === curGameweek-1) || previousHistory[0].freehit.event === curGameweek-1) {
                 let index = retrievedHistory.findIndex(x => x.id === curGameweek)
                 let prevTeam = retrievedHistory.find(x => x.id === curGameweek - 2)
                 for(let i=0; i<retrievedHistory.length; i++) {
@@ -310,8 +316,6 @@ function loadGameweeks() {
             }
             }
 
-            //newWeek[0].newPicks.length = 0
-            //newWeek[0].newPicks.push(...picks)
             newWeek[0].newPicks.length === 0 ? newWeek[0].newPicks.push(...picks) : newWeek[0].newPicks.push()
             previousHistory[0].rolledft === true ? newHistory[0].fts = 2 : newHistory[0].fts = 1
             if(previousHistory[0].rolledft === true) {
@@ -319,8 +323,6 @@ function loadGameweeks() {
             }
 
             sessionStorage.removeItem('managerPicks')
-           // retrievedGameweeks.splice(previousWeekIndex,1, previousWeek[0], newWeek[0])
-            //retrievedHistory.splice(previousHistoryIndex,1, previousHistory[0], newHistory[0])
             sessionStorage.setItem('managerPicks', JSON.stringify(retrievedGameweeks))
             sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 
@@ -347,7 +349,7 @@ function loadGameweeks() {
         playersIn.length = 0
         playersOut.length = 0
 
-        //let currentWeek = retrievedGameweeks.filter(x => x.gameweek === curGameweek)
+        let currentHistory = retrievedHistory.filter(x => x.id === curGameweek)
     /* let currentChip = currentWeek[0].wcard ? 'wcard' : currentWeek[0].fhit ? 'fhit' :
                         currentWeek[0].tcap ? 'tcap' : currentWeek[0].bbench ? 'bbench' : ""
         let usedChips = []
@@ -399,10 +401,12 @@ function loadGameweeks() {
         trackInRealtime(curGameweek)
         trackTransfers()
         if(currentWeek[0].fts === 'unlimited') transferNumber.innerHTML = '∞'*/
+        trackInRealtime(curGameweek)
         if(curGameweek === Math.max(...eventIds) + 1) {
             document.querySelector('#prevGameweek').style.visibility = 'hidden'
         } else {
             document.querySelector('#prevGameweek').style.visibility = 'visible'
+            document.querySelector('.transfer-number').innerHTML = currentHistory[0].fts  
             //transferNumber.innerHTML = currentWeek[0].fts === 'unlimited' ? '∞' : currentWeek[0].fts
         }
         /*if((curGameweek*gameweekSize) === retrievedGameweeks.length) {

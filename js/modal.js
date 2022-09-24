@@ -50,7 +50,7 @@ function trackTransfers(curGameweek) {
 	let fts = b[0].fts
 	let playersInL = playersIn.length
 	let playersOutL = playersOut.length
-	if(fts !== 'unlimited') {
+	if(b[0].wildcard.event !== curGameweek || a[0].freehit.event !== curGameweek) {
 		pointsCost = (fts - playersInL)*4
 		transferCost.innerHTML = pointsCost > 0 ? 0 : pointsCost
 	} else {

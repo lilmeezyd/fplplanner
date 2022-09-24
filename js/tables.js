@@ -583,7 +583,7 @@ function upload() {
 									playersIn.push(player)
 								}
 								loadTransfersIn()
-								//trackTransfers(loadGameweeks().curGameweek)
+								trackTransfers(weekNdeadline[1])
 
 								picks.push(player)
 								document.querySelector('.message').style.display = 'block'

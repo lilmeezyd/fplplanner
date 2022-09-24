@@ -338,6 +338,7 @@
 		let showModal = false
 		const picks = []
    		const oldTeam = []
+   		const realPicks = []
 		closeModal.onclick = function() {
 			showModal = !showModal
 		}
@@ -396,7 +397,7 @@
 			.then(result => {
 				let eventztream = JSON.parse(sessionStorage.getItem('events'))
 				let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) > new Date())
-				//const { id, name, deadline_time } = filteredEvents
+
 				let newPicks = []
 				let gameweekPicks = []
 				let bank, value
@@ -404,6 +405,7 @@
 					playerState.players.forEach(y => {
 						if(y.id === x.element) {
 							newPicks.push({...x, disabled:true, element_type:y.element_type, team:y.team})
+							realPicks.push({...x, disabled:true, element_type:y.element_type, team:y.team})
 						}
 					})
 				})
@@ -486,7 +488,6 @@
 
 				document.querySelector('.transfer-number').innerHTML = fts	
 
-				console.log(`${wildcard}: ${bboost}: ${freehit}: ${tcap}`)
 				sessionStorage.removeItem('managerHistory')
 				sessionStorage.setItem('managerHistory', JSON.stringify(newManagerHistory))
 				let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
@@ -574,12 +575,9 @@
 			 setPlayers()
 			 setFixtures()
 			 loadTeamFixtures()
-			 //upload()
 			 upload().loadPrices()
 			 upload().loadPlayers()
 			 loadGameweeks().loadGameweek()
-			 //loadTeam()
-			 //loadTeams()
 		}
 		
 		//Compare previous Gameweeks
@@ -605,8 +603,6 @@
 					sameRank()
 					sessionStorage.setItem('color', JSON.stringify('grey'))
 				}
-				console.log(gwCurrent)
-				console.log(gwPrevious)
 			})
 			.catch(error => console.log('error', error));
 		}
