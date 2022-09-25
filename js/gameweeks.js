@@ -5,108 +5,24 @@ function loadGameweeks() {
     let curGameweek = Math.max(...eventIds) + 1
     const bdiff = []
     const sdiff = []
-    /*const gameweeks = [
-        {
-            "gameweek": 1,
-            "team": [...teamz],
-            "fts": 'unlimited',
-            "rolledft": false,
-            "tc": 0,
-            "transfers": [{"transfersOut":[]}, {"transfersIn":[]}],
-            "wcard": false,
-            "bbench": false,
-            "fhit": false,
-            "tcap": false,
-            "deadline" : 'Fri, 05 Aug 2022 17:30:00 GMT'
-        },
-        {
-            "gameweek": 2,
-            "team": [],
-            "fts": 1,
-            "rolledft": false,
-            "tc": 0,
-            "chips": [
-                "wcard": false,
-                "bbench": false,
-                "fhit": false,
-                "tcap": false
-             ]
-            "transfers": [{"transfersOut":[]}, {"transfersIn":[]}],
-            "deadline" : 'Sat, 13 Aug 2022 11:30:00 GMT'
-        },
-        {
-            "gameweek": 4,
-            "team": [],
-            "fts": 1,
-            "rolledft": false,
-            "tc": 0,
-            "wcard": false,
-            "bbench": false,
-            "fhit": false,
-            "tcap": false,
-            "transfers": [{"transfersOut":[]}, {"transfersIn":[]}],
-            "deadline" : 'Fri, 26 Aug 2022 17:30:00 GMT'
-        },
-        {
-            "gameweek": 5,
-            "team": [],
-            "fts": 1,
-            "rolledft": false,
-            "tc": 0,
-            "wcard": false,
-            "bbench": false,
-            "fhit": false,
-            "tcap": false,
-            "transfers":[{"transfersOut":[]}, {"transfersIn":[]}],
-            "deadline" : 'Sat, 03 Sep 2022 11:30:00 GMT'
-        },
-        {
-            "gameweek": 3,
-            "team": [],
-            "fts": 1,
-            "rolledft": false,
-            "tc": 0,
-            "wcard": false,
-            "bbench": false,
-            "fhit": false,
-            "tcap": false,
-            "transfers": [{"transfersOut":[]}, {"transfersIn":[]}],
-            "deadline" : 'Sat, 20 Aug 2022 11:30:00 GMT'
-        }
-    ]*/
-
-
-    
-
-    let gameweeks = []
-    let ayt = []
 
 
 
-    gameweeks.sort((a,b) => {
-        if(a.gameweek > b.gameweek) return 1
-        if(a.gameweek < b.gameweek) return -1
-    })
-
-
-    //let retrievedGameweeks = JSON.parse(sessionStorage.getItem('gameweeks'))
-
-
-
-    //teamSave.addEventListener('click', saveTeam)
     teamReset.addEventListener('click', resetTeam)
     document.querySelector('#nextGameweek').addEventListener('click', nextGameweek, false)
     document.querySelector('#prevGameweek').addEventListener('click', previousGameweek, false)
     gameweekNum.textContent = `Gameweek ${curGameweek}`
 
 
-
+    // Loading picks from the previous GW & wiping out future picks
     function resetTeam() {
         let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
         let realPicks = JSON.parse(sessionStorage.getItem('realPicks'))
+        let realHistory = JSON.parse(sessionStorage.getItem('realHistory'))
         let newWeek = retrievedGameweeks.filter(x => x.id === curGameweek)
         let previousWeek = retrievedGameweeks.filter(x => x.id === curGameweek-1)
+        let previousHistory = retrievedHistory.filter(x => x.id === curGameweek-1)
         let index = retrievedGameweeks.findIndex(x => x.id === curGameweek)
         if(previousWeek.length === 0) {
             newWeek[0].newPicks.length = 0
@@ -123,6 +39,19 @@ function loadGameweeks() {
                     retrievedGameweeks[i].transfers[1].transfersIn.length = 0
                 }
             }
+            for(let i=0; i<retrievedHistory.length; i++) {
+                if(i>=index) {
+                    retrievedHistory[i].bboost.is_used = realHistory[0].bboost.is_used
+                    retrievedHistory[i].bboost.event = realHistory[0].bboost.event
+                    retrievedHistory[i].wildcard.is_used = realHistory[0].wildcard.is_used
+                    retrievedHistory[i].wildcard.event = realHistory[0].wildcard.event
+                    retrievedHistory[i].freehit.is_used = realHistory[0].freehit.is_used
+                    retrievedHistory[i].freehit.event = realHistory[0].freehit.event
+                    retrievedHistory[i].tcap.is_used = realHistory[0].tcap.is_used
+                    retrievedHistory[i].tcap.event = realHistory[0].tcap.event
+                }
+            }
+            sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
             sessionStorage.setItem('managerPicks', JSON.stringify(retrievedGameweeks))
             loadGameweek()
         } else {
@@ -138,11 +67,25 @@ function loadGameweeks() {
                     retrievedGameweeks[i].transfers[1].transfersIn.length = 0
                 }
             }
+            for(let i=0; i<retrievedHistory.length; i++) {
+                if(i>=index) {
+                    retrievedHistory[i].bboost.is_used = previousHistory[0].bboost.is_used
+                    retrievedHistory[i].bboost.event = previousHistory[0].bboost.event
+                    retrievedHistory[i].wildcard.is_used = previousHistory[0].wildcard.is_used
+                    retrievedHistory[i].wildcard.event = previousHistory[0].wildcard.event
+                    retrievedHistory[i].freehit.is_used = previousHistory[0].freehit.is_used
+                    retrievedHistory[i].freehit.event = previousHistory[0].freehit.event
+                    retrievedHistory[i].tcap.is_used = previousHistory[0].tcap.is_used
+                    retrievedHistory[i].tcap.event = previousHistory[0].tcap.event
+                }
+            }
+            sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
             sessionStorage.setItem('managerPicks', JSON.stringify(retrievedGameweeks))
             loadGameweek()
         }
     }
 
+    // Loading picks from a Gameweek preceding the current
     function previousGameweek() {
         let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
@@ -227,9 +170,12 @@ function loadGameweeks() {
             //bdiff.length = 0
         }
     }
+
+    // Loading picks from an upcoming Gameweek
     function nextGameweek() {
         let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
-        let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
+        let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+        let realPicks = JSON.parse(sessionStorage.getItem('realPicks')) 
         //remainingBudget < 0 ||
         if(picks.length < 15) {
             console.log(`Team not full or Budget not enough`)
@@ -299,7 +245,9 @@ function loadGameweeks() {
             
             if(pTransfercount !== nTransfercount || (previousHistory[0].wildcard.event === curGameweek-1) || previousHistory[0].freehit.event === curGameweek-1) {
                 let index = retrievedHistory.findIndex(x => x.id === curGameweek)
-                let prevTeam = retrievedGameweeks.find(x => x.id === curGameweek - 2)
+                let prevIndex = retrievedGameweeks.findIndex(x => x.id === curGameweek - 2)
+                let prevTeam = prevIndex === -1 ? realPicks : 
+                retrievedGameweeks.find(x => x.id === curGameweek - 2).newPicks
                 for(let i=0; i<retrievedHistory.length; i++) {
                 if(i>=index) {
                     retrievedGameweeks[i].newPicks.length = 0
@@ -313,7 +261,7 @@ function loadGameweeks() {
                     if(previousHistory[0].freehit.is_used === true) {
                         retrievedHistory[i].freehit.is_used = true
                         //retrievedHistory[i].freehit.event = curGameweek
-                        retrievedGameweeks[i].newPicks.push(...prevTeam.newPicks)
+                        retrievedGameweeks[i].newPicks.push(...prevTeam)
                     }
                 }
             }
@@ -333,16 +281,9 @@ function loadGameweeks() {
         }
     }
 
-    /*window.onload = function() {
-        if(JSON.parse(sessionStorage.getItem('gameweeks')) === null) {
-            console.log('Upload Team')
-            } else {
-                loadGameweek()
-            }
-        }*/
+    
 
-
-
+    // Loading a specific Gameweek
     function loadGameweek() {
         document.querySelector('.details-one').style.paddingBottom = '8px'
         let chipsz = document.querySelectorAll('.btn-chip')
@@ -455,35 +396,6 @@ function loadGameweeks() {
     }
 
 
-    function getTime() {
-        let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
-        let currentWeek = retrievedGameweeks.filter(x => x.id === curGameweek)
-        let deadline = currentWeek[0].deadline_time
-        let millis = new Date(deadline_time)-new Date()
-        let seconds = Math.floor(millis/1000)
-        let formattedseconds = seconds >= 60 ? seconds%60 : seconds
-        newseconds = formattedseconds <= 9 ? `0${formattedseconds}` : formattedseconds
-        let minutes = Math.floor(seconds/60)
-        let formattedminutes = minutes >= 60 ? minutes%60 : minutes
-        newminutes = formattedminutes <= 9 ? `0${formattedminutes}` : formattedminutes
-        let hours = Math.floor(minutes/60)
-        let formattedhours = hours >= 24 ? hours%24 : hours
-        newhours = formattedhours <= 9 ? `0${formattedhours}` : formattedhours
-        let days = Math.floor(hours/24)
-        newdays = days <= 9 ? `0${days}` : days
-        if(millis <= 0) {
-            day.innerHTML = '00'
-            hour.innerHTML = '00'
-            minute.innerHTML = '00'
-            second.innerHTML = '00'
-        } else {
-            day.innerHTML = newdays
-            hour.innerHTML = newhours
-            minute.innerHTML = newminutes
-            second.innerHTML = newseconds
-    }
-    }
-    //setInterval(getTime, 1000)
 
     return { loadGameweek }
 }

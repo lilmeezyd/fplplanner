@@ -102,6 +102,9 @@
 		function returnData() {
 			setData()
 			setFixtureData()
+			//loadPlayers()
+			//loadFixtures()
+			//loadTeam()
 		}
 
 		

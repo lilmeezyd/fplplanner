@@ -1,5 +1,7 @@
 let chips = document.querySelectorAll('.btn-chip')
 let currentFts, rolled
+
+//Toggling .chip-active class to activate chip by passing the id
 Array.from(chips).forEach(x => {
 	x.onclick = function() {
 		id = x.getAttribute('id')
@@ -9,9 +11,11 @@ Array.from(chips).forEach(x => {
 })
 
 
+//Activating specific chip using #id passed
 function activateChip(a) {
 	button = document.querySelector(`#${a}`)
 	
+	//Checking if selected button contains chip-active class
 	if(button.classList.contains('chip-active')) {
 		a === 'wcard' && playWildcard() || a === 'fhit' && playFreeHit() || 
 		a === 'bbench' && playBboost() || a === 'tcap' && playTcap()
@@ -46,15 +50,15 @@ function enableOtherChips(a) {
 }
 
 
+//Activating the wildcard
 function playWildcard() {
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
   let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
 	currentHistory[0].wildcard.is_used = true
 	currentHistory[0].wildcard.event = weekNdeadline[1]
-	//currentWeek[0].fts = 'unlimited'
-	//currentWeek[0].wcard = true
-	//currentWeek[0].rolledft = false
+
+	// Adding when the Wildcard was played to future gws data
 	for(let i=0; i<retrievedHistory.length; i++) {
         if(i>=index) {
             retrievedHistory[i].wildcard.is_used = true
@@ -67,16 +71,18 @@ function playWildcard() {
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
 	loadTeam()
+	trackTransfers(weekNdeadline[1])
 }
 
+//Deactivating the wildcard chip
 function cancelWildcard() {
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
   let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
 	currentHistory[0].wildcard.is_used = false
 	currentHistory[0].wildcard.event = null
-	//currentWeek[0].fts = currentFts 
-	//currentWeek[0].rolledft = rolled
+
+	// Adding that the Wildcard chip is still available to future gws data
 	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
         for(let i=0; i<retrievedHistory.length; i++) {
         if(i>=index) {
@@ -87,30 +93,34 @@ function cancelWildcard() {
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
 	loadTeam()
+	trackTransfers(weekNdeadline[1])
 }
 
+// Activating the freehit chip
 function playFreeHit() {
-  trackInRealtime(weekNdeadline[1])
-  trackTransfers(weekNdeadline[1])
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
-  let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+  let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks')) 
+  let realPicks = JSON.parse(sessionStorage.getItem('realPicks'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
-	//currentFts = currentWeek[0].fts
-	//rolled = currentWeek[0].rolledft
-	//currentWeek[0].fts = 'unlimited'
 	currentHistory[0].freehit.is_used = true
 	currentHistory[0].freehit.event = weekNdeadline[1]
-	//currentHistory[0].rolledft = false
-	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
-	prevIndex = retrievedPicks.findIndex(x => x.id === weekNdeadline[1] - 1)
-	prevTeam = retrievedPicks.find(x => x.id === weekNdeadline[1] - 1).newPicks
-	newIndex = prevIndex+2
+	let index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
+	let prevIndex = retrievedPicks.findIndex(x => x.id === weekNdeadline[1] - 1)
+
+	// Pre Freehit team retrieval
+	let prevTeam = prevIndex === -1 ? realPicks :
+						 retrievedPicks.find(x => x.id === weekNdeadline[1] - 1).newPicks
+	let newIndex = prevIndex+2
+
+	//Resetting team to pre freehit team
 	for(let i = 0; i < retrievedPicks.length; i++) {
 		if(i===newIndex) {
 			retrievedPicks[i].newPicks.length = 0
 			retrievedPicks[i].newPicks.push(...prevTeam)
 		}
 	}
+
+	// Adding when the freehit was played to future gws data
 	for(let i=0; i<retrievedHistory.length; i++) {
         if(i>=index) {
               retrievedHistory[i].freehit.is_used = true
@@ -123,10 +133,11 @@ function playFreeHit() {
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
 	loadTeam()
+	trackTransfers(weekNdeadline[1])
 }
 
-function cancelFreeHit() {
-  trackTransfers(weekNdeadline[1]) 
+// Deactivating the freehit chip
+function cancelFreeHit() { 
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
   let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
@@ -136,12 +147,15 @@ function cancelFreeHit() {
 	prevIndex = retrievedPicks.findIndex(x => x.id === weekNdeadline[1])
 	prevTeam = retrievedPicks.find(x => x.id === weekNdeadline[1]).newPicks
 
+	//Current team before chip activation persisted
 	for(let i = 0; i < retrievedPicks.length; i++) {
 		if(i>index) {
 			retrievedPicks[i].newPicks.length = 0
 			retrievedPicks[i].newPicks.push(...prevTeam)
 		}
 	}
+
+	// Adding that the Freehit chip is still available to future gws data
   for(let i=0; i<retrievedHistory.length; i++) {
   if(i>=index) {
         retrievedHistory[i].freehit.is_used = false
@@ -151,7 +165,10 @@ function cancelFreeHit() {
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
 	loadTeam()
+	trackTransfers(weekNdeadline[1])
 }
+
+// Activating the Bench Boost chip
 function playBboost() {
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
@@ -160,6 +177,8 @@ function playBboost() {
 	bench.classList.add('bench_boost')
 	bench.classList.remove('bench')
 	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
+
+	// Adding when the Bench Boost was played to future gws data
 	 for(let i=0; i<retrievedHistory.length; i++) {
         if(i>=index) {
               retrievedHistory[i].bboost.is_used = true
@@ -172,6 +191,8 @@ function playBboost() {
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	loadTeam()
 }
+
+// Deactivating the Bench Boost chip
 function cancelBboost(){
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
@@ -179,6 +200,8 @@ function cancelBboost(){
 	currentHistory[0].bboost.event = null
 	bench.classList.add('bench')
 	bench.classList.remove('bench_boost')
+
+	// Adding that the Bench Boost chip is still available to future gws data
 	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
         for(let i=0; i<retrievedHistory.length; i++) {
         if(i>=index) {
@@ -189,12 +212,16 @@ function cancelBboost(){
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	loadTeam()
 }
+
+// Activating the Triple Captain chip
 function playTcap() {
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
 	currentHistory[0].tcap.is_used = true
 	currentHistory[0].tcap.event = weekNdeadline[1]
 	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
+
+	// Adding when the Triple Captain was played to future gws data
 	for(let i=0; i<retrievedHistory.length; i++) {
         if(i>=index) {
               retrievedHistory[i].tcap.is_used = true
@@ -208,18 +235,22 @@ function playTcap() {
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	loadTeam()
 }
+
+// Deactivating the Triple Captain chip
 function cancelTcap() {
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
 	currentHistory[0].tcap.is_used = false
 	currentHistory[0].tcap.event = null
 	index = retrievedHistory.findIndex(x => x.id === weekNdeadline[1])
-        for(let i=0; i<retrievedHistory.length; i++) {
-        if(i>=index) {
-              retrievedHistory[i].tcap.is_used = false
-              retrievedHistory[i].tcap.event = null
-        }
-    }
+
+	// Adding that the Trple Captain chip is still available to future gws data
+  for(let i=0; i<retrievedHistory.length; i++) {
+  if(i>=index) {
+        retrievedHistory[i].tcap.is_used = false
+        retrievedHistory[i].tcap.event = null
+  }
+  }
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	loadTeam()
 }

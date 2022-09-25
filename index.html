@@ -446,10 +446,10 @@
 				let bboost = chips.some(x => x.name === 'bboost') ? true : false
 				let freehit = chips.some(x => x.name === 'freehit') ? true : false
 				let tcap = chips.some(x => x.name === '3xc') ? true : false
-				let wEvent = wildcard === true ? chips.filter(x => x.name === 'wildcard')[0].event : 0
-				let bEvent = bboost === true ? chips.filter(x => x.name === 'bboost')[0].event : 0
-				let fEvent = freehit === true ? chips.filter(x => x.name === 'freehit')[0].event : 0
-				let tEvent = tcap === true ? chips.filter(x => x.name === '3xc')[0].event : 0
+				let wEvent = wildcard === true ? chips.filter(x => x.name === 'wildcard')[0].event : null
+				let bEvent = bboost === true ? chips.filter(x => x.name === 'bboost')[0].event : null
+				let fEvent = freehit === true ? chips.filter(x => x.name === 'freehit')[0].event : null
+				let tEvent = tcap === true ? chips.filter(x => x.name === '3xc')[0].event : null
 				let fts
 				returnFt(1, current.length, 1, current)
 				rolledft = fts  === 1 ? false : true
@@ -492,7 +492,9 @@
 
 				sessionStorage.removeItem('managerHistory')
 				sessionStorage.setItem('managerHistory', JSON.stringify(newManagerHistory))
+				sessionStorage.setItem('realHistory', JSON.stringify(newManagerHistory))
 				let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+				loadGameweeks().loadGameweek()
 			})
 			.catch(error => console.log('error', error));
 		}
@@ -553,6 +555,7 @@
 				playerId = retrievedManager.id+''
 				//getManagerPicks()
 				//getManagerHistory()
+				setInterval(getTime, 100)
 			}
 			if(retrievedHistory === null) {
 				console.log(null)
@@ -632,6 +635,35 @@
 			red_rank.classList.remove('show_rank')
 			red_rank.classList.add('hide_rank')
 		}
+
+	    function getTime() {
+	        let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
+	        let currentWeek = retrievedGameweeks.filter(x => x.id === weekNdeadline[1])
+	        let deadline = currentWeek[0].deadline_time
+	        let millis = new Date(deadline)-new Date()
+	        let seconds = Math.floor(millis/1000)
+	        let formattedseconds = seconds >= 60 ? seconds%60 : seconds
+	        newseconds = formattedseconds <= 9 ? `0${formattedseconds}` : formattedseconds
+	        let minutes = Math.floor(seconds/60)
+	        let formattedminutes = minutes >= 60 ? minutes%60 : minutes
+	        newminutes = formattedminutes <= 9 ? `0${formattedminutes}` : formattedminutes
+	        let hours = Math.floor(minutes/60)
+	        let formattedhours = hours >= 24 ? hours%24 : hours
+	        newhours = formattedhours <= 9 ? `0${formattedhours}` : formattedhours
+	        let days = Math.floor(hours/24)
+	        newdays = days <= 9 ? `0${days}` : days
+	        if(millis <= 0) {
+	            day.innerHTML = '00'
+	            hour.innerHTML = '00'
+	            minute.innerHTML = '00'
+	            second.innerHTML = '00'
+	        } else {
+	            day.innerHTML = newdays
+	            hour.innerHTML = newhours
+	            minute.innerHTML = newminutes
+	            second.innerHTML = newseconds
+	    }
+	    }
 		
 
 		
@@ -667,9 +699,10 @@
 
 			headers[n-1].style.display = 'flex'
 			dots[n-1].classList.add('active')
-			setTimeout(showHeader, 5000, n)
+			setTimeout(showHeader, 10000, n)
 		}
 	</script>
+	<script type="text/javascript" src="js/fetch.js"></script>
 	<script type="text/javascript" src="js/players.js"></script>
 	<script type="text/javascript" src="js/tables.js">
 	</script>

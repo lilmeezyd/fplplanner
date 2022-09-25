@@ -72,7 +72,6 @@ function loadTeam() {
 			playerposition = x.parentElement.getAttribute('position')
 			playerIndex = picks.findIndex(x => x.element === playerId)
 			playername = playerState.players.find(x => x.id === playerId).web_name
-			//playersOutpurg.push(team[playerIndex])
 			playersOut.push(picks[playerIndex])
 			document.querySelector('.message').style.display = 'block'
 			document.querySelector('.details-one').style.paddingBottom = 0
