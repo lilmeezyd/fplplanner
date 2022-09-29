@@ -185,28 +185,9 @@ function playerOpponent(a) {
 }
 
 function playerHistory(a) {
-	let result = ''
-	let playerData = JSON.parse(sessionStorage.getItem('playerData'))
-	playerData.history.forEach(x => {
-		let hTeam = teamState.teams.find(tname => tname.id === x.opponent_team).name
-		let home = x.was_home ? 'H':'A'
-		let row = `<tr><td class='table-sticky'>${x.round}</td>
-		<td class='table-sticky-1'>${hTeam}&nbsp;&nbsp;(${home}) </td>
-		<td>${x.team_h_score} : ${x.team_a_score}</td>
-		<td>${x.minutes}</td>
-		<td>${x.total_points}</td>
-		<td>${x.goals_scored}</td>
-		<td>${x.assists}</td>
-		<td>${x.clean_sheets}</td>
-		</tr>`
-		result += row
-	})
-	return result
+	//setPlayerData(a)
 }
 
-//document.querySelector('btn-close-info').onclick = function() {
-//	sessionStorage.removeItem('playerData')
-//}
 
 // Loading Player info data// Loading or changing captain 
 function loadInfo(a) {
@@ -259,7 +240,7 @@ function loadInfo(a) {
 						</tr>
 					</thead>
 					<tbody>
-							${playerHistory(a)}
+							${setPlayerData(a)}
 					</tbody>
 				</table>
 			</div>

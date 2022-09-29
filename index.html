@@ -517,7 +517,20 @@
 				
 			})
 			.catch(error => console.log('error', error));
-		}	
+		}
+
+		//Collect my data
+		/*async function getMoini() {
+			var requestOptions = {
+				method: 'GET',
+				redirect: 'follow'
+			};
+			let credentials = btoa("denismoini09@gmail.com:#El$&c6pitan0*;:@")
+			let response = await 
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/my-team/5953/`, { headers: {"Authorizaton":`Basic ${credentials}`}})
+			let data = await response.json()
+			console.log(data)
+		}*/
 		
 
 		//set player Data
@@ -526,15 +539,47 @@
 			method: 'GET',
 			redirect: 'follow'
 			};
-
 			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/element-summary/${a}/`, requestOptions)
 			.then(response => response.json())
-			.then(result => {
+			.then(data => {
+				let result = ''
+				let history = data.history
+				history.map(x => {
+					let hTeam = teamState.teams.find(tname => tname.id === x.opponent_team).name
+					let home =  x.was_home ? 'H':'A'
+					let row =  `<tr><td class='table-sticky'>${x.round}</td>
+					<td class='table-sticky-1'>${hTeam}&nbsp;&nbsp;(${home}) </td>
+					<td>${x.team_h_score} : ${x.team_a_score}</td>
+					<td>${x.minutes}</td>
+					<td>${x.total_points}</td>
+					<td>${x.goals_scored}</td>
+					<td>${x.assists}</td>
+					<td>${x.clean_sheets}</td>
+					</tr>`
+					result += row
+				})
 				console.log(result)
-				sessionStorage.setItem('playerData', JSON.stringify(result))
+				return result
 			})
-			.catch(error => console.log('error', error));
+			/*let response = await fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/element-summary/${a}/`, requestOptions)
+			let data = await response.json()
+			let history = await data.history
+			history.forEach(x => {
+					let hTeam = teamState.teams.find(tname => tname.id === x.opponent_team).name
+					let home =  x.was_home ? 'H':'A'
+					let row =  `<tr><td class='table-sticky'>${x.round}</td>
+					<td class='table-sticky-1'>${hTeam}&nbsp;&nbsp;(${home}) </td>
+					<td>${x.team_h_score} : ${x.team_a_score}</td>
+					<td>${x.minutes}</td>
+					<td>${x.total_points}</td>
+					<td>${x.goals_scored}</td>
+					<td>${x.assists}</td>
+					<td>${x.clean_sheets}</td>
+					</tr>`
+					result += row
+				})*/
 		}
+
 
 		window.onload = function() {
 			let retrievedManager = JSON.parse(sessionStorage.getItem('managerInfo'))
@@ -702,7 +747,6 @@
 			setTimeout(showHeader, 10000, n)
 		}
 	</script>
-	<script type="text/javascript" src="js/fetch.js"></script>
 	<script type="text/javascript" src="js/players.js"></script>
 	<script type="text/javascript" src="js/tables.js">
 	</script>

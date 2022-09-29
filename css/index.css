@@ -744,12 +744,16 @@
 		background: rgba(0, 0, 0, 0.1);
 	}
 	.playerpop {
-		position: fixed;
+		/*position: fixed;
 		top: 25%;
 		left: 25%;
 		transform: translate(-5%, 25%);
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		width: 300px;
+		border: 1px solid rgba(0, 0, 0, 0.2);*/
+		position: absolute;
+		left: 50%;
+		top: 20%;
+		transform: translate(-50%, -50%);
+		width: 320px;
 		margin: auto;
 		padding: 0.4rem;
 		background: rgba(13, 122, 86, 1);
@@ -758,14 +762,15 @@
 	.playerpop1 {
 		border: 1px solid rgba(0, 0, 0, 0.2);
 		margin: auto;
-		max-width: 500px;
+		margin-top: 25%;
+		max-width: min-content;
 		height: min-content;
 		padding: 0.4rem;
 		background: rgba(13, 122, 86, 1);
 		text-transform: capitalize;
 		position: relative;
 	}
-	@media(max-width: 1000px) {
+	/*@media(max-width: 1000px) {
 		.playerpop {
 			transform: translate(-22.5%, 25%);
 		}
@@ -791,7 +796,7 @@
 			width: 90%;
 			transform: translate(0%, 25%);
 		}
-	}
+	} */
 
 	.info-details span.small {
 		display: block;
@@ -814,8 +819,8 @@
 		padding: 0.1rem;
 	}
 	.games-info-fixtures {
-		/*display: none;*/
-		display: flex;
+		display: none;
+		/*display: flex;*/
 		justify-content: left;
 		align-items: center;
 	}
@@ -859,7 +864,8 @@
 	}
 	
 	.games-info-results {
-		display: none;
+		/*display: none;*/
+		display: flex;
 	}
 	.games-info-buttons {
 		padding: 0.1rem;
@@ -1218,12 +1224,11 @@
 	.table tbody td:nth-child(2), .table thead th:nth-child(2) {
 		position: sticky;
 		left: 30px;
-		background: white;
+		background: whitesmoke;
 		z-index: 1;
 	}
 	.table-sticky, .table-sticky-1 {
-		box-shadow: inset 2px 0px 5px rgba(0, 255, 255, 1);
-		border: none;
+		font-weight: bolder;
 	}
 	.ticker-table tbody td:first-child {
 		display: flex;
