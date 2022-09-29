@@ -560,8 +560,7 @@
 					</tr>`
 					result += row
 				})
-				console.log(result)
-				return result
+				document.querySelector('.games-info-results tbody').innerHTML = result
 			})
 			/*let response = await fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/element-summary/${a}/`, requestOptions)
 			let data = await response.json()

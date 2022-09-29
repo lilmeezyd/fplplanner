@@ -240,7 +240,7 @@ function loadInfo(a) {
 						</tr>
 					</thead>
 					<tbody>
-							${setPlayerData(a)}
+						
 					</tbody>
 				</table>
 			</div>

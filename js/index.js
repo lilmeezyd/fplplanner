@@ -201,6 +201,7 @@ function loadTeam() {
 			loadTeam()
 		}
 		document.querySelector('.btn-player-info').onclick = function() {
+			setPlayerData(playerId)
 			document.querySelector('.playerpopup').innerHTML = loadInfo(playerId)
 			document.querySelector('.playerpopup').style.display = 'block'
 			popupclose = document.querySelector('.btn-player')
