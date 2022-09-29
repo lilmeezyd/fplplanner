@@ -413,6 +413,7 @@
 				value = (result.entry_history.value/10).toFixed(1)
 				filteredEvents.forEach((x, key) => {
 					const { id, name, deadline_time } = x
+					//Adding picks to first GW only
 					const brandNewPicks = key === 0 ? newPicks : []
 					const newResult = {id, name, deadline_time, newPicks:brandNewPicks, bank, value, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
 					gameweekPicks.push(newResult)
@@ -495,6 +496,7 @@
 				sessionStorage.setItem('realHistory', JSON.stringify(newManagerHistory))
 				let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
 				loadGameweeks().loadGameweek()
+				setInterval(getTime, 100)
 			})
 			.catch(error => console.log('error', error));
 		}
