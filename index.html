@@ -462,14 +462,14 @@
 						let element_in_cost = transferPlayers.find(player => player.element === x.element).element_in_cost
 						formattedCost = (element_in_cost/10).toFixed(1)
 						profit = (+x.now_cost - +formattedCost)/2
-						selling_price = profit <= 0.1 ? (+formattedCost).toFixed(1) :
+						selling_price = profit <= 0.1 && profit > 0 ? (+formattedCost).toFixed(1) :
 										profit < 0 ? (+x.now_cost).toFixed(1) : 
 										(+formattedCost + +profit).toFixed(1) 
 						newPicks.push({...x, selling_price, element_in_cost:formattedCost})
 					} else {
 						formattedCost = (+x.now_cost - +x.price_change).toFixed(1)
 						profit = (+x.now_cost - +formattedCost)/2
-						selling_price = profit <= 0.1 ? (+formattedCost).toFixed(1) :
+						selling_price = profit <= 0.1 && profit > 0 ? (+formattedCost).toFixed(1) :
 										profit < 0 ? (+x.now_cost).toFixed(1) : 
 										(+formattedCost + +profit).toFixed(1)
 						newPicks.push({...x, selling_price, element_in_cost:formattedCost})
@@ -482,14 +482,14 @@
 						let element_in_cost = transferPlayers.find(player => player.element === x.element).element_in_cost
 						formattedCost = (element_in_cost/10).toFixed(1)
 						profit = (+x.now_cost - +formattedCost)/2
-						selling_price = profit <= 0.1 ? (+formattedCost).toFixed(1) :
+						selling_price = profit <= 0.1 && profit > 0 ? (+formattedCost).toFixed(1) :
 										profit < 0 ? (+x.now_cost).toFixed(1) : 
 										(+formattedCost + +profit).toFixed(1)
 						realPicks.push({...x, selling_price, element_in_cost:formattedCost})
 					} else {
 						formattedCost = (+x.now_cost - +x.price_change).toFixed(1)
 						profit = (+x.now_cost - +formattedCost)/2
-						selling_price = profit <= 0.1 ? (+formattedCost).toFixed(1) :
+						selling_price = profit <= 0.1 && profit > 0 ? (+formattedCost).toFixed(1) :
 										profit < 0 ? (+x.now_cost).toFixed(1) : 
 										(+formattedCost + +profit).toFixed(1)
 						realPicks.push({...x, selling_price, element_in_cost:formattedCost})
