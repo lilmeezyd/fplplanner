@@ -373,11 +373,32 @@
 			redOrGreen()
 			getManagerHistory()
 			getManagerPicks()
+			//getManagerTransfers()
 			//loadTeam()
 			//createGameweek()
 			playersOut.length = 0
 			playersIn.length = 0
 			teamid.value = ""
+		}
+
+		//Get Manager Transfers
+		function getManagerTransfers() {
+			var requestOptions = {
+			method: 'GET',
+			redirect: 'follow'
+			};
+
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/transfers/`, requestOptions)
+			.then(response => response.json())
+			.then(result => {
+				result.forEach(x => {
+					console.log(x)
+					console.log(x.element_in)
+					console.log(x.element_in_cost)
+					console.log(x.time)
+					console.log(x.event)
+				})
+			})
 		}
 
 		//Get Manager Picks
@@ -390,8 +411,107 @@
 			method: 'GET',
 			redirect: 'follow'
 			};
+			let buyingPrice
+			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/transfers/`, requestOptions)
+			.then(response => response.json())
+			.then(data => {
+				console.log(data)
+				return fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
+				.then(response => response.json())
+				.then(result => {
+				let eventztream = JSON.parse(sessionStorage.getItem('events'))
+				let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) > new Date())
 
-			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
+				let newPicks = []
+   				const realPicks = []
+   				let newPicksHyp = []
+   				const realPicksHyp = []
+				let gameweekPicks = []
+				const transferPlayers = []
+				let bank, value
+				//console.log(result.picks)
+				result.picks.forEach(x => {
+					data.forEach(y => {
+						if(x.element === y.element_in) {
+							//Removing duplicate entries
+							let isFound = transferPlayers.some(player => player.element === y.element_in)
+							if(isFound) {
+								return;
+							} else {
+								transferPlayers
+							.push({element:y.element_in, element_in_cost:y.element_in_cost})
+						}
+						}
+					})
+				})
+				console.log(transferPlayers)
+				result.picks.forEach(x => {
+					playerState.players.forEach(y => {
+						if(y.id === x.element) {
+							now_cost = (y.now_cost/10).toFixed(1)
+							price_change = (y.cost_change_start/10).toFixed(1)
+							newPicksHyp.push({...x, disabled:true, element_type:y.element_type, team:y.team, now_cost, price_change})
+							realPicksHyp.push({...x, disabled:true, element_type:y.element_type, team:y.team, now_cost, price_change})
+						}
+					})
+				})
+
+				newPicksHyp.forEach(x => {
+					let isFound = transferPlayers.some(player => player.element === x.element)
+					if(isFound) {
+						let element_in_cost = transferPlayers.find(player => player.element === x.element).element_in_cost
+						formattedCost = (element_in_cost/10).toFixed(1)
+						profit = (+x.now_cost - +formattedCost)/2 < 0.1 ? (0).toFixed(1) :
+								 ((+x.now_cost - +formattedCost)/2).toFixed(1)
+						selling_price = (+formattedCost + +profit).toFixed(1)
+						newPicks.push({...x, selling_price, element_in_cost:formattedCost})
+					} else {
+						formattedCost = (+x.now_cost - +x.price_change).toFixed(1)
+						profit = (+x.now_cost - +formattedCost)/2 < 0.1 ? (0).toFixed(1) :
+								 ((+x.now_cost - +formattedCost)/2).toFixed(1)
+						selling_price = (+formattedCost + +profit).toFixed(1)
+						newPicks.push({...x, selling_price, element_in_cost:formattedCost})
+					}
+				})
+
+				realPicksHyp.forEach(x => {
+					let isFound = transferPlayers.some(player => player.element === x.element)
+					if(isFound) {
+						let element_in_cost = transferPlayers.find(player => player.element === x.element).element_in_cost
+						formattedCost = (element_in_cost/10).toFixed(1)
+						profit = (+x.now_cost - +formattedCost)/2 < 0.1 ? (0).toFixed(1) :
+								 ((+x.now_cost - +formattedCost)/2).toFixed(1)
+						selling_price = (+formattedCost + +profit).toFixed(1)
+						realPicks.push({...x, selling_price, element_in_cost:formattedCost})
+					} else {
+						formattedCost = (+x.now_cost - +x.price_change).toFixed(1)
+						profit = (+x.now_cost - +formattedCost)/2 < 0.1 ? (0).toFixed(1) :
+								 ((+x.now_cost - +formattedCost)/2).toFixed(1)
+						selling_price = (+formattedCost + +profit).toFixed(1)
+						realPicks.push({...x, selling_price, element_in_cost:formattedCost})
+					}
+				})
+				bank = (result.entry_history.bank/10).toFixed(1)
+				value = (result.entry_history.value/10).toFixed(1)
+				filteredEvents.forEach((x, key) => {
+					const { id, name, deadline_time } = x
+					//Adding picks to first GW only
+					const brandNewPicks = key === 0 ? newPicks : []
+					const newResult = {id, name, deadline_time, newPicks:brandNewPicks, bank, value, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
+					gameweekPicks.push(newResult)
+				})
+
+				
+				sessionStorage.removeItem('managerPicks')
+				sessionStorage.setItem('managerPicks', JSON.stringify(gameweekPicks))
+				sessionStorage.removeItem('realPicks')
+				sessionStorage.setItem('realPicks', JSON.stringify(realPicks))
+				
+				loadGameweeks().loadGameweek()
+			})
+			.catch(error => console.log('error', error));
+			})
+			/*fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
 			.then(response => response.json())
 			.then(result => {
 				let eventztream = JSON.parse(sessionStorage.getItem('events'))
@@ -427,7 +547,7 @@
 				
 				loadGameweeks().loadGameweek()
 			})
-			.catch(error => console.log('error', error));
+			.catch(error => console.log('error', error));*/
 		}
 
 		//Get Manager History

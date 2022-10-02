@@ -512,7 +512,7 @@ function loadPlayer(a, player) {
 												<div class="data_name"
 												style="background:${backgroundColor}; color:${color};">${player.web_name}</div>
 												<div class="data_fixtures x-small">
-												${nextFixtures(teamId,player)}
+												${nextFixtures(teamId,player,a.selling_price)}
 												</div>
 											</div>
 										</button>
@@ -563,7 +563,7 @@ function loadBench(a, player) {
 											<div class="details-cont">
 												<div class="data_name" style="background:${backgroundColor}; color:${color};">${player.web_name}</div>
 												<div class="data_fixtures x-small">
-												${nextFixtures(teamId, player)}
+												${nextFixtures(teamId, player, a.selling_price)}
 												</div>
 											</div>
 										</button>
@@ -589,8 +589,8 @@ function loadBench(a, player) {
 }
 
 /* Load Each Player's Fixtures */
-function nextFixtures(a,b) {
-	let resultFix = ''
+function nextFixtures(a,b, c) {
+	let resultFix = `<span>${c}</span>`
 	let resultFour = ''
 	eventztream = JSON.parse(sessionStorage.getItem('events'))
 	filteredEvents = eventztream.filter(x => new Date(x.deadline_time) < new Date(weekNdeadline[0]))

@@ -1400,6 +1400,11 @@
 	.data_fixtures .next-fix {
 		background: ghostwhite;
 	}
+	.next-fix  {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 	.data_fixtures .up-fix {
 		background: white;
 		display: flex;
