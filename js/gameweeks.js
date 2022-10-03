@@ -33,7 +33,6 @@ function loadGameweeks() {
             newWeek[0].newPicks.push(...realPicks)
             transferCost.innerHTML = 0
 
-            //Added piece of code
             for(let i=0; i<retrievedGameweeks.length; i++) {
                 if(i>index) {
                     retrievedGameweeks[i].newPicks.length = 0
@@ -123,6 +122,7 @@ function loadGameweeks() {
             let snTeam = nTeam.filter(x => x.multiplier === 0)
             if(curGameweek > Math.max(...eventIds) + 1) curGameweek--
             let previousWeek = retrievedGameweeks.filter(x => x.id === curGameweek)
+            let previousHistory = retrievedHistory.filter(x => x.id === curGameweek)
             let previousCaptain = previousWeek[0].newPicks.find(x => x.is_captain)
             let previousVCaptain = previousWeek[0].newPicks.find(x => x.is_vice_captain)
             bnpreviousWeek = previousWeek[0].newPicks.filter(x => x.multiplier !== 0)
@@ -173,7 +173,22 @@ function loadGameweeks() {
                         retrievedHistory[i].fts = 1
                     }
                 }
-                }
+                }  
+
+                console.log(newHistory)
+                console.log(previousHistory)
+
+            if(newHistory[0].fts === 2 && previousHistory[0].fts === 2){
+                previousHistory[0].rolledft = true
+                newHistory[0].rolledft = false
+                newHistory[0].fts = 1
+            }
+            if(newHistory[0].fts <= 2 && previousHistory[0].fts === 1) {
+                previousHistory[0].rolledft = false
+                newHistory[0].rolledft = false
+                newHistory[0].fts = 1
+            }
+
             sessionStorage.removeItem('managerPicks')
             sessionStorage.removeItem('managerHistory')
             //retrievedGameweeks.splice(newWeekIndex,1, newWeek[0])
@@ -228,7 +243,7 @@ function loadGameweeks() {
             let playersInSet = new Set(playersIn)
             let playersInSetArray = Array.from(playersInSet)*/
             trackTransfers(curGameweek)
-           if(previousWeek[0].transfers[0].transfersOut.length === playersOut.length) {
+            if(previousWeek[0].transfers[0].transfersOut.length === playersOut.length) {
                 sideArray.push()
             }
             if(previousWeek[0].transfers[0].transfersOut.length < playersOut.length) {
@@ -300,11 +315,28 @@ function loadGameweeks() {
             }
             }
 
+
             newWeek[0].newPicks.length === 0 ? newWeek[0].newPicks.push(...picks) : newWeek[0].newPicks.push()
-            previousHistory[0].rolledft === true ? newHistory[0].fts = 2 : newHistory[0].fts = 1
-            if(previousHistory[0].rolledft === true) {
+            //previousHistory[0].rolledft === true ? newHistory[0].fts = 2 : newHistory[0].fts = 1
+            if(previousWeek[0].transfers[0].transfersOut.length === 1 && previousHistory[0].rolledft === true){
                 newHistory[0].fts = 2
+                previousHistory[0].rolledft = true
             }
+            if(previousWeek[0].transfers[0].transfersOut.length === 0) {
+                newHistory[0].fts = 2
+                previousHistory[0].rolledft = true
+            }
+            if(previousWeek[0].transfers[0].transfersOut.length > 1) {
+                newHistory[0].fts = 1
+                previousHistory[0].rolledft = false
+            }
+            if(previousWeek[0].transfers[0].transfersOut.length === 1 && previousHistory[0].rolledft === false) {
+                newHistory[0].fts = 1
+                previousHistory[0].rolledft = false
+            }
+            /*if(previousHistory[0].rolledft === true) {
+                newHistory[0].fts = 2
+            }*/
 
             sessionStorage.removeItem('managerPicks')
             sessionStorage.setItem('managerPicks', JSON.stringify(retrievedGameweeks))
@@ -322,6 +354,7 @@ function loadGameweeks() {
         let chipsz = document.querySelectorAll('.btn-chip')
         let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+        if(retrievedHistory === null) return
         let currentHistory = retrievedHistory.filter(x => x.id === curGameweek)
 
         playersIn.length = 0

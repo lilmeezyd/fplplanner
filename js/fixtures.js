@@ -25,6 +25,7 @@ function fixtureHeader() {
 function fixtureBody() {
 	let result = ''
 	let eventztream = JSON.parse(sessionStorage.getItem('events'))
+	if(eventztream === null) return;
 	let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) < new Date())
 	const nextFixturesObj = {}
 	for(let i=filteredEvents.length+1; i <= 38; i++) {

@@ -64,10 +64,7 @@ function loadTeam() {
 	
 	remainBudget = document.querySelector('.remain-budget')
 	spent = picks.reduce((x,y) => x+(+y.selling_price),0)
-	console.log(spent)
-	console.log(totalBudget)
 	remainingBudget = (+totalBudget-spent).toFixed(1)
-	console.log(remainingBudget)
 	remainBudget.textContent = remainingBudget
 	//console.log(remainingBudget.toFixed(1))
 	//remainBudget.textContent = remainingBudget.toFixed(1)+'m'

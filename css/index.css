@@ -692,6 +692,9 @@
 	.budget-players span, .free-transfers span, .cost-transfers span, .remain span {
 		font-weight: bolder;
 	}
+	.remain-budget {
+		padding: 0.3rem;
+	}
 	.field {
 		background-color: rgba(0, 255, 255, 1.0); 
 		padding-top: 1rem;
@@ -1159,14 +1162,14 @@
 		background-color: darkgreen;
 		width: fit-content;
 		color: white;
-		padding: 0.2rem;
+		/*padding: 0.2rem;*/
 		
 	}
 	.info-danger {
 		background-color: darkred;
 		color: white;
 		width: fit-content;
-		padding: 0.2rem;
+		/*padding: 0.2rem;*/
 		/*font-family: 'Montserrat';*/
 	}
 
