@@ -415,7 +415,6 @@
 			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/transfers/`, requestOptions)
 			.then(response => response.json())
 			.then(data => {
-				console.log(data)
 				return fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
 				.then(response => response.json())
 				.then(result => {
@@ -500,7 +499,7 @@
 				})
 				bank = (result.entry_history.bank/10).toFixed(1)
 				value = (result.entry_history.value/10).toFixed(1)
-        let totalBudget = picks.reduce((x,y) => x+(+y.selling_price),0) + +bank
+        let totalBudget = newPicks.reduce((x,y) => x+(+y.selling_price),0) + +bank
 				filteredEvents.forEach((x, key) => {
 					const { id, name, deadline_time } = x
 					//Adding picks to first GW only

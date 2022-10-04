@@ -16,6 +16,11 @@ function returnTotalBudget() {
 }
 
 function loadTeam() {
+	if(picks.length === 0) {
+		return;
+	} else {
+		returnTotalBudget()
+	}
 	returnTotalBudget()
 	document.querySelector('.player-num').innerHTML = picks.length
 	result0 = ''
