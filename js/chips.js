@@ -71,13 +71,14 @@ function playWildcard() {
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
 	loadTeam()
+	document.querySelector('.transfer-number').innerHTML = `∞`
 	trackTransfers(weekNdeadline[1])
 }
 
 //Deactivating the wildcard chip
 function cancelWildcard() {
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
-  let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+  	let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
 	currentHistory[0].wildcard.is_used = false
 	currentHistory[0].wildcard.event = null
@@ -93,12 +94,13 @@ function cancelWildcard() {
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
 	loadTeam()
+	document.querySelector('.transfer-number').innerHTML = currentHistory[0].fts
 	trackTransfers(weekNdeadline[1])
 }
 
 // Activating the freehit chip
 function playFreeHit() {
-	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
+let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
   let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks')) 
   let realPicks = JSON.parse(sessionStorage.getItem('realPicks'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
@@ -133,13 +135,14 @@ function playFreeHit() {
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
 	loadTeam()
+	document.querySelector('.transfer-number').innerHTML = `∞`
 	trackTransfers(weekNdeadline[1])
 }
 
 // Deactivating the freehit chip
 function cancelFreeHit() { 
 	let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
-  let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+  	let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
 	let currentHistory = retrievedHistory.filter(x => x.id === weekNdeadline[1])
 	currentHistory[0].freehit.is_used = false
 	currentHistory[0].freehit.event = null
@@ -165,6 +168,7 @@ function cancelFreeHit() {
 	sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 	sessionStorage.setItem('managerPicks', JSON.stringify(retrievedPicks))
 	loadTeam()
+	document.querySelector('.transfer-number').innerHTML = currentHistory[0].fts
 	trackTransfers(weekNdeadline[1])
 }
 

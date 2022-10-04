@@ -423,9 +423,9 @@
 				let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) > new Date())
 
 				let newPicks = []
-   				const realPicks = []
-   				let newPicksHyp = []
-   				const realPicksHyp = []
+   			const realPicks = []
+   			let newPicksHyp = []
+   			const realPicksHyp = []
 				let gameweekPicks = []
 				const transferPlayers = []
 				let bank, value
@@ -444,7 +444,7 @@
 						}
 					})
 				})
-				console.log(transferPlayers)
+
 				result.picks.forEach(x => {
 					playerState.players.forEach(y => {
 						if(y.id === x.element) {
@@ -456,52 +456,56 @@
 					})
 				})
 
+        // Adding selling prices and buying prices to the picks
 				newPicksHyp.forEach(x => {
 					let isFound = transferPlayers.some(player => player.element === x.element)
 					if(isFound) {
 						let element_in_cost = transferPlayers.find(player => player.element === x.element).element_in_cost
 						formattedCost = (element_in_cost/10).toFixed(1)
-						profit = (+x.now_cost - +formattedCost)/2
-						selling_price = profit <= 0.1 && profit > 0 ? (+formattedCost).toFixed(1) :
-										profit < 0 ? (+x.now_cost).toFixed(1) : 
-										(+formattedCost + +profit).toFixed(1) 
+						profit = ((+x.now_cost - +formattedCost)/2).toFixed(1)
+						selling_price = +profit < 0.1 && +profit >= 0 ? (+formattedCost).toFixed(1) :
+										+profit < 0 ? (+x.now_cost).toFixed(1) : 
+										(+formattedCost + +profit).toFixed(1)
 						newPicks.push({...x, selling_price, element_in_cost:formattedCost})
 					} else {
 						formattedCost = (+x.now_cost - +x.price_change).toFixed(1)
-						profit = (+x.now_cost - +formattedCost)/2
-						selling_price = profit <= 0.1 && profit > 0 ? (+formattedCost).toFixed(1) :
-										profit < 0 ? (+x.now_cost).toFixed(1) : 
+						profit = ((+x.now_cost - +formattedCost)/2).toFixed(1)
+						selling_price = +profit < 0.1 && +profit >= 0 ? (+formattedCost).toFixed(1) :
+										+profit < 0 ? (+x.now_cost).toFixed(1) : 
 										(+formattedCost + +profit).toFixed(1)
 						newPicks.push({...x, selling_price, element_in_cost:formattedCost})
 					}
 				})
 
+        /* Adding selling prices and buying prices to picks to be used on reset for
+         the first gw in the ui */
 				realPicksHyp.forEach(x => {
 					let isFound = transferPlayers.some(player => player.element === x.element)
 					if(isFound) {
 						let element_in_cost = transferPlayers.find(player => player.element === x.element).element_in_cost
 						formattedCost = (element_in_cost/10).toFixed(1)
-						profit = (+x.now_cost - +formattedCost)/2
-						selling_price = profit <= 0.1 && profit > 0 ? (+formattedCost).toFixed(1) :
-										profit < 0 ? (+x.now_cost).toFixed(1) : 
+						profit = ((+x.now_cost - +formattedCost)/2).toFixed(1)
+						selling_price = +profit < 0.1 && +profit >= 0 ? (+formattedCost).toFixed(1) :
+										+profit < 0 ? (+x.now_cost).toFixed(1) : 
 										(+formattedCost + +profit).toFixed(1)
 						realPicks.push({...x, selling_price, element_in_cost:formattedCost})
 					} else {
 						formattedCost = (+x.now_cost - +x.price_change).toFixed(1)
-						profit = (+x.now_cost - +formattedCost)/2
-						selling_price = profit <= 0.1 && profit > 0 ? (+formattedCost).toFixed(1) :
-										profit < 0 ? (+x.now_cost).toFixed(1) : 
+						profit = ((+x.now_cost - +formattedCost)/2).toFixed(1)
+						selling_price = +profit < 0.1 && +profit >= 0 ? (+formattedCost).toFixed(1) :
+										+profit < 0 ? (+x.now_cost).toFixed(1) : 
 										(+formattedCost + +profit).toFixed(1)
 						realPicks.push({...x, selling_price, element_in_cost:formattedCost})
 					}
 				})
 				bank = (result.entry_history.bank/10).toFixed(1)
 				value = (result.entry_history.value/10).toFixed(1)
+        let totalBudget = picks.reduce((x,y) => x+(+y.selling_price),0) + +bank
 				filteredEvents.forEach((x, key) => {
 					const { id, name, deadline_time } = x
 					//Adding picks to first GW only
 					const brandNewPicks = key === 0 ? newPicks : []
-					const newResult = {id, name, deadline_time, newPicks:brandNewPicks, bank, value, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
+					const newResult = {id, name, deadline_time, newPicks:brandNewPicks, totalBudget, bank, value, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
 					gameweekPicks.push(newResult)
 				})
 
@@ -515,43 +519,6 @@
 			})
 			.catch(error => console.log('error', error));
 			})
-			/*fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/event/${eventId}/picks/`, requestOptions)
-			.then(response => response.json())
-			.then(result => {
-				let eventztream = JSON.parse(sessionStorage.getItem('events'))
-				let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) > new Date())
-
-				let newPicks = []
-   				const realPicks = []
-				let gameweekPicks = []
-				let bank, value
-				result.picks.forEach(x => {
-					playerState.players.forEach(y => {
-						if(y.id === x.element) {
-							newPicks.push({...x, disabled:true, element_type:y.element_type, team:y.team})
-							realPicks.push({...x, disabled:true, element_type:y.element_type, team:y.team})
-						}
-					})
-				})
-				bank = (result.entry_history.bank/10).toFixed(1)
-				value = (result.entry_history.value/10).toFixed(1)
-				filteredEvents.forEach((x, key) => {
-					const { id, name, deadline_time } = x
-					//Adding picks to first GW only
-					const brandNewPicks = key === 0 ? newPicks : []
-					const newResult = {id, name, deadline_time, newPicks:brandNewPicks, bank, value, transfers:[{"transfersOut":[]}, {"transfersIn":[]}] }
-					gameweekPicks.push(newResult)
-				})
-
-				
-				sessionStorage.removeItem('managerPicks')
-				sessionStorage.setItem('managerPicks', JSON.stringify(gameweekPicks))
-				sessionStorage.removeItem('realPicks')
-				sessionStorage.setItem('realPicks', JSON.stringify(realPicks))
-				
-				loadGameweeks().loadGameweek()
-			})
-			.catch(error => console.log('error', error));*/
 		}
 
 		//Get Manager History
@@ -686,23 +653,6 @@
 				})
 				document.querySelector('.games-info-results tbody').innerHTML = result
 			})
-			/*let response = await fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/element-summary/${a}/`, requestOptions)
-			let data = await response.json()
-			let history = await data.history
-			history.forEach(x => {
-					let hTeam = teamState.teams.find(tname => tname.id === x.opponent_team).name
-					let home =  x.was_home ? 'H':'A'
-					let row =  `<tr><td class='table-sticky'>${x.round}</td>
-					<td class='table-sticky-1'>${hTeam}&nbsp;&nbsp;(${home}) </td>
-					<td>${x.team_h_score} : ${x.team_a_score}</td>
-					<td>${x.minutes}</td>
-					<td>${x.total_points}</td>
-					<td>${x.goals_scored}</td>
-					<td>${x.assists}</td>
-					<td>${x.clean_sheets}</td>
-					</tr>`
-					result += row
-				})*/
 		}
 
 

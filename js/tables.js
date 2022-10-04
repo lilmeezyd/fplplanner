@@ -478,6 +478,9 @@ function upload() {
 					let isCaptain = picks.filter(x => x.is_captain)[0]
 					let isViceCaptain = picks.filter(x => x.is_vice_captain)[0]
 					let playerId = +x.parentElement.id
+					let price_change = (playerState.players.find(x => x.id === playerId).price_change/10).toFixed(1)
+					let element_in_cost = (playerState.players.find(x => x.id === playerId).now_cost/10).toFixed(1)
+					let selling_price = (playerState.players.find(x => x.id === playerId).now_cost/10).toFixed(1)
 					let elementType = +x.querySelector('.position').getAttribute('element_type')
 					let team = +x.querySelector('.team').getAttribute('team_id')
 					//price
@@ -487,6 +490,9 @@ function upload() {
 					player.disabled = true
 					player.position = 0
 					player.multiplier = 1
+					player.price_change = price_change
+					player.element_in_cost = element_in_cost
+					player.selling_price = selling_price
 					benchGoalie = picks.filter(x => x.multiplier === 0 && x.element_type === 1).length
 					nonBench = picks.filter(x => x.multiplier !== 0).length
 					playingGoalie = picks.filter(x => x.multiplier !== 0 && x.element_type === 1).length
@@ -494,7 +500,7 @@ function upload() {
 					playingMid = picks.filter(x => x.multiplier !== 0 && x.element_type === 3).length
 					playingFwd = picks.filter(x => x.multiplier !==0 && x.element_type === 4).length
 
-					let num = elementType === 1 ? 2 : elementType === 2 ? 3 : 
+					let num = elementType === 1 ? 2 : elementType === 2 ? 5 : 
 					elementType === 3 ? 5 : 3
 					let fieldnum = elementType === 1 ? 'Goalkeepers' : 
 					elementType === 2 ?	'Defenders' : elementType === 3 ? 'Midfielder' : 'Forwards'	

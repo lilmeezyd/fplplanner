@@ -1405,6 +1405,13 @@
 		justify-content: space-between;
 		align-items: center;
 	}
+	.next-fix > span, .up-fix > span {
+		font-weight: bolder;
+	}
+	.next-fix span:first-of-type {
+		background-color: #445b44;
+		color: white;
+	}
 	.data_fixtures .up-fix {
 		background: white;
 		display: flex;

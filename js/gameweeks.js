@@ -24,6 +24,8 @@ function loadGameweeks() {
         let previousWeek = retrievedGameweeks.filter(x => x.id === curGameweek-1)
         let previousHistory = retrievedHistory.filter(x => x.id === curGameweek-1)
         let index = retrievedGameweeks.findIndex(x => x.id === curGameweek)
+        document.querySelector('.message').innerHTML = ``
+        document.querySelector('.message').style.display = 'none'
         if(previousWeek.length === 0) {
             newWeek[0].newPicks.length = 0
             newWeek[0].transfers[0].transfersOut.length = 0
@@ -91,9 +93,25 @@ function loadGameweeks() {
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
         const newWeekIndex = retrievedGameweeks.findIndex(x => x.id === curGameweek)
         const newHistoryIndex = retrievedHistory.findIndex(x => x.id === curGameweek)
+        
+        document.querySelector('.message').innerHTML = ``
+        document.querySelector('.message').style.display = 'none'
 
-        if(picks.length < 15) {
-            console.log(`Team not full or Budget not enough`)
+        if(remainingBudget < 0 || picks.length < 15) {
+            if(remainingBudget < 0) {
+                document.querySelector('.message').style.display = 'block'
+				document.querySelector('.details-one').style.paddingBottom = 0
+				document.querySelector('.message').classList.add('danger')
+				document.querySelector('.message').classList.remove('success')
+				document.querySelector('.message').innerHTML = `Budget not enough`
+	
+            } else {
+                document.querySelector('.message').style.display = 'block'
+				document.querySelector('.details-one').style.paddingBottom = 0
+				document.querySelector('.message').classList.add('danger')
+				document.querySelector('.message').classList.remove('success')
+				document.querySelector('.message').innerHTML = `Team not full`
+            }
         } else { 
             let newWeek = retrievedGameweeks.filter(x => x.id === curGameweek)
             const newHistory = retrievedHistory.filter(x => x.id === curGameweek)
@@ -175,10 +193,25 @@ function loadGameweeks() {
     function nextGameweek() {
         let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
-        let realPicks = JSON.parse(sessionStorage.getItem('realPicks')) 
-        //remainingBudget < 0 ||
-        if(picks.length < 15) {
-            console.log(`Team not full or Budget not enough`)
+        let realPicks = JSON.parse(sessionStorage.getItem('realPicks'))
+        
+        document.querySelector('.message').innerHTML = ``
+        document.querySelector('.message').style.display = 'none'
+        if(remainingBudget < 0 || picks.length < 15) {
+            if(remainingBudget < 0) {
+                document.querySelector('.message').style.display = 'block'
+				document.querySelector('.details-one').style.paddingBottom = 0
+				document.querySelector('.message').classList.add('danger')
+				document.querySelector('.message').classList.remove('success')
+				document.querySelector('.message').innerHTML = `Budget not enough`
+	
+            } else {
+                document.querySelector('.message').style.display = 'block'
+				document.querySelector('.details-one').style.paddingBottom = 0
+				document.querySelector('.message').classList.add('danger')
+				document.querySelector('.message').classList.remove('success')
+				document.querySelector('.message').innerHTML = `Team not full`
+            }
         } else {
             if((curGameweek*gameweekSize) < retrievedGameweeks.length) curGameweek++   
             gameweekNum.textContent = `Gameweek ${curGameweek}`
@@ -356,13 +389,10 @@ function loadGameweeks() {
             x.setAttribute('disabled', true)
         })
 
-
-        
-        
-       /* if(currentWeek[0].fts === 'unlimited') transferNumber.innerHTML = '∞'*/
         trackInRealtime(curGameweek)
         trackTransfers(curGameweek)
-        document.querySelector('.transfer-number').innerHTML = currentHistory[0].fts  
+        document.querySelector('.transfer-number').innerHTML = 
+        (currentChip === 'fhit' || currentChip === 'wcard') ? '∞' : currentHistory[0].fts  
 
         if(curGameweek === Math.max(...eventIds) + 1) {
             document.querySelector('#prevGameweek').style.visibility = 'hidden'
@@ -370,11 +400,7 @@ function loadGameweeks() {
             document.querySelector('#prevGameweek').style.visibility = 'visible'
             //transferNumber.innerHTML = currentWeek[0].fts === 'unlimited' ? '∞' : currentWeek[0].fts
         }
-        /*if((curGameweek*gameweekSize) === retrievedGameweeks.length) {
-            document.querySelector('#nextGameweek').style.visibility = 'hidden'
-        } else {
-            document.querySelector('#nextGameweek').style.visibility = 'visible'
-        }*/
+        
 
         picks.length = 0
         oldTeam.length = 0

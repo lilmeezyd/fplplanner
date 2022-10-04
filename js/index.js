@@ -9,10 +9,14 @@ const changeBench = []
 let swap = ''
 let tgoal
 let tgoal1
+let totalBudget
 
-
+function returnTotalBudget() {
+	totalBudget = +JSON.parse(sessionStorage.getItem('managerPicks'))[0].totalBudget
+}
 
 function loadTeam() {
+	returnTotalBudget()
 	document.querySelector('.player-num').innerHTML = picks.length
 	result0 = ''
 	result1 = ''
@@ -52,12 +56,18 @@ function loadTeam() {
 	forw.innerHTML = result3
 	benchelement.innerHTML = result4
 
+	
 	remainBudget = document.querySelector('.remain-budget')
-	spent = picks.reduce((x,y) => x+(+y.price), 0)
-	//remainingBudget = budget-spent
+	spent = picks.reduce((x,y) => x+(+y.selling_price),0)
+	console.log(spent)
+	console.log(totalBudget)
+	remainingBudget = (+totalBudget-spent).toFixed(1)
+	console.log(remainingBudget)
+	remainBudget.textContent = remainingBudget
+	//console.log(remainingBudget.toFixed(1))
 	//remainBudget.textContent = remainingBudget.toFixed(1)+'m'
-	//remainingBudget >= 0 ? remainBudget.classList.remove('info-danger') : remainBudget.classList.remove('info-success')
-	//remainingBudget >= 0 ? remainBudget.classList.add('info-success') : remainBudget.classList.add('info-danger')
+	remainingBudget >= 0 ? remainBudget.classList.remove('info-danger') : remainBudget.classList.remove('info-success')
+	remainingBudget >= 0 ? remainBudget.classList.add('info-success') : remainBudget.classList.add('info-danger')
 	/*if(remainingBudget < 0 || team.length < 15) {
     	document.querySelector('#nextGameweek').setAttribute('disabled', true)
 	} else {
@@ -501,7 +511,7 @@ function loadPlayer(a, player) {
 	let backgroundColor = news == 0 ? 'darkred' : news == 25 ? 'darkorange' :
 			news == 50 ? 'orange' : news == 75 ? 'yellow' : 'rgba(0,0,55,0.9)'
 	let color = news == 25 ? 'rgba(0,0,55,0.9)' :
-			news == 50 ? 'rgba(0,0,55,0.9)' : news == 75 ? 'rgba(0,0,55,0.9)' :'white'		
+			news == 50 ? 'rgba(0,0,55,0.9)' : news == 75 ? 'rgba(0,0,55,0.9)' :'white'
 	return `
 	<div class="pitch_unit">
 	<div class="element_container">
