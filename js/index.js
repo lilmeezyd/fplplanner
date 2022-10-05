@@ -676,7 +676,7 @@ function nextFixtures(a,b, c) {
 	nextThree = newNextFour.splice(0,3)
 	nextOne.forEach(x => {
 		if(x.team_a === a) {
-			nameAway = nameAway = x.team_h === 0 ? 'blk' : teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
+			nameAway = nameAway = x.team_h === 0 ? '' : teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
 			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
 			x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_a_difficulty === 4 ?
 			'rgb(255, 23, 81)' : x.team_a_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
@@ -684,7 +684,7 @@ function nextFixtures(a,b, c) {
 			resultFix+=spanAway
 		}
 		if(x.team_h === a) {
-			nameHome = x.team_a === 0 ? 'BLK' : teamState.teams.find(tname => tname.id === x.team_a).short_name
+			nameHome = x.team_a === 0 ? '' : teamState.teams.find(tname => tname.id === x.team_a).short_name
 			let homeColor = x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
 			x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_h_difficulty === 4 ?
 			'rgb(255, 23, 81)' : x.team_h_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
@@ -694,7 +694,7 @@ function nextFixtures(a,b, c) {
 	})
 	nextThree.forEach((x,key) => {
 		if(x.team_a === a) {
-			nameAway = x.team_h === 0 ? 'blk' : teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
+			nameAway = x.team_h === 0 ? '' : teamState.teams.find(tname => tname.id === x.team_h).short_name.toLowerCase()
 			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
 			x.team_a_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_a_difficulty === 4 ?
 			'rgb(255, 23, 81)' : x.team_a_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'
@@ -702,7 +702,7 @@ function nextFixtures(a,b, c) {
 			resultFour+=spanAway
 		}
 		if(x.team_h === a) {
-			nameHome = x.team_a === 0 ? 'BLK' : teamState.teams.find(tname => tname.id === x.team_a).short_name
+			nameHome = x.team_a === 0 ? '' : teamState.teams.find(tname => tname.id === x.team_a).short_name
 			let homeColor = x.team_h_difficulty === 2 ? 'rgb(1, 252, 122)' : 
 			x.team_h_difficulty === 3 ? 'rgb(231, 231, 231)' : x.team_h_difficulty === 4 ?
 			'rgb(255, 23, 81)' : x.team_h_difficulty === 5 ? 'rgb(128, 7, 45)' : 'rgb(0,0,0)'

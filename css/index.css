@@ -387,6 +387,7 @@
 	.details-cont, .data_fixtures, .next-fix, .up-fix {
 		width: 100%;
 		font-weight: bolder;
+		font-family: 'Montserrat Alternates', sans-serif;
 	}
 	.data_name {
 		/*border: 1px solid black;*/
@@ -915,7 +916,7 @@
 		font-size: 0.9rem;
 	}
 	table td span:first-child {
-		font-weight: bolder;
+		font-family: 'Montserrat Alternates', sans-serif;
 	}
 	.diff-2 {
 		background: darkgreen;
@@ -1181,6 +1182,7 @@
 		/*margin: auto;
 		table-layout: fixed;
 		white-space: nowrap;*/
+		font-family: 'Montserrat Alternates', sans-serif;
 		border-collapse: collapse;
 		margin-top: 2rem;
 		display: block;
