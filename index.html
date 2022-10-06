@@ -12,7 +12,8 @@
 	<link rel="icon" type="image/x-icon" href="/static/icons8.png">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@500&display=swap" rel="stylesheet"> 
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> 
 </head>
 <body>
@@ -376,7 +377,6 @@
 			redOrGreen()
 			getManagerHistory()
 			getManagerPicks()
-			//getManagerTransfers()
 			//loadTeam()
 			//createGameweek()
 			playersOut.length = 0
@@ -384,25 +384,7 @@
 			teamid.value = ""
 		}
 
-		//Get Manager Transfers
-		function getManagerTransfers() {
-			var requestOptions = {
-			method: 'GET',
-			redirect: 'follow'
-			};
-
-			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/entry/${playerId}/transfers/`, requestOptions)
-			.then(response => response.json())
-			.then(result => {
-				result.forEach(x => {
-					console.log(x)
-					console.log(x.element_in)
-					console.log(x.element_in_cost)
-					console.log(x.time)
-					console.log(x.event)
-				})
-			})
-		}
+		
 
 		//Get Manager Picks
 		function getManagerPicks() {
@@ -425,9 +407,9 @@
 				let filteredEvents = eventztream.filter(x => new Date(x.deadline_time) > new Date())
 
 				let newPicks = []
-   			const realPicks = []
-   			let newPicksHyp = []
-   			const realPicksHyp = []
+   				const realPicks = []
+   				let newPicksHyp = []
+   				const realPicksHyp = []
 				let gameweekPicks = []
 				const transferPlayers = []
 				let bank, value
@@ -663,6 +645,11 @@
 			let retrievedColor = JSON.parse(sessionStorage.getItem('color'))
 			let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
 			let retrievedPicks = JSON.parse(sessionStorage.getItem('managerPicks'))
+			let rTeams = JSON.parse(sessionStorage.getItem('teams'))
+			let rElementTypes = JSON.parse(sessionStorage.getItem('element_types'))
+			let rEvents = JSON.parse(sessionStorage.getItem('events'))
+			let rFixtures = JSON.parse(sessionStorage.getItem('fixtures'))
+			let rPlayers = JSON.parse(sessionStorage.getItem('players'))
 			if(retrievedManager === null) {
 				document.querySelector('.tname').innerHTML = 'TEAM NAME'
 				document.querySelector('.trank').innerHTML = 'OVERALL RANK'
@@ -696,11 +683,16 @@
         	} else {
            		 console.log('Team Uploaded')
        		 }
-       		 setTeams() 
-			 setElementTypes()
-			 setEvents()
-			 setPlayers()
-			 setFixtures()
+			 if(rElementTypes==null || rTeams==null || rEvents==null || rFixtures==null || rPlayers==null) {
+				return
+			 } else {
+			    setTeams() 
+				setElementTypes()
+				setEvents()
+				setPlayers()
+				setFixtures()
+			 }
+       		 
 			 loadTeamFixtures()
 			 upload().loadPrices()
 			 upload().loadPlayers()
@@ -760,6 +752,7 @@
 
 	    function getTime() {
 	        let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
+			if(retrievedGameweeks === null) return
 	        let currentWeek = retrievedGameweeks.filter(x => x.id === weekNdeadline[1])
 	        let deadline = currentWeek[0].deadline_time
 	        let millis = new Date(deadline)-new Date()

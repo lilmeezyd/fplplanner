@@ -407,6 +407,9 @@ function loadGameweeks() {
         weekNdeadline.length = 0
         //message.innerHTML = ''
         //message.style.display = 'none'
+        if(retrievedPicks === null) {
+            return
+        }
         retrievedPicks.filter((row, index) => {
             let start = (curGameweek-(Math.max(...eventIds) + 1))*gameweekSize
             let end = (curGameweek-Math.max(...eventIds))*gameweekSize

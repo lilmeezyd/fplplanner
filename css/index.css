@@ -16,6 +16,9 @@
 	a {
 		text-decoration: none;
 	}
+	h4 {
+		font-family: 'Montserrat Alternates', sans-serif;
+	}
 	nav {
 		overflow: hidden;
 		/*position: fixed;
@@ -253,6 +256,13 @@
 	.trans-team {
 		text-transform: capitalize;
 		padding: 0.3rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.trans-team img {
+		width: 25px;
+		height: 30px;
 	}
 	.trans-wrapper:not(.trans-wrapper:last-child) {
 		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -674,6 +684,7 @@
 		text-align: center;
 		display: flex;
 		flex-direction: column;
+		align-items: center;
 		row-gap: 0.8rem;
 		padding: 1rem;
 		color: rgba(22, 22, 68, 1.0);
@@ -977,7 +988,6 @@
 	.btn-info-block {
 		width: 100%;
 		padding: 0.6rem 0;
-		font-weight: 700;
 		font-size: 0.9rem;
 	}
 	.btn-danger {
@@ -995,7 +1005,6 @@
 	 .btn-vcap {
 		background: rgba(192, 192, 192, 0.8);
 		color: black;
-		font-weight: bolder;
 	}
 	.btn-vcap:hover {
 		background: rgba(192, 192, 192, 1.0);
@@ -1003,7 +1012,6 @@
 	.btn-cap {
 		background: rgba(255, 215, 0, 0.8);
 		color: black;
-		font-weight: bolder;
 	}
 	.btn-cap:hover {
 		background: rgba(255, 215, 0, 1.0);
@@ -1148,11 +1156,17 @@
 		color: #fff;
 	}
 	.info-success {
-		color: darkgreen;
+		background-color: darkgreen;
+		width: fit-content;
+		color: white;
+		padding: 0.2rem;
 		
 	}
 	.info-danger {
-		color: darkred;
+		background-color: darkred;
+		color: white;
+		width: fit-content;
+		padding: 0.2rem;
 		/*font-family: 'Montserrat';*/
 	}
 
@@ -1400,12 +1414,13 @@
 		}
 	} 
 	.data_fixtures .next-fix {
-		background: ghostwhite;
+		background: transparent;
 	}
 	.next-fix  {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		margin-bottom: 2px;
 	}
 	.next-fix > span, .up-fix > span {
 		font-weight: bolder;
@@ -1414,8 +1429,11 @@
 		background-color: #445b44;
 		color: white;
 	}
+	.next-fix span:not(:last-of-type), .up-fix span:not(:last-of-type) {
+		margin-right: 2px;
+	}
 	.data_fixtures .up-fix {
-		background: white;
+		background: transparent;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -1423,9 +1441,9 @@
 	.data_fixtures span {
 		flex: 1 1 0%;
 		display: block;
-		/*border: 1px solid rgba(255, 255, 255, 1.0);*/
-		padding: 0.2rem 0;
-		min-height: 17.6px;
+		border: 1px solid rgba(0, 0, 0, 0.5);
+		padding: 0.1rem 0;
+		min-height: 10px;
 	}
 	.show-btn {
 		display: block;
