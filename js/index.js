@@ -143,9 +143,6 @@ function loadTeam() {
 		player = picks.find(x => x.element === playerId)
 		document.querySelector('.playerpopup').innerHTML = load_popup(playerId)
 		document.querySelector('.playerpopup').style.display = 'block'
-		//document.body.style.overflow = 'hidden'
-		//document.body.style.paddingRight = '17px'
-		//playerpop = document.querySelector('.playerpop')
 		popupclose = document.querySelector('.btn-close')
 		popupclose.addEventListener('click', function() {
 			document.querySelector('.playerpopup').innerHTML = ''
@@ -232,6 +229,33 @@ function loadTeam() {
 	}
 })
 
+Array.from(document.querySelectorAll('[size="element_container"]')).forEach(x => {
+	x.ondragstart = function(e) {
+		let swapButton = x.parentElement.querySelector('.swap-button').classList
+		swapButton.contains('swap-button-out') ? 
+		swapButtonOut(x.parentElement.querySelector('.swap-button')) :
+		swapButtonIn(x.parentElement.querySelector('.swap-button'))
+		//playerIndex = picks.findIndex(x => x.element === playerId)
+		//player = playerState.players.find(x => x.id === a.element)
+		//outplayer = picks[playerIndex]
+		e.dataTransfer.setData("Text", e.target.id);
+	}
+	x.parentElement.ondragover = function(e) {
+		e.preventDefault()
+	}
+	x.parentElement.ondrop = function(e) {
+		e.preventDefault()
+		var data = e.dataTransfer.getData("Text");
+		console.log(data)
+		console.log(x.id)
+		console.log(inplayer)
+		swapplayer(outplayer, inplayer)
+	}
+	
+})
+
+
+
 	
 
 
@@ -247,6 +271,7 @@ document.querySelector('.show-fpl').addEventListener('click', function() {
 function swapButtonOut(a) {
 			playerId = +a.parentElement.id
 			playerposition = +a.parentElement.getAttribute('position')
+			console.log(playerposition)
 			positonnumber = picks.filter(x => x.element_type === playerposition && x.multiplier !== 0).length
 			captain = picks.find(x => x.is_captain)
 			vcaptain = picks.find(x => x.is_vice_captain)
@@ -517,9 +542,11 @@ function loadPlayer(a, player) {
 	return `
 	<div class="pitch_unit">
 	<div class="element_container">
-									<div size="element_container" class="element_container-two"  team="${team_name}" position="${player.element_type}" id="${player.id}">
+									<div size="element_container" class="element_container-two"  team="${team_name}" position="${player.element_type}" id="${player.id}"
+									draggable="true">
 										<button type="button" class="btn-details">
-											<img src="${player.image}" size="image">
+											<img src="${player.image}" size="image"
+											draggable="false">
 											<div class="details-cont">
 												<div class="data_name"
 												style="background:${backgroundColor}; color:${color};">${player.web_name}</div>
@@ -569,9 +596,10 @@ function loadBench(a, player) {
 									<span class="bean tooltip">${positionObj.singular_name_short}</span>
 								</h3>
 								<div class="bean1">
-									<div size="element_container" class="styledPitchElement" position="${player.element_type}" team="${team_name}" id="${player.id}">
+									<div size="element_container" class="styledPitchElement" position="${player.element_type}" team="${team_name}" id="${player.id}"
+									draggable="true">
 										<button type="button" class="btn-details">
-											<img src="${player.image}" size="image">
+											<img src="${player.image}" size="image" draggable="false">
 											<div class="details-cont">
 												<div class="data_name" style="background:${backgroundColor}; color:${color};">${player.web_name}</div>
 												<div class="data_fixtures x-small">

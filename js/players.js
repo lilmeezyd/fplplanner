@@ -86,32 +86,16 @@
 				sessionStorage.removeItem('fixtures')
 				sessionStorage.setItem('fixtures', JSON.stringify(result))
 				setFixtures()
-				loadTeamFixtures()
 			})
 			.catch(error => console.log('error', error));
 
 		}
 		
-		/*function setFixtureData() {
-			var requestOptions = {
-			method: 'GET',
-			redirect: 'follow'
-			};
-
-			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/fixtures/`, requestOptions)
-			.then(response => response.json())
-			.then(result => {
-				sessionStorage.removeItem('fixtures')
-				sessionStorage.setItem('fixtures', JSON.stringify(result))
-				setFixtures()
-				loadTeamFixtures()
-			})
-			.catch(error => console.log('error', error));
-		}*/
 
 		function returnData() {
 			//setFixtureData()
 			setData()
+			loadTeamFixtures()
 			//loadPlayers()
 			//loadFixtures()
 			//loadTeam()
