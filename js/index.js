@@ -235,10 +235,15 @@ Array.from(document.querySelectorAll('[size="element_container"]')).forEach(x =>
 		swapButton.contains('swap-button-out') ? 
 		swapButtonOut(x.parentElement.querySelector('.swap-button')) :
 		swapButtonIn(x.parentElement.querySelector('.swap-button'))
-		//playerIndex = picks.findIndex(x => x.element === playerId)
-		//player = playerState.players.find(x => x.id === a.element)
-		//outplayer = picks[playerIndex]
+		playerIndex = picks.findIndex(x => x.element === +e.target.id)
+		player = playerState.players.find(x => x.id === +e.target.id)
+		outplayer = picks[playerIndex]
 		e.dataTransfer.setData("Text", e.target.id);
+	}
+	x.ondragend = function(e) {
+		outplayer = ''
+		inplayer = ''
+		loadTeam()
 	}
 	x.parentElement.ondragover = function(e) {
 		e.preventDefault()
@@ -246,9 +251,9 @@ Array.from(document.querySelectorAll('[size="element_container"]')).forEach(x =>
 	x.parentElement.ondrop = function(e) {
 		e.preventDefault()
 		var data = e.dataTransfer.getData("Text");
-		console.log(data)
-		console.log(x.id)
-		console.log(inplayer)
+		playerIndex = picks.findIndex(player => player.element === +x.id)
+		player = playerState.players.find(player => player.id === +x.id)
+		inplayer = picks[playerIndex]
 		swapplayer(outplayer, inplayer)
 	}
 	
@@ -271,7 +276,6 @@ document.querySelector('.show-fpl').addEventListener('click', function() {
 function swapButtonOut(a) {
 			playerId = +a.parentElement.id
 			playerposition = +a.parentElement.getAttribute('position')
-			console.log(playerposition)
 			positonnumber = picks.filter(x => x.element_type === playerposition && x.multiplier !== 0).length
 			captain = picks.find(x => x.is_captain)
 			vcaptain = picks.find(x => x.is_vice_captain)
@@ -395,30 +399,29 @@ function swapButtonOut(a) {
 }
 
 function swapButtonIn(a) {
-			playerId = +a.parentElement.id
-			playerposition = +a.parentElement.getAttribute('position')
-			teamdefenders = picks.filter(x => x.multiplier !== 0 && x.element_type === 2).length
-			teammidfielders = picks.filter(x => x.multiplier !== 0 && x.element_type === 3).length
-			teamforwards = picks.filter(x => x.multiplier !== 0 && x.element_type === 4).length
-			let playerContainer = a.parentElement.parentElement
-			playerContainer.classList.toggle('player-active')
-			function outin() {
-				playerIndex = picks.findIndex(x => x.multiplier === 0 && x.element_type === playerposition && x.element == playerId)
-			    inplayer = picks[playerIndex]
-			    document.querySelector('.message').style.display = 'block'
-				document.querySelector('.details-one').style.paddingBottom = 0
-				document.querySelector('.message').classList.remove('danger')
-				document.querySelector('.message').classList.add('success')
-				document.querySelector('.message').innerHTML = loadMessage6(inplayer)
-			    if(outplayer.is_captain) {
-			    	inplayer.is_captain = true;
-			    	outplayer.is_captain = false
-		    		}
-		    	if(outplayer.is_vice_captain) {
-		    		inplayer.is_vice_captain = true
-		    		outplayer.is_vice_captain = false
-		    		}
-
+		playerId = +a.parentElement.id
+		playerposition = +a.parentElement.getAttribute('position')
+		teamdefenders = picks.filter(x => x.multiplier !== 0 && x.element_type === 2).length
+		teammidfielders = picks.filter(x => x.multiplier !== 0 && x.element_type === 3).length
+		teamforwards = picks.filter(x => x.multiplier !== 0 && x.element_type === 4).length
+		let playerContainer = a.parentElement.parentElement
+		playerContainer.classList.toggle('player-active')
+		function outin() {
+			playerIndex = picks.findIndex(x => x.multiplier === 0 && x.element_type === playerposition && x.element == playerId)
+		    inplayer = picks[playerIndex]
+		    document.querySelector('.message').style.display = 'block'
+			document.querySelector('.details-one').style.paddingBottom = 0
+			document.querySelector('.message').classList.remove('danger')
+			document.querySelector('.message').classList.add('success')
+			document.querySelector('.message').innerHTML = loadMessage6(inplayer)
+		    if(outplayer.is_captain) {
+		    	inplayer.is_captain = true;
+		    	outplayer.is_captain = false
+		   		}
+		   	if(outplayer.is_vice_captain) {
+		   		inplayer.is_vice_captain = true
+		   		outplayer.is_vice_captain = false
+		   		}
 				swapplayer(outplayer, inplayer)
 				loadTeam()
 				tgoal.length = 0
@@ -809,14 +812,29 @@ function addSwap(arr) {
 }
 
 function swapplayer(a, b) {
+	//change bench order
 	bbenchOrder = b.position
 	sbenchOrder = a.position
+	b.position = sbenchOrder
+	a.position = bbenchOrder
+
+	//change multiplier
 	aMultiplier = a.multiplier
 	bMultiplier = b.multiplier
 	a.multiplier = bMultiplier
 	b.multiplier = aMultiplier
-	b.position = sbenchOrder
-	a.position = bbenchOrder
+
+	//change captain
+	aCaptain = a.is_captain
+	bCaptain = b.is_captain
+	a.is_captain = bCaptain
+	b.is_captain = aCaptain
+
+	//change vice captain
+	aVcaptain = a.is_vice_captain
+	bVcaptain = b.is_vice_captain
+	a.is_vice_captain = bVcaptain
+	b.is_vice_captain = aVcaptain
 	loadTeam()
 	changeBench.length = 0
 }

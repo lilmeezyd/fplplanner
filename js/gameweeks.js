@@ -173,10 +173,7 @@ function loadGameweeks() {
                         retrievedHistory[i].fts = 1
                     }
                 }
-                }  
-
-                console.log(newHistory)
-                console.log(previousHistory)
+                } 
 
             if(newHistory[0].fts === 2 && previousHistory[0].fts === 2){
                 previousHistory[0].rolledft = true
