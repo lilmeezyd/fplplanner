@@ -86,6 +86,7 @@
 				sessionStorage.removeItem('fixtures')
 				sessionStorage.setItem('fixtures', JSON.stringify(result))
 				setFixtures()
+				loadTeamFixtures()
 			})
 			.catch(error => console.log('error', error));
 
@@ -95,7 +96,6 @@
 		function returnData() {
 			//setFixtureData()
 			setData()
-			loadTeamFixtures()
 			//loadPlayers()
 			//loadFixtures()
 			//loadTeam()
