@@ -974,10 +974,10 @@
 		padding: 0.2rem 0 0.2rem 2.5rem;
 	}
 	.infobuttons {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 	}.btn-info {
 		outline: none;
 		border: none;
@@ -987,6 +987,7 @@
 		cursor: pointer;
 		color: #fff;
 		font-family: 'Montserrat';
+		font-weight: 600;
 	}
 	.btn-info-block {
 		width: 100%;
@@ -1008,6 +1009,7 @@
 	 .btn-vcap {
 		background: rgba(192, 192, 192, 0.8);
 		color: black;
+		font-weight: 600;
 	}
 	.btn-vcap:hover {
 		background: rgba(192, 192, 192, 1.0);
@@ -1015,6 +1017,7 @@
 	.btn-cap {
 		background: rgba(255, 215, 0, 0.8);
 		color: black;
+		font-weight: 600;
 	}
 	.btn-cap:hover {
 		background: rgba(255, 215, 0, 1.0);
@@ -1141,6 +1144,7 @@
 	}
 	.transfer, .substitute {
 		/*display: none;*/
+		font-weight: 600;
 	}
 	.message {
 		margin: 0.2rem -0.8rem 0;

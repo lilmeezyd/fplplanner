@@ -596,18 +596,7 @@
 			.catch(error => console.log('error', error));
 		}
 
-		//Collect my data
-		/*async function getMoini() {
-			var requestOptions = {
-				method: 'GET',
-				redirect: 'follow'
-			};
-			let credentials = btoa("denismoini09@gmail.com:#El$&c6pitan0*;:@")
-			let response = await 
-			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/my-team/5953/`, { headers: {"Authorizaton":`Basic ${credentials}`}})
-			let data = await response.json()
-			console.log(data)
-		}*/
+		
 		
 
 		//set player Data
@@ -817,15 +806,14 @@
 			setTimeout(showHeader, 10000, n)
 		}
 	</script>
-	<script type="text/javascript" src="js/players.js"></script>
-	<script type="text/javascript" src="js/tables.js">
+	<script defer type="text/javascript" src="js/players.js"></script>
+	<script defer type="text/javascript" src="js/tables.js">
 	</script>
-	<script type="text/javascript" src="js/fixtures.js"></script>
+	<script defer type="text/javascript" src="js/fixtures.js"></script>
 	<script type="text/javascript" src="js/index.js"></script>
 	<script type="text/javascript" src="js/modal.js"></script>
 	<script type="text/javascript" src="js/gameweeks.js"></script>
 	<script type="text/javascript" src="js/chips.js"></script>
-	<script type="text/javascript" src="js/dragPlayers.js"></script>
 </body>
 </html>
 

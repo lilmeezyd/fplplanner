@@ -471,10 +471,19 @@ function upload() {
 			Array.from(player_cells).forEach(x => {
 				let player = {}
 				x.addEventListener('click', function() {
-					let goalkeepers = picks.filter(x => x.element_type === 1).length
-					let defenders = picks.filter(x => x.element_type === 2).length
-					let midfielders = picks.filter(x => x.element_type === 3).length
-					let forwards = picks.filter(x => x.element_type === 4).length
+					let playersOutG = playersOut.filter(x => x.element_type === 1).length
+					let playersOutD = playersOut.filter(x => x.element_type === 2).length
+					let playersOutM = playersOut.filter(x => x.element_type === 3).length
+					let playersOutF = playersOut.filter(x => x.element_type === 4).length
+
+					let goalkeepers = picks.filter(x => x.element_type === 1).length - playersOutG
+					let defenders = picks.filter(x => x.element_type === 2).length - playersOutD
+					let midfielders = picks.filter(x => x.element_type === 3).length - playersOutM
+					let forwards = picks.filter(x => x.element_type === 4).length - playersOutF
+
+					let playersOutCap = playersOut.some(x => x.is_captain)
+					let playersOutvCap = playersOut.some(x => x.is_vice_captain)
+
 					let isCaptain = picks.filter(x => x.is_captain)[0]
 					let isViceCaptain = picks.filter(x => x.is_vice_captain)[0]
 					let playerId = +x.parentElement.id
@@ -483,6 +492,7 @@ function upload() {
 					let selling_price = (playerState.players.find(x => x.id === playerId).now_cost/10).toFixed(1)
 					let elementType = +x.querySelector('.position').getAttribute('element_type')
 					let team = +x.querySelector('.team').getAttribute('team_id')
+					
 					//price
 					player.element_type = elementType
 					player.element = playerId
@@ -493,12 +503,20 @@ function upload() {
 					player.price_change = price_change
 					player.element_in_cost = element_in_cost
 					player.selling_price = selling_price
-					benchGoalie = picks.filter(x => x.multiplier === 0 && x.element_type === 1).length
-					nonBench = picks.filter(x => x.multiplier !== 0).length
-					playingGoalie = picks.filter(x => x.multiplier !== 0 && x.element_type === 1).length
-					playingDef = picks.filter(x => x.multiplier !== 0 && x.element_type === 2).length
-					playingMid = picks.filter(x => x.multiplier !== 0 && x.element_type === 3).length
-					playingFwd = picks.filter(x => x.multiplier !==0 && x.element_type === 4).length
+
+					let playersOutBenchG = playersOut.filter(x => x.multiplier === 0 && x.element_type === 1).length
+					let playersOutnonB = playersOut.filter(x => x.multiplier !== 0).length
+					let playersOutPG =  playersOut.filter(x => x.multiplier !== 0 && x.element_type === 1).length
+					let playersOutPD = playersOut.filter(x => x.multiplier !== 0 && x.element_type === 2).length
+					let playersOutPM = playersOut.filter(x => x.multiplier !== 0 && x.element_type === 3).length
+					let playersOutPF = playersOut.filter(x => x.multiplier !==0 && x.element_type === 4).length
+
+					benchGoalie = picks.filter(x => x.multiplier === 0 && x.element_type === 1).length - playersOutBenchG
+					nonBench = picks.filter(x => x.multiplier !== 0).length - playersOutnonB
+					playingGoalie = picks.filter(x => x.multiplier !== 0 && x.element_type === 1).length - playersOutPG
+					playingDef = picks.filter(x => x.multiplier !== 0 && x.element_type === 2).length - playersOutPD
+					playingMid = picks.filter(x => x.multiplier !== 0 && x.element_type === 3).length - playersOutPM
+					playingFwd = picks.filter(x => x.multiplier !==0 && x.element_type === 4).length - playersOutPF
 
 					let num = elementType === 1 ? 2 : elementType === 2 ? 5 : 
 					elementType === 3 ? 5 : 3
@@ -510,18 +528,20 @@ function upload() {
 						return a
 					},{})
 
-					if(picks.length < 15) {
+					if(picks.length < 15 || playersOut.length > 0) {
 						let orderOne = picks.some(x => x.position === 13)
 						let orderTwo = picks.some(x => x.position === 14)
 						let orderThree = picks.some(x => x.position === 15)
 
-						if(isCaptain === undefined) {
+						if(isCaptain === undefined || playersOutCap) {
 							player.is_captain = true
 							player.is_vice_captain = false
-						} else if(isViceCaptain === undefined) {
+						} 
+						if(isViceCaptain === undefined || playersOutvCap) {
 							player.is_vice_captain = true
 							player.is_captain = false
-						} else if(isViceCaptain === undefined && isCaptain === undefined) {
+						}
+						if(isViceCaptain === undefined && isCaptain === undefined) {
 							player.is_captain = true
 							player.is_vice_captain = false
 						} else {
@@ -529,7 +549,6 @@ function upload() {
 							player.is_vice_captain = false
 						}
 						if(elementType === 1 && playingGoalie === 1) {
-							//
 							player.position = 12
 							player.multiplier = 0
 						} else {
@@ -591,7 +610,13 @@ function upload() {
 								loadTransfersIn()
 								trackTransfers(weekNdeadline[1])
 
-								picks.push(player)
+								let playerOut = playersOut.find(x => x.element_type === player.element_type).element
+								console.log(playerOut)
+								let playerOutIndex = picks.findIndex(x => x.element === playerOut)
+								console.log(playerOutIndex)
+								removedPlayers = picks.splice(playerOutIndex,1, player)
+
+								//picks.push(player)
 								document.querySelector('.message').style.display = 'block'
 								document.querySelector('.details-one').style.paddingBottom = 0
 								document.querySelector('.message').classList.remove('danger')

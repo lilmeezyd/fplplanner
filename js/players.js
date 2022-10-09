@@ -128,28 +128,4 @@
 			viewBy.append(groupTeam)
 		}
 
-		/*let aTeams = 0, page = 1, condition = true
-		url = 'https://corsproxy.io/?https://fantasy.premierleague.com/api/leagues-classic/7184/standings/?page_standings='
-		
-		const start = Date.now() 
-		fetchLeague(url, page, aTeams) 
-		const end = Date.now()
-		console.log(`${end - start}ms`)
-
-		async function fetchLeague(url,page,aTeams, condition) {
-			var requestOptions = {
-			method: 'GET',
-			redirect: 'follow'
-			};
-			if(condition === false) {
-				console.log(aTeams)
-				return
-			}
-			let response = await fetch(`${url}${page}`, requestOptions)
-			let data = await response.json()
-			aTeams = await aTeams + data['standings']['results'].length
-			condition = await data['standings']['has_next']
-			page += 1
-			fetchLeague(url, page, aTeams,condition)
-		}*/
 		

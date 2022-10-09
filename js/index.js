@@ -10,6 +10,7 @@ let swap = ''
 let tgoal
 let tgoal1
 let totalBudget
+let playersSelected
 
 function returnTotalBudget() {
 	totalBudget = +JSON.parse(sessionStorage.getItem('managerPicks'))[0].totalBudget
@@ -81,21 +82,47 @@ function loadTeam() {
 	Array.from(transfer).forEach(x => 
 		x.onclick = function () {
 			playerId = +x.parentElement.id
-			playerposition = x.parentElement.getAttribute('position')
+			playerposition = +x.parentElement.getAttribute('position')
 			playerIndex = picks.findIndex(x => x.element === playerId)
 			playername = playerState.players.find(x => x.id === playerId).web_name
-			playersOut.push(picks[playerIndex])
+			teamId = playerState.players.find(x => x.id === playerId).team
+			teamCode = teamState.teams.find(x => x.id === teamId).code
+
+			//Add player to playersOut or remove player from playersOut
+			isFound = playersOut.some(x => x.element === playerId)
+			if(isFound) {
+				isFoundIndex = playersOut.findIndex(x => x.element === playerId)
+				playersOut.splice(isFoundIndex, 1)
+				addDisabled(playerId)
+			} else {
+				playersOut.push(picks[playerIndex])
+				removeDisabled(playerId)
+			}
+
+			// Toggle the image
+			newSrc = x.parentElement.querySelector('img').getAttribute('src')
+			playerImage = playerposition === 1 ? `./static/shirt_${teamCode}_1-66.webp`:
+			`./static/shirt_${teamCode}-66.webp`
+			x.parentElement.querySelector('img').src =  newSrc === './static/shirt_0-66.webp' ? 
+			`${playerImage}` : './static/shirt_0-66.webp'
+
 			document.querySelector('.message').style.display = 'block'
 			document.querySelector('.details-one').style.paddingBottom = 0
 			document.querySelector('.message').classList.add('danger')
 			document.querySelector('.message').classList.remove('success')
 			document.querySelector('.message').innerHTML = loadMessage(playerId)
-			picks.splice(playerIndex,1)
-			removedisabled(playerId)
-			document.querySelector('.player-num').innerHTML = picks.length
+			//picks.splice(playerIndex,1)
+
+			playersSelected = picks.length - playersOut.length
+			document.querySelector('.player-num').innerHTML = playersSelected
 			loadTransfersOut()
-			loadTeam()
-			hideallswapbtn()
+			//loadTeam()
+			if(playersSelected === undefined || playersSelected === 15) {
+				showallswapbtn()
+			} else {
+				hideallswapbtn()
+			}
+			
 	
 	})
 
@@ -150,21 +177,62 @@ function loadTeam() {
 			document.body.style.overflow = ''
 			document.body.style.paddingRight = ''
 		})
+
+		//Check player if they're in the playersOut array or not
+		isFound = playersOut.some(x => x.element === playerId)
+			if(isFound) {
+				document.querySelector('.transfer').innerText = 'Restore Player'
+				document.querySelector('.transfer').style.backgroundColor = 'darkgreen'
+				document.querySelector('.substitute').style.display = 'none'
+				document.querySelector('.btn-cap').style.display = 'none'
+				document.querySelector('.btn-vcap').style.display = 'none'
+				document.querySelector('.btn-player-info').style.display = 'none'
+			} else {
+				document.querySelector('.transfer').innerText = 'Transfer'
+			}
+
 		document.querySelector('.transfer').onclick = function() {
 			playerId = +x.parentElement.id
 			playerposition = x.parentElement.getAttribute('position')
 			playerIndex = picks.findIndex(x => x.element === playerId)
 			playername = playerState.players.find(x => x.id === playerId).web_name
-			playersOut.push(picks[playerIndex])
+			teamId = playerState.players.find(x => x.id === playerId).team
+			teamCode = teamState.teams.find(x => x.id === teamId).code
+
+			//Add player to playersOut or remove player from playersOut
+			if(isFound) {
+				isFoundIndex = playersOut.findIndex(x => x.element === playerId)
+				playersOut.splice(isFoundIndex, 1)
+				addDisabled(playerId)
+			} else {
+				playersOut.push(picks[playerIndex])
+				removeDisabled(playerId)
+			}
+			
+			// Toggle the image
+			newSrc = x.parentElement.querySelector('img').getAttribute('src')
+			playerImage = playerposition === 1 ? `./static/shirt_${teamCode}_1-66.webp`:
+			`./static/shirt_${teamCode}-66.webp`
+			x.parentElement.querySelector('img').src =  newSrc === './static/shirt_0-66.webp' ? 
+			`${playerImage}` : './static/shirt_0-66.webp'
+
+			//playersOut.push(picks[playerIndex])
 			document.querySelector('.message').style.display = 'block'
 			document.querySelector('.details-one').style.paddingBottom = 0
 			document.querySelector('.message').classList.add('danger')
 			document.querySelector('.message').classList.remove('success')
 			document.querySelector('.message').innerHTML = loadMessage(playerId)
-			picks.splice(playerIndex,1)
-			removedisabled(playerId)
-			loadTeam()
-			hideallswapbtn()
+			//picks.splice(playerIndex,1)
+			//loadTeam()
+			playersSelected = picks.length - playersOut.length
+			document.querySelector('.player-num').innerHTML = playersSelected
+			
+			if(playersSelected === undefined || playersSelected === 15) {
+				showallswapbtn()
+			} else {
+				hideallswapbtn()
+			}
+
 			document.querySelector('.playerpopup').innerHTML = ''
 			document.querySelector('.playerpopup').style.display = 'none'
 			document.body.style.overflow = ''
@@ -770,9 +838,12 @@ function hideallswapbtn() {
 	Array.from(document.querySelectorAll('.swap-button')).forEach(x => {
 		x.style.display = 'none'
 	})
-	/*Array.from(document.querySelectorAll('.player-info-button'))forEach(x => {
-		x.style.display = 'none'
-	})*/
+}
+
+function showallswapbtn() {
+	Array.from(document.querySelectorAll('.swap-button')).forEach(x => {
+		x.style.display = 'block'
+	})
 }
 
 function hideswapbtn(a) {
@@ -829,6 +900,8 @@ function swapplayer(a, b) {
 	bCaptain = b.is_captain
 	a.is_captain = bCaptain
 	b.is_captain = aCaptain
+	
+	/* Bug */
 
 	//change vice captain
 	aVcaptain = a.is_vice_captain
@@ -841,14 +914,21 @@ function swapplayer(a, b) {
 
 
 
-function removedisabled(a) {
+function removeDisabled(a) {
 	Array.from(document.querySelectorAll('.player-cell')).forEach(x => {
 		let playerId = +x.parentElement.id
 		if(a === playerId) {
 			x.removeAttribute('disabled')
 		}
-		//newindex = cachedPlayers.findIndex(x => x.name === a && x.image === b && x.position === c)
-		//cachedPlayers[newindex].disabled = ''
+	})
+}
+
+function addDisabled(a) {
+	Array.from(document.querySelectorAll('.player-cell')).forEach(x => {
+		let playerId = +x.parentElement.id
+		if(a === playerId) {
+			x.setAttribute('disabled', true)
+		}
 	})
 }
 
