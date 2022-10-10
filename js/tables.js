@@ -484,8 +484,8 @@ function upload() {
 					let playersOutCap = playersOut.some(x => x.is_captain)
 					let playersOutvCap = playersOut.some(x => x.is_vice_captain)
 
-					let isCaptain = picks.filter(x => x.is_captain)[0]
-					let isViceCaptain = picks.filter(x => x.is_vice_captain)[0]
+					let isCaptain = picks.some(x => x.is_captain)
+					let isViceCaptain = picks.some(x => x.is_vice_captain)
 					let playerId = +x.parentElement.id
 					let price_change = (playerState.players.find(x => x.id === playerId).price_change/10).toFixed(1)
 					let element_in_cost = (playerState.players.find(x => x.id === playerId).now_cost/10).toFixed(1)
@@ -533,15 +533,15 @@ function upload() {
 						let orderTwo = picks.some(x => x.position === 14)
 						let orderThree = picks.some(x => x.position === 15)
 
-						if(isCaptain === undefined || playersOutCap) {
+						if(!isCaptain || playersOutCap) {
 							player.is_captain = true
 							player.is_vice_captain = false
 						} 
-						if(isViceCaptain === undefined || playersOutvCap) {
+						if(!isViceCaptain || playersOutvCap) {
 							player.is_vice_captain = true
 							player.is_captain = false
 						}
-						if(isViceCaptain === undefined && isCaptain === undefined) {
+						if(!isViceCaptain && !isCaptain) {
 							player.is_captain = true
 							player.is_vice_captain = false
 						} else {
@@ -611,9 +611,7 @@ function upload() {
 								trackTransfers(weekNdeadline[1])
 
 								let playerOut = playersOut.find(x => x.element_type === player.element_type).element
-								console.log(playerOut)
 								let playerOutIndex = picks.findIndex(x => x.element === playerOut)
-								console.log(playerOutIndex)
 								removedPlayers = picks.splice(playerOutIndex,1, player)
 
 								//picks.push(player)
@@ -622,7 +620,9 @@ function upload() {
 								document.querySelector('.message').classList.remove('danger')
 								document.querySelector('.message').classList.add('success')
 								document.querySelector('.message').innerHTML = loadMessage(playerId)
-								loadTeam()
+								if(playersOut.length == playersIn.length){
+									loadTeam()
+								} 
 								document.querySelector('.player-num').innerHTML = picks.length
 							} else {
 								document.querySelector('.message').style.display = 'block'

@@ -90,21 +90,27 @@ function loadTeam() {
 
 			//Add player to playersOut or remove player from playersOut
 			isFound = playersOut.some(x => x.element === playerId)
+			sellingPrice = +picks.find(x => x.element === playerId).selling_price
 			if(isFound) {
 				isFoundIndex = playersOut.findIndex(x => x.element === playerId)
+				remainingBudget = +remainingBudget - sellingPrice
+				remainBudget.textContent = remainingBudget.toFixed(1)
 				playersOut.splice(isFoundIndex, 1)
 				addDisabled(playerId)
 			} else {
+				remainingBudget = +remainingBudget + sellingPrice
+				remainBudget.textContent = remainingBudget.toFixed(1)
 				playersOut.push(picks[playerIndex])
 				removeDisabled(playerId)
 			}
 
 			// Toggle the image
 			newSrc = x.parentElement.querySelector('img').getAttribute('src')
-			playerImage = playerposition === 1 ? `./static/shirt_${teamCode}_1-66.webp`:
+			playerImage = playerposition == 1 ? `./static/shirt_${teamCode}_1-66.webp`:
 			`./static/shirt_${teamCode}-66.webp`
-			x.parentElement.querySelector('img').src =  newSrc === './static/shirt_0-66.webp' ? 
+			x.parentElement.querySelector('img').src =  newSrc == './static/shirt_0-66.webp' ? 
 			`${playerImage}` : './static/shirt_0-66.webp'
+			
 
 			document.querySelector('.message').style.display = 'block'
 			document.querySelector('.details-one').style.paddingBottom = 0
@@ -200,20 +206,25 @@ function loadTeam() {
 			teamCode = teamState.teams.find(x => x.id === teamId).code
 
 			//Add player to playersOut or remove player from playersOut
+			sellingPrice = +picks.find(x => x.element === playerId).selling_price
 			if(isFound) {
 				isFoundIndex = playersOut.findIndex(x => x.element === playerId)
+				remainingBudget = +remainingBudget - sellingPrice
+				remainBudget.textContent = remainingBudget.toFixed(1)
 				playersOut.splice(isFoundIndex, 1)
 				addDisabled(playerId)
 			} else {
+				remainingBudget = +remainingBudget + sellingPrice
+				remainBudget.textContent = remainingBudget.toFixed(1)
 				playersOut.push(picks[playerIndex])
 				removeDisabled(playerId)
 			}
 			
 			// Toggle the image
 			newSrc = x.parentElement.querySelector('img').getAttribute('src')
-			playerImage = playerposition === 1 ? `./static/shirt_${teamCode}_1-66.webp`:
+			playerImage = playerposition == 1 ? `./static/shirt_${teamCode}_1-66.webp`:
 			`./static/shirt_${teamCode}-66.webp`
-			x.parentElement.querySelector('img').src =  newSrc === './static/shirt_0-66.webp' ? 
+			x.parentElement.querySelector('img').src =  newSrc == './static/shirt_0-66.webp' ? 
 			`${playerImage}` : './static/shirt_0-66.webp'
 
 			//playersOut.push(picks[playerIndex])
@@ -227,7 +238,7 @@ function loadTeam() {
 			playersSelected = picks.length - playersOut.length
 			document.querySelector('.player-num').innerHTML = playersSelected
 			
-			if(playersSelected === undefined || playersSelected === 15) {
+			if(window.innerWidth >= 620 && (playersSelected === undefined || playersSelected === 15)) {
 				showallswapbtn()
 			} else {
 				hideallswapbtn()
@@ -297,6 +308,8 @@ function loadTeam() {
 	}
 })
 
+
+/* Dragging players into position */
 Array.from(document.querySelectorAll('[size="element_container"]')).forEach(x => {
 	x.ondragstart = function(e) {
 		let swapButton = x.parentElement.querySelector('.swap-button').classList
@@ -305,13 +318,15 @@ Array.from(document.querySelectorAll('[size="element_container"]')).forEach(x =>
 		swapButtonIn(x.parentElement.querySelector('.swap-button'))
 		playerIndex = picks.findIndex(x => x.element === +e.target.id)
 		player = playerState.players.find(x => x.id === +e.target.id)
-		outplayer = picks[playerIndex]
+		multiplier = picks.find(x => x.element === +e.target.id).multiplier
+		multiplier === 0 ? inplayer = picks[playerIndex] : outplayer = picks[playerIndex]
 		e.dataTransfer.setData("Text", e.target.id);
 	}
 	x.ondragend = function(e) {
 		outplayer = ''
 		inplayer = ''
 		loadTeam()
+		changeBench.length = 0
 	}
 	x.parentElement.ondragover = function(e) {
 		e.preventDefault()
@@ -321,8 +336,23 @@ Array.from(document.querySelectorAll('[size="element_container"]')).forEach(x =>
 		var data = e.dataTransfer.getData("Text");
 		playerIndex = picks.findIndex(player => player.element === +x.id)
 		player = playerState.players.find(player => player.id === +x.id)
-		inplayer = picks[playerIndex]
-		swapplayer(outplayer, inplayer)
+		multiplier2 = picks[playerIndex].multiplier
+		multiplier2 === 0 ? inplayer = picks[playerIndex] : outplayer = picks[playerIndex]
+		if(outplayer.is_captain) {
+			inplayer.is_captain = true;
+			outplayer.is_captain = false
+		}
+		if(outplayer.is_vice_captain) {
+			inplayer.is_vice_captain = true
+			outplayer.is_vice_captain = false
+		}
+		if(outplayer == '') {
+			changeBench.push(picks[playerIndex])
+			changeBenchOrder();
+		} else {
+			swapplayer(outplayer, inplayer)
+		}
+		
 	}
 	
 })
@@ -491,7 +521,7 @@ function swapButtonIn(a) {
 		   		outplayer.is_vice_captain = false
 		   		}
 				swapplayer(outplayer, inplayer)
-				loadTeam()
+				//loadTeam()
 				tgoal.length = 0
 				inplayer = ''
 				outplayer = ''
@@ -600,7 +630,7 @@ function loadPlayer(a, player) {
 	let teamId = player.team
 	let team_name = teamObj.name
 	let positionObj = elementTypesState.elementTypes.find(x => x.id === player.element_type)
-	player.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
+	player.image = positionObj.id == 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
 		`./static/shirt_${teamObj.code}-66.webp`
 	captain = a.is_captain === true && currentHistory[0].tcap.event !== weekNdeadline[1] ? returncaptain() : 
 	a.is_vice_captain === true && currentHistory[0].tcap.event !== weekNdeadline[1]  ? returnvcaptain() : 
@@ -895,19 +925,6 @@ function swapplayer(a, b) {
 	a.multiplier = bMultiplier
 	b.multiplier = aMultiplier
 
-	//change captain
-	aCaptain = a.is_captain
-	bCaptain = b.is_captain
-	a.is_captain = bCaptain
-	b.is_captain = aCaptain
-	
-	/* Bug */
-
-	//change vice captain
-	aVcaptain = a.is_vice_captain
-	bVcaptain = b.is_vice_captain
-	a.is_vice_captain = bVcaptain
-	b.is_vice_captain = aVcaptain
 	loadTeam()
 	changeBench.length = 0
 }
