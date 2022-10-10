@@ -12,193 +12,10 @@ function upload() {
 	positions = []
 	teams = []
 	viewValue = ''
-	let teamz = [
-
-	    {
-	        "position": "defender",
-	        "name": "Ruben Dias",
-	        "price": "6.2",
-	        "playerteam": "man city",
-	        "image": "static/man_city.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "captain": false,
-	        "vcaptain": false,
-	        "position_code": "DEF"
-	    },
-	    {
-	        "position": "defender",
-	        "name": "Doherty",
-	        "price": "5.2",
-	        "playerteam": "spurs",
-	        "image": "static/spurs.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "captain": false,
-	        "vcaptain": false,
-	        "position_code": "DEF"
-	    },
-	    {
-	        "position": "defender",
-	        "name": "R.James",
-	        "price": "6.7",
-	        "playerteam": "chelsea",
-	        "image": "static/chelsea.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "captain": false,
-	        "vcaptain": false,
-	        "position_code": "DEF"
-	    },
-	    {
-	        "position": "forward",
-	        "name": "Jota",
-	        "price": "9.0",
-	        "playerteam": "liverpool",
-	        "image": "static/liverpool.png",
-	        "bench": true,
-	        "benchOrder": 3,
-	        "captain": false,
-	        "vcaptain": false,
-	        "position_code": "FWD"
-	    },
-	    {
-	        "position": "midfielder",
-	        "name": "Saka",
-	        "price": "7.8",
-	        "playerteam": "arsenal",
-	        "image": "static/arsenal.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "captain": false,
-	        "vcaptain": true,
-	        "position_code": "MID"
-	    },
-	    {
-	        "position": "goalkeeper",
-	        "name": "de Gea",
-	        "price": "5.1",
-	        "playerteam": "man united",
-	        "image": "static/man_utd_gk.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "disabled": "",
-	        "position_code": "GKP",
-	        "captain": false,
-	        "vcaptain": false
-	    },
-	    {
-	        "position": "defender",
-	        "name": "Dalot",
-	        "price": "4.6",
-	        "playerteam": "man united",
-	        "image": "static/man_utd.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "disabled": "",
-	        "position_code": "DEF"
-	    },
-	    {
-	        "position": "defender",
-	        "name": "White",
-	        "price": "4.5",
-	        "playerteam": "arsenal",
-	        "image": "static/arsenal.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "disabled": "",
-	        "position_code": "DEF"
-	    },
-	    {
-	        "position": "midfielder",
-	        "name": "Kulusevski",
-	        "price": "7.5",
-	        "playerteam": "spurs",
-	        "image": "static/spurs.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "disabled": "",
-	        "position_code": "MID"
-	    },
-	    {
-	        "position": "midfielder",
-	        "name": "Mahrez",
-	        "price": "8.0",
-	        "playerteam": "man city",
-	        "image": "static/man_city.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "disabled": "",
-	        "position_code": "MID",
-	        "captain": false,
-	        "vcaptain": false
-	    },
-	    {
-	        "position": "forward",
-	        "name": "Jesus",
-	        "price": "8.1",
-	        "playerteam": "arsenal",
-	        "image": "static/arsenal.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "disabled": "",
-	        "position_code": "FWD",
-	        "captain": true,
-	        "vcaptain": false
-	    },
-	    {
-	        "position": "forward",
-	        "name": "Richarlison",
-	        "price": "8.3",
-	        "playerteam": "spurs",
-	        "image": "static/spurs.png",
-	        "bench": true,
-	        "benchOrder": 2,
-	        "disabled": "",
-	        "position_code": "FWD"
-	    },
-	    {
-	        "position": "goalkeeper",
-	        "name": "Heaton",
-	        "price": "3.9",
-	        "playerteam": "man united",
-	        "image": "static/man_utd_gk.png",
-	        "bench": true,
-	        "benchOrder": -1,
-	        "disabled": "",
-	        "position_code": "GKP"
-	    },
-	    {
-	        "position": "midfielder",
-	        "name": "Foden",
-	        "price": "8.0",
-	        "playerteam": "man city",
-	        "image": "static/man_city.png",
-	        "bench": false,
-	        "benchOrder": 0,
-	        "disabled": "",
-	        "position_code": "MID"
-	    },
-	    {
-	        "position": "midfielder",
-	        "name": "Naby Keita",
-	        "price": "6.1",
-	        "playerteam": "liverpool",
-	        "image": "static/liverpool.png",
-	        "bench": true,
-	        "benchOrder": 1,
-	        "disabled": "",
-	        "position_code": "MID",
-	        "vcaptain": false
-	    }
-	]
 
 	let message = document.querySelector('.message')
 
 
-	//let team = [...teamz]
-
-	let budget = 100
 	let goalkeeper_body = document.querySelector('#goalkeepers tbody')
 	let defender_body = document.querySelector('#defenders tbody')
 	let midfielder_body = document.querySelector('#midfielders tbody')
@@ -471,18 +288,19 @@ function upload() {
 			Array.from(player_cells).forEach(x => {
 				let player = {}
 				x.addEventListener('click', function() {
-					let playersOutG = playersOut.filter(x => x.element_type === 1).length
-					let playersOutD = playersOut.filter(x => x.element_type === 2).length
-					let playersOutM = playersOut.filter(x => x.element_type === 3).length
-					let playersOutF = playersOut.filter(x => x.element_type === 4).length
+					let playersOutG = tempPlayersOut.filter(x => x.element_type === 1).length
+					let playersOutD = tempPlayersOut.filter(x => x.element_type === 2).length
+					let playersOutM = tempPlayersOut.filter(x => x.element_type === 3).length
+					let playersOutF = tempPlayersOut.filter(x => x.element_type === 4).length
 
 					let goalkeepers = picks.filter(x => x.element_type === 1).length - playersOutG
 					let defenders = picks.filter(x => x.element_type === 2).length - playersOutD
 					let midfielders = picks.filter(x => x.element_type === 3).length - playersOutM
 					let forwards = picks.filter(x => x.element_type === 4).length - playersOutF
 
-					let playersOutCap = playersOut.some(x => x.is_captain)
-					let playersOutvCap = playersOut.some(x => x.is_vice_captain)
+
+					let playersOutCap = tempPlayersOut.some(x => x.is_captain)
+					let playersOutvCap = tempPlayersOut.some(x => x.is_vice_captain)
 
 					let isCaptain = picks.some(x => x.is_captain)
 					let isViceCaptain = picks.some(x => x.is_vice_captain)
@@ -504,12 +322,12 @@ function upload() {
 					player.element_in_cost = element_in_cost
 					player.selling_price = selling_price
 
-					let playersOutBenchG = playersOut.filter(x => x.multiplier === 0 && x.element_type === 1).length
-					let playersOutnonB = playersOut.filter(x => x.multiplier !== 0).length
-					let playersOutPG =  playersOut.filter(x => x.multiplier !== 0 && x.element_type === 1).length
-					let playersOutPD = playersOut.filter(x => x.multiplier !== 0 && x.element_type === 2).length
-					let playersOutPM = playersOut.filter(x => x.multiplier !== 0 && x.element_type === 3).length
-					let playersOutPF = playersOut.filter(x => x.multiplier !==0 && x.element_type === 4).length
+					let playersOutBenchG = tempPlayersOut.filter(x => x.multiplier === 0 && x.element_type === 1).length
+					let playersOutnonB = tempPlayersOut.filter(x => x.multiplier !== 0).length
+					let playersOutPG =  tempPlayersOut.filter(x => x.multiplier !== 0 && x.element_type === 1).length
+					let playersOutPD = tempPlayersOut.filter(x => x.multiplier !== 0 && x.element_type === 2).length
+					let playersOutPM = tempPlayersOut.filter(x => x.multiplier !== 0 && x.element_type === 3).length
+					let playersOutPF = tempPlayersOut.filter(x => x.multiplier !==0 && x.element_type === 4).length
 
 					benchGoalie = picks.filter(x => x.multiplier === 0 && x.element_type === 1).length - playersOutBenchG
 					nonBench = picks.filter(x => x.multiplier !== 0).length - playersOutnonB
@@ -528,12 +346,12 @@ function upload() {
 						return a
 					},{})
 
-					if(picks.length < 15 || playersOut.length > 0) {
+					if(picks.length < 15 || tempPlayersOut.length > 0) {
 						let orderOne = picks.some(x => x.position === 13)
 						let orderTwo = picks.some(x => x.position === 14)
 						let orderThree = picks.some(x => x.position === 15)
 
-						if(!isCaptain || playersOutCap) {
+						/*if(!isCaptain || playersOutCap) {
 							player.is_captain = true
 							player.is_vice_captain = false
 						} 
@@ -547,7 +365,8 @@ function upload() {
 						} else {
 							player.is_captain = false
 							player.is_vice_captain = false
-						}
+						}*/
+
 						if(elementType === 1 && playingGoalie === 1) {
 							player.position = 12
 							player.multiplier = 0
@@ -577,7 +396,7 @@ function upload() {
 							(orderOne && !orderTwo && !orderThree) ? 14 : 
 							(orderOne && orderTwo && !orderThree) ? 15 :
 							(!orderOne && orderTwo && orderThree) ? 13 :
-							(orderOne && !orderTwo && orderThree) ? 14 : 15 
+							(orderOne && !orderTwo && orderThree) ? 14 : 15
 						}
 						if((elementType === 4 && nonBench === 11) ||
 							(elementType === 4 && nonBench === 10 && playingGoalie === 0)||
@@ -587,7 +406,7 @@ function upload() {
 							(orderOne && !orderTwo && !orderThree) ? 14 : 
 							(orderOne && orderTwo && !orderThree) ? 15 :
 							(!orderOne && orderTwo && orderThree) ? 13 :
-							(orderOne && !orderTwo && orderThree) ? 14 : 15 
+							(orderOne && !orderTwo && orderThree) ? 14 : 15
 						}
 						if(elementType === 1 && goalkeepers < 2 ||
 							elementType === 2 && defenders < 5 || 
@@ -610,9 +429,12 @@ function upload() {
 								loadTransfersIn()
 								trackTransfers(weekNdeadline[1])
 
-								let playerOut = playersOut.find(x => x.element_type === player.element_type).element
+								let playerOut = tempPlayersOut.find(x => x.element_type === player.element_type).element
 								let playerOutIndex = picks.findIndex(x => x.element === playerOut)
 								removedPlayers = picks.splice(playerOutIndex,1, player)
+
+								pIndex = tempPlayersOut.findIndex(x => x.element_type == player.element_type)
+								tempPlayersOut.splice(pIndex,1)
 
 								//picks.push(player)
 								document.querySelector('.message').style.display = 'block'

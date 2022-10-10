@@ -16,6 +16,7 @@ function loadGameweeks() {
 
     // Loading picks from the previous GW & wiping out future picks
     function resetTeam() {
+        tempPlayersOut.length = 0
         let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
         let realPicks = JSON.parse(sessionStorage.getItem('realPicks'))

@@ -67,6 +67,15 @@
 				sessionStorage.setItem('players', JSON.stringify(result.elements))
 				sessionStorage.setItem('element_types', JSON.stringify(result.element_types))
 				
+				fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/fixtures/`, requestOptions)
+				.then(response => response.json())
+				.then(result => {
+					sessionStorage.removeItem('fixtures')
+					sessionStorage.setItem('fixtures', JSON.stringify(result))
+					setFixtures()
+					loadTeamFixtures()
+				})
+				.catch(error => console.log('error', error));
 				
 				setTeams() 
 				setElementTypes()
@@ -77,16 +86,6 @@
 			 	//loadPlayers()
 			 	upload().loadPrices()
 			 	loadTeam()
-			})
-			.catch(error => console.log('error', error));
-
-			fetch(`https://corsproxy.io/?https://fantasy.premierleague.com/api/fixtures/`, requestOptions)
-			.then(response => response.json())
-			.then(result => {
-				sessionStorage.removeItem('fixtures')
-				sessionStorage.setItem('fixtures', JSON.stringify(result))
-				setFixtures()
-				loadTeamFixtures()
 			})
 			.catch(error => console.log('error', error));
 

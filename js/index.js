@@ -6,6 +6,7 @@ benchelement = document.querySelector('.bench_element')
 let outplayer = ''
 let inplayer = ''
 const changeBench = []
+const tempPlayersOut = []
 let swap = ''
 let tgoal
 let tgoal1
@@ -96,11 +97,13 @@ function loadTeam() {
 				remainingBudget = +remainingBudget - sellingPrice
 				remainBudget.textContent = remainingBudget.toFixed(1)
 				playersOut.splice(isFoundIndex, 1)
+				tempPlayersOut.splice(isFoundIndex, 1)
 				addDisabled(playerId)
 			} else {
 				remainingBudget = +remainingBudget + sellingPrice
 				remainBudget.textContent = remainingBudget.toFixed(1)
 				playersOut.push(picks[playerIndex])
+				tempPlayersOut.push(picks[playerIndex])
 				removeDisabled(playerId)
 			}
 
@@ -212,11 +215,13 @@ function loadTeam() {
 				remainingBudget = +remainingBudget - sellingPrice
 				remainBudget.textContent = remainingBudget.toFixed(1)
 				playersOut.splice(isFoundIndex, 1)
+				tempPlayersOut.splice(isFoundIndex, 1)
 				addDisabled(playerId)
 			} else {
 				remainingBudget = +remainingBudget + sellingPrice
 				remainBudget.textContent = remainingBudget.toFixed(1)
 				playersOut.push(picks[playerIndex])
+				tempPlayersOut.push(picks[playerIndex])
 				removeDisabled(playerId)
 			}
 			

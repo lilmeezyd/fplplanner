@@ -1,5 +1,7 @@
 let tickerDiv = document.querySelector('.ticker-table')
 let eventIds = []
+
+
 function loadTeamFixtures() {
 	let table = fixtureHeader()+fixtureBody()
 	tickerDiv.innerHTML = table
