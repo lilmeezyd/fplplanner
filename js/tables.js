@@ -341,10 +341,20 @@ function upload() {
 					let fieldnum = elementType === 1 ? 'Goalkeepers' : 
 					elementType === 2 ?	'Defenders' : elementType === 3 ? 'Midfielder' : 'Forwards'	
 					
-					teamCount = picks.reduce((a,b) => {
+					teamCountPicksObj = picks.reduce((a,b) => {
 						a[b.team] = a[b.team] ? ++a[b.team] : 1
 						return a
 					},{})
+
+					tempCountObj = tempPlayersOut.reduce((a,b) => {
+						a[b.team] = a[b.team] ? ++a[b.team] : 1
+						return a
+					}, {})
+
+					picksCount = teamCountPicksObj[team] == undefined ? 0 : teamCountPicksObj[team]
+					tempCount = tempCountObj[team] == undefined ? 0 : tempCountObj[team]
+					teamCount = picksCount - tempCount
+					console.log(teamCount)
 
 					if(picks.length < 15 || tempPlayersOut.length > 0) {
 						let orderOne = picks.some(x => x.position === 13)
@@ -412,7 +422,7 @@ function upload() {
 							elementType === 2 && defenders < 5 || 
 							elementType === 3 && midfielders < 5 ||
 							elementType === 4 && forwards < 3) {
-							if(teamCount[team] !== 3) {
+							if(teamCount !== 3) {
 								let repeatedPlayer = []
 								x.setAttribute('disabled', true)
 								for(let j = 0; j < playersOut.length; j++) {
