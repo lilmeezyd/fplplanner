@@ -429,8 +429,12 @@ function upload() {
 								loadTransfersIn()
 								trackTransfers(weekNdeadline[1])
 
-								let playerOut = tempPlayersOut.find(x => x.element_type === player.element_type).element
-								let playerOutIndex = picks.findIndex(x => x.element === playerOut)
+								//switching captaincy
+								let playerOut = tempPlayersOut.find(x => x.element_type === player.element_type)
+								let playerOutIndex = picks.findIndex(x => x.element === playerOut.element)
+								player.is_captain = playerOut.is_captain
+								player.is_vice_captain = playerOut.is_vice_captain
+								player.multiplier = playerOut.multiplier
 								removedPlayers = picks.splice(playerOutIndex,1, player)
 
 								pIndex = tempPlayersOut.findIndex(x => x.element_type == player.element_type)
@@ -442,9 +446,10 @@ function upload() {
 								document.querySelector('.message').classList.remove('danger')
 								document.querySelector('.message').classList.add('success')
 								document.querySelector('.message').innerHTML = loadMessage(playerId)
-								if(playersOut.length == playersIn.length){
+								/*if(playersOut.length == playersIn.length){
 									loadTeam()
-								} 
+								} */
+								loadTeam()
 								document.querySelector('.player-num').innerHTML = picks.length
 							} else {
 								document.querySelector('.message').style.display = 'block'

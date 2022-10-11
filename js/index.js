@@ -65,7 +65,7 @@ function loadTeam() {
 
 	
 	remainBudget = document.querySelector('.remain-budget')
-	spent = picks.reduce((x,y) => x+(+y.selling_price),0)
+	spent = picks.reduce((x,y) => x+(+y.selling_price),0) - tempPlayersOut.reduce((x,y) => x+(+y.selling_price),0) 
 	remainingBudget = (+totalBudget-spent).toFixed(1)
 	remainBudget.textContent = remainingBudget
 	//console.log(remainingBudget.toFixed(1))
@@ -634,9 +634,15 @@ function loadPlayer(a, player) {
 	let news = player.chance_of_playing_next_round
 	let teamId = player.team
 	let team_name = teamObj.name
+	let inTemp = tempPlayersOut.some(x => x.element == a.element)
+	let inplayersIn = playersIn.some(x => x.element == a.element)
+	let playerInClass = inplayersIn ? 'player_in' : ''
+	let newPlayer = inplayersIn ? 'NEW' : ''
+	let newPadding = inplayersIn ? 2 : 0
 	let positionObj = elementTypesState.elementTypes.find(x => x.id === player.element_type)
-	player.image = positionObj.id == 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
-		`./static/shirt_${teamObj.code}-66.webp`
+	player.image = (positionObj.id == 1 && !inTemp) ? `./static/shirt_${teamObj.code}_1-66.webp`:
+					(positionObj.id >= 1 && !inTemp) ? `./static/shirt_${teamObj.code}-66.webp` :
+					`./static/shirt_0-66.webp`
 	captain = a.is_captain === true && currentHistory[0].tcap.event !== weekNdeadline[1] ? returncaptain() : 
 	a.is_vice_captain === true && currentHistory[0].tcap.event !== weekNdeadline[1]  ? returnvcaptain() : 
 	a.is_captain === true && currentHistory[0].tcap.event === weekNdeadline[1] ? returnTcaptain() :
@@ -647,7 +653,7 @@ function loadPlayer(a, player) {
 			news == 50 ? 'rgba(0,0,55,0.9)' : news == 75 ? 'rgba(0,0,55,0.9)' :'white'
 	return `
 	<div class="pitch_unit">
-	<div class="element_container">
+	<div class="element_container ${playerInClass}">
 									<div size="element_container" class="element_container-two"  team="${team_name}" position="${player.element_type}" id="${player.id}"
 									draggable="true">
 										<button type="button" class="btn-details">
@@ -677,6 +683,8 @@ function loadPlayer(a, player) {
 											  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
 											  </svg>
 										</button>
+										<div class="new"
+										style="padding: ${newPadding}px;">${newPlayer}</div>
 										<div class="captain">${captain}</div>
 									</div>
 					</div>
@@ -689,9 +697,15 @@ function loadBench(a, player) {
 	let teamId = player.team
 	let team_name = teamObj.name
 	let short_name = teamObj.short_name
+	let inTemp = tempPlayersOut.some(x => x.element == a.element)
+	let inplayersIn = playersIn.some(x => x.element == a.element)
+	let playerInClass = inplayersIn ? 'player_in' : ''
+	let newPlayer = inplayersIn ? 'NEW' : ''
+	let newPadding = inplayersIn ? 2 : 0
 	let positionObj = elementTypesState.elementTypes.find(x => x.id === player.element_type)
-	player.image = positionObj.id === 1 ? `./static/shirt_${teamObj.code}_1-66.webp`:
-		`./static/shirt_${teamObj.code}-66.webp`
+	player.image = (positionObj.id == 1 && !inTemp) ? `./static/shirt_${teamObj.code}_1-66.webp`:
+					(positionObj.id >= 1 && !inTemp) ? `./static/shirt_${teamObj.code}-66.webp` :
+					`./static/shirt_0-66.webp`
 	order = a.position === 13 ? 'one' : a.position === 14 ? 'two' : a.position === 15 ? 'three' : a.position === 12 ? 'goalie' : ''
 	let backgroundColor = news == 0 ? 'darkred' : news == 25 ? 'darkorange' :
 			news == 50 ? 'orange' : news == 75 ? 'yellow' : 'rgba(0,0,55,0.9)'
@@ -701,7 +715,7 @@ function loadBench(a, player) {
 								<h3 class="bench_unit_heading">
 									<span class="bean tooltip">${positionObj.singular_name_short}</span>
 								</h3>
-								<div class="bean1">
+								<div class="bean1 ${playerInClass}">
 									<div size="element_container" class="styledPitchElement" position="${player.element_type}" team="${team_name}" id="${player.id}"
 									draggable="true">
 										<button type="button" class="btn-details">
@@ -724,6 +738,8 @@ function loadBench(a, player) {
 											  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
 											  </svg>
 										</button>
+										<div class="new"
+										style="padding: ${newPadding}px;">${newPlayer}</div>
 										<button class="swap-button-in swap-button">
 											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkgreen" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
 											  <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>

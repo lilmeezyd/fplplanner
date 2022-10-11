@@ -718,7 +718,7 @@
 	.transfer-button {
 		position: absolute;
 		left: 0.4rem;
-		bottom: 65px;
+		bottom: 60px;
 		background: transparent;
 		border: 0;
 		outline: none;
@@ -739,11 +739,21 @@
 	.swap-button-in, .swap-button-out {
 		position: absolute;
 		right: 0.4rem;
-		bottom: 65px;
+		bottom: 60px;
 		outline: none;
 		background: transparent;
 		border: 0;
 		cursor: pointer;
+	}
+	.new {
+		position: absolute;
+		right: 0.4rem;
+		bottom: 83px;
+		font-size: 0.4rem;
+		padding: 2px;
+		font-weight: bold;
+		background: white;
+		border: 1px solid rgba(0, 0, 0, 0.5);
 	}
 	.save-button {
 		background-color: ghostwhite;
@@ -1487,6 +1497,11 @@
 	}
 	.show_modal {
 		display: block;
+	}
+	.player_in {
+		border: 1px solid transparent;
+		border-radius: 10px;
+		background-color: gold;
 	}
 
 	/*.btn-save {
