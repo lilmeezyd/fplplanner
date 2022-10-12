@@ -184,9 +184,9 @@
 						<label>Sorted by</label>
 						<select class="custom-select" id="sort_by">
 							<option value="total_points">Total points</option>
-							<option value="event_points">Round points</option>
+							<!-- <option value="event_points">Round points</option> -->
 							<option value="now_cost">Price</option>
-							<option>Team selected by %</option>
+							<!-- <option>Team selected by %</option>
 							<option>Minutes played</option>
 							<option>Goals scored</option>
 							<option>Assists</option>
@@ -206,7 +206,7 @@
 							<option>Price rise</option>
 							<option>Price fall</option>
 							<option>Price rise(round)</option>
-							<option>Price fall(round)</option>
+							<option>Price fall(round)</option> -->
 						</select>
 					</div>
 					<div class="search">
@@ -330,10 +330,10 @@
 	<div id="modal" class="hide_modal">
 		<form name="team">
 			<label for="team">Team ID</label>
-			<input type="number" id="teamid">
+			<input type="number" id="teamid" required>
 			<button type="submit" class="btn btn-block btn-fpl">Load</button>
-			<button class="btn-info btn-close btn-danger" id="close_modal">X</button>
 		</form>
+		<button class="btn-info btn-close btn-danger" id="close_modal">X</button>
 	</div>
 	
 	<script type="text/javascript">
@@ -345,7 +345,10 @@
 		const picks = []
    		const oldTeam = []
 		closeModal.onclick = function() {
-			showModal = !showModal
+			showModal = false
+			modal.classList.remove('show_modal')
+			modal.classList.add('hide_modal')
+			document.querySelector('.playerpopup').style.display = 'none'
 		}
 		teamId.onclick = function(e) {
 			e.preventDefault()
@@ -353,10 +356,20 @@
 			if(showModal) {
 				modal.classList.add('show_modal')
 				modal.classList.remove('hide_modal')
+				modal.style.top = `${((window.innerHeight - modal.clientHeight)/2)}px`
+				modal.style.left = `${((window.innerWidth - modal.clientWidth)/2)}px`
+				document.querySelector('.playerpopup').style.display = 'block'
 			}
 			if(!showModal) {
 				modal.classList.remove('show_modal')
 				modal.classList.add('hide_modal')
+				document.querySelector('.playerpopup').style.display = 'none'
+			}
+		}
+		window.onresize = function() {
+			if(showModal) {
+				modal.style.top = `${((window.innerHeight - modal.clientHeight)/2)}px`
+				modal.style.left = `${((window.innerWidth - modal.clientWidth)/2)}px`
 			}
 		}
 		document.addEventListener('scroll', changeLogo, false)
@@ -372,6 +385,7 @@
 
 		document.forms.team.onsubmit = function(e) {
 			e.preventDefault()
+			console.log(e.target.input)
 			modal.classList.remove('show_modal')
 			modal.classList.add('hide_modal')
 			playerId = teamid.value

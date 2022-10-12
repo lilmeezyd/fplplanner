@@ -31,14 +31,14 @@ function removeShow(e) {
 }
 function loadFixtures() {
 	document.querySelector('.btn-game-fixtures').addEventListener('click', function() {
-		document.querySelector('.games-info-results').style.display = 'none'
-		document.querySelector('.games-info-fixtures').style.display = 'flex'
+		document.querySelector('.games-info-results').style.display = 'flex'
+		document.querySelector('.games-info-fixtures').style.display = 'none'
 	})
 }
 function loadResults() {
 	document.querySelector('.btn-game-results').addEventListener('click', function() {
-		document.querySelector('.games-info-results').style.display = 'flex'
-		document.querySelector('.games-info-fixtures').style.display = 'none'
+		document.querySelector('.games-info-results').style.display = 'none'
+		document.querySelector('.games-info-fixtures').style.display = 'flex'
 	})
 }
 
@@ -150,8 +150,10 @@ function load_popup(id) {
 	if(Object.keys(inplayer).length > 0) {
 		hideOutplayerButton =  'hide-btn'
 	}
+	topMargin = `${((window.innerHeight - 300)/2)}px`
+	leftMargin = `${((window.innerWidth - 320)/2)}px`
 	return `
-	<div class="playerpop">
+	<div class="playerpop"   style="top: ${topMargin}; left: ${leftMargin}">
 		<div class="namesection small">
 			<span>${player.first_name}&nbsp;${player.second_name}</span>
 			<button class="btn-info btn-close btn-danger">X</button>

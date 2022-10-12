@@ -122,7 +122,7 @@ function loadTeam() {
 			document.querySelector('.message').innerHTML = loadMessage(playerId)
 			//picks.splice(playerIndex,1)
 
-			playersSelected = picks.length - playersOut.length
+			playersSelected = picks.length - tempPlayersOut.length
 			document.querySelector('.player-num').innerHTML = playersSelected
 			loadTransfersOut()
 			//loadTeam()

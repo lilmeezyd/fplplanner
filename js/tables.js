@@ -361,22 +361,6 @@ function upload() {
 						let orderTwo = picks.some(x => x.position === 14)
 						let orderThree = picks.some(x => x.position === 15)
 
-						/*if(!isCaptain || playersOutCap) {
-							player.is_captain = true
-							player.is_vice_captain = false
-						} 
-						if(!isViceCaptain || playersOutvCap) {
-							player.is_vice_captain = true
-							player.is_captain = false
-						}
-						if(!isViceCaptain && !isCaptain) {
-							player.is_captain = true
-							player.is_vice_captain = false
-						} else {
-							player.is_captain = false
-							player.is_vice_captain = false
-						}*/
-
 						if(elementType === 1 && playingGoalie === 1) {
 							player.position = 12
 							player.multiplier = 0
@@ -424,31 +408,38 @@ function upload() {
 							elementType === 4 && forwards < 3) {
 							if(teamCount !== 3) {
 								let repeatedPlayer = []
+								let playerOut = tempPlayersOut.find(x => x.element_type === player.element_type)
+								let playerOutIndex = picks.findIndex(x => x.element === playerOut.element)
+								//switching captaincy
+								player.is_captain = playerOut.is_captain
+								player.is_vice_captain = playerOut.is_vice_captain
+								player.multiplier = playerOut.multiplier
 								x.setAttribute('disabled', true)
 								for(let j = 0; j < playersOut.length; j++) {
 									if(player.element === playersOut[j].element) {
 										repeatedPlayer.push(...playersOut.splice(j,1))
-										console.log(repeatedPlayer)
+									}
+									for(let i = 0; i < playersIn.length; i++) {
+										if(playersIn[i].element === playersOut[j].element) {
+											playersOut.splice(j,1)
+											playersIn.splice(i,1)
+										}
 									}
 								}
 								if(repeatedPlayer.length === 1) {
 									playersIn.push()
+									removedPlayers = picks.splice(playerOutIndex,1, repeatedPlayer[0])
+									pIndex = tempPlayersOut.findIndex(x => x.element_type == player.element_type)
+									tempPlayersOut.splice(pIndex,1)
 								} else {
 									playersIn.push(player)
+									removedPlayers = picks.splice(playerOutIndex,1, player)
+									pIndex = tempPlayersOut.findIndex(x => x.element_type == player.element_type)
+									tempPlayersOut.splice(pIndex,1)
 								}
 								loadTransfersIn()
 								trackTransfers(weekNdeadline[1])
 
-								//switching captaincy
-								let playerOut = tempPlayersOut.find(x => x.element_type === player.element_type)
-								let playerOutIndex = picks.findIndex(x => x.element === playerOut.element)
-								player.is_captain = playerOut.is_captain
-								player.is_vice_captain = playerOut.is_vice_captain
-								player.multiplier = playerOut.multiplier
-								removedPlayers = picks.splice(playerOutIndex,1, player)
-
-								pIndex = tempPlayersOut.findIndex(x => x.element_type == player.element_type)
-								tempPlayersOut.splice(pIndex,1)
 
 								//picks.push(player)
 								document.querySelector('.message').style.display = 'block'
@@ -460,7 +451,9 @@ function upload() {
 									loadTeam()
 								} */
 								loadTeam()
-								document.querySelector('.player-num').innerHTML = picks.length
+								let playersInTeam = picks.length - tempPlayersOut.length
+								document.querySelector('.player-num').innerHTML = playersInTeam
+
 							} else {
 								document.querySelector('.message').style.display = 'block'
 								document.querySelector('.details-one').style.paddingBottom = 0

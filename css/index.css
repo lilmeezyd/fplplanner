@@ -12,7 +12,19 @@
 		position: relative;
 		background: linear-gradient(300deg, rgba(0, 255, 255, 0.1) 50%,
 		 rgba(22, 22, 68, 0.1) 100%);
+		position: relative;
 	}
+	/*body::after {
+		position: absolute;
+		content: '';
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: darkgreen;
+		opacity: 0.3;
+		z-index: 3;
+	}*/
 	a {
 		text-decoration: none;
 	}
@@ -764,30 +776,33 @@
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		z-index: 3;
 		display: none;
-		background: rgba(0, 0, 0, 0.1);
+		content: '';
+		top: 0;
+		left: 0;
+		background-color: rgba(23, 255, 23, 0.3);
+		z-index: 3;
 	}
 	.playerpop {
-		/*position: fixed;
-		top: 25%;
+		position: fixed;
+		/*top: 25%;
 		left: 25%;
 		transform: translate(-5%, 25%);
 		border: 1px solid rgba(0, 0, 0, 0.2);*/
-		position: absolute;
-		left: 50%;
-		top: 20%;
-		transform: translate(-50%, -50%);
+		/*transform: translate(-50%, -50%);*/
 		width: 320px;
 		margin: auto;
 		padding: 0.4rem;
 		background: rgba(13, 122, 86, 1);
+		z-index: 5;
+		animation-name: modal-animate;
+		animation-duration: 0.5s;
 	}
 
 	.playerpop1 {
 		border: 1px solid rgba(0, 0, 0, 0.2);
 		margin: auto;
-		margin-top: 25%;
+		margin-top: 50%;
 		max-width: min-content;
 		height: min-content;
 		padding: 0.4rem;
@@ -844,8 +859,8 @@
 		padding: 0.1rem;
 	}
 	.games-info-fixtures {
-		display: none;
-		/*display: flex;*/
+		/*display: none;*/
+		display: flex;
 		justify-content: left;
 		align-items: center;
 	}
@@ -889,8 +904,8 @@
 	}
 	
 	.games-info-results {
-		/*display: none;*/
-		display: flex;
+		display: none;
+		/*display: flex;*/
 	}
 	.games-info-buttons {
 		padding: 0.1rem;
@@ -1399,7 +1414,7 @@
 			min-height: 5.0rem;
 		}
 		.btn {
-			padding: 0.4rem;
+			padding: 0.7rem 0.4rem;
 		}
 		#nextGameweek, #prevGameweek {
 			padding: 0.4rem;
@@ -1471,15 +1486,36 @@
 	#modal {
 		width: 320px;
 		position: fixed;
-		top: 10%;
-		left: 50%;
-		transform: translate(-50%, 0%);
+		/*transform: translate(-50%, 0%);*/
 		z-index: 5;
-		background: rgba(250, 250, 250, 1.0);
-		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1),
-			0px 2px 4px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1),
-			0px 8px 16px rgba(0,0,0,0.1);
+		border-radius: 10px;
+		background: rgba(255, 255, 255, 1.0);
+		box-shadow: 0px 0px 10px darkgreen;
 		padding: 1rem;
+		animation-name: modal-animate;
+		animation-duration: 0.5s;
+	}
+
+	-webkit- @keyframes modal-animate {
+		from {
+			top: -100px;
+			opacity: 0;
+		}
+		to {
+			top: 0px;
+			opacity: 1;
+		}
+	}
+
+	@keyframes modal-animate {
+		from {
+			top: -100px;
+			opacity: 0;
+		}
+		to {
+			top 0px;
+			opacity: 1;
+		}
 	}
 	#modal .btn-close {
 		position: absolute;
