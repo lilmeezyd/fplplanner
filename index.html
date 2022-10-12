@@ -385,7 +385,8 @@
 
 		document.forms.team.onsubmit = function(e) {
 			e.preventDefault()
-			console.log(e.target.input)
+			document.querySelector('.playerpopup').innerHTML = ''
+			document.querySelector('.playerpopup').style.display = 'none'
 			modal.classList.remove('show_modal')
 			modal.classList.add('hide_modal')
 			playerId = teamid.value
@@ -500,7 +501,7 @@
 				})
 				bank = (result.entry_history.bank/10).toFixed(1)
 				value = (result.entry_history.value/10).toFixed(1)
-        let totalBudget = newPicks.reduce((x,y) => x+(+y.selling_price),0) + +bank
+                let totalBudget = newPicks.reduce((x,y) => x+(+y.selling_price),0) + +bank
 				filteredEvents.forEach((x, key) => {
 					const { id, name, deadline_time } = x
 					//Adding picks to first GW only
