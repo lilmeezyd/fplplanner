@@ -414,6 +414,7 @@ function upload() {
 								player.is_captain = playerOut.is_captain
 								player.is_vice_captain = playerOut.is_vice_captain
 								player.multiplier = playerOut.multiplier
+								player.element_out = playerOut.element
 								x.setAttribute('disabled', true)
 								for(let j = 0; j < playersOut.length; j++) {
 									if(player.element === playersOut[j].element) {
@@ -453,6 +454,11 @@ function upload() {
 								loadTeam()
 								let playersInTeam = picks.length - tempPlayersOut.length
 								document.querySelector('.player-num').innerHTML = playersInTeam
+								if(playersInTeam === undefined || playersInTeam === 15) {
+									showallswapbtn()
+								} else {
+									hideallswapbtn()
+								}
 
 							} else {
 								document.querySelector('.message').style.display = 'block'

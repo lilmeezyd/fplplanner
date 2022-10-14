@@ -90,21 +90,58 @@ function loadTeam() {
 			teamCode = teamState.teams.find(x => x.id === teamId).code
 
 			//Add player to playersOut or remove player from playersOut
-			isFound = playersOut.some(x => x.element === playerId)
+			isFoundOut = playersOut.some(x => x.element === playerId)
+			isFoundIn = playersIn.some(x => x.element === playerId)
 			sellingPrice = +picks.find(x => x.element === playerId).selling_price
-			if(isFound) {
-				isFoundIndex = playersOut.findIndex(x => x.element === playerId)
+			if(isFoundOut) {
+				isFoundOutIndex = playersOut.findIndex(x => x.element === playerId)
+				isFoundOutTempIndex = tempPlayersOut.findIndex(x => x.element === playerId)
 				remainingBudget = +remainingBudget - sellingPrice
 				remainBudget.textContent = remainingBudget.toFixed(1)
-				playersOut.splice(isFoundIndex, 1)
-				tempPlayersOut.splice(isFoundIndex, 1)
+				playersOut.splice(isFoundOutIndex, 1)
+				tempPlayersOut.splice(isFoundOutTempIndex, 1)
 				addDisabled(playerId)
+
+				document.querySelector('.message').classList.remove('danger')
+				document.querySelector('.message').classList.add('success')
 			} else {
 				remainingBudget = +remainingBudget + sellingPrice
 				remainBudget.textContent = remainingBudget.toFixed(1)
 				playersOut.push(picks[playerIndex])
 				tempPlayersOut.push(picks[playerIndex])
 				removeDisabled(playerId)
+
+				document.querySelector('.message').classList.add('danger')
+				document.querySelector('.message').classList.remove('success')
+			}
+
+			if(isFoundIn) {
+
+				//In PlayersIn Array
+				isFoundInIndex = playersIn.findIndex(x => x.element === playerId)
+				isFoundInPicksIndex = picks.findIndex(x => x.element === playerId)
+				replacedElement = playersIn[isFoundInIndex].element_out
+				replacedElementPrice = +playersOut.find(x => x.element === replacedElement).selling_price
+				replacedElementObj = playersOut.find(x => x.element === replacedElement)
+				replacedElementObj.is_captain = playersIn[isFoundInIndex].is_captain
+				replacedElementObj.is_vice_captain = playersIn[isFoundInIndex].is_vice_captain
+				replacedElementObj.multiplier = playersIn[isFoundInIndex].multiplier
+				replacedElementObj.position = playersIn[isFoundInIndex].position
+				playersIn.splice(isFoundInIndex, 1)
+				picks.splice(isFoundInPicksIndex, 1, replacedElementObj)
+
+
+				//In PlayersOut Array
+				isFoundOutIndex = playersOut.findIndex(x => x.element === playerId)
+				isFoundOutTempIndex = tempPlayersOut.findIndex(x => x.element === playerId)
+				remainingBudget = +remainingBudget - replacedElementPrice
+				remainBudget.textContent = remainingBudget.toFixed(1)
+				playersOut.splice(isFoundOutIndex, 1)
+				tempPlayersOut.splice(isFoundOutTempIndex, 1, replacedElementObj)
+
+				trackTransfers(weekNdeadline[1])
+
+				loadTeam()
 			}
 
 			// Toggle the image
@@ -117,8 +154,6 @@ function loadTeam() {
 
 			document.querySelector('.message').style.display = 'block'
 			document.querySelector('.details-one').style.paddingBottom = 0
-			document.querySelector('.message').classList.add('danger')
-			document.querySelector('.message').classList.remove('success')
 			document.querySelector('.message').innerHTML = loadMessage(playerId)
 			//picks.splice(playerIndex,1)
 
@@ -188,8 +223,8 @@ function loadTeam() {
 		})
 
 		//Check player if they're in the playersOut array or not
-		isFound = playersOut.some(x => x.element === playerId)
-			if(isFound) {
+			isFoundOut = playersOut.some(x => x.element === playerId)
+			if(isFoundOut) {
 				document.querySelector('.transfer').innerText = 'Restore Player'
 				document.querySelector('.transfer').style.backgroundColor = 'darkgreen'
 				document.querySelector('.substitute').style.display = 'none'
@@ -209,20 +244,58 @@ function loadTeam() {
 			teamCode = teamState.teams.find(x => x.id === teamId).code
 
 			//Add player to playersOut or remove player from playersOut
+			isFoundIn = playersIn.some(x => x.element === playerId)
 			sellingPrice = +picks.find(x => x.element === playerId).selling_price
-			if(isFound) {
-				isFoundIndex = playersOut.findIndex(x => x.element === playerId)
+			if(isFoundOut) {
+				isFoundOutIndex = playersOut.findIndex(x => x.element === playerId)
+				isFoundOutTempIndex = tempPlayersOut.findIndex(x => x.element === playerId)
 				remainingBudget = +remainingBudget - sellingPrice
 				remainBudget.textContent = remainingBudget.toFixed(1)
-				playersOut.splice(isFoundIndex, 1)
-				tempPlayersOut.splice(isFoundIndex, 1)
+				playersOut.splice(isFoundOutIndex, 1)
+				tempPlayersOut.splice(isFoundOutTempIndex, 1)
 				addDisabled(playerId)
+
+				document.querySelector('.message').classList.remove('danger')
+				document.querySelector('.message').classList.add('success')
 			} else {
 				remainingBudget = +remainingBudget + sellingPrice
 				remainBudget.textContent = remainingBudget.toFixed(1)
 				playersOut.push(picks[playerIndex])
 				tempPlayersOut.push(picks[playerIndex])
 				removeDisabled(playerId)
+
+
+				document.querySelector('.message').classList.add('danger')
+				document.querySelector('.message').classList.remove('success')
+			}
+
+			if(isFoundIn) {
+
+				//In PlayersIn Array
+				isFoundInIndex = playersIn.findIndex(x => x.element === playerId)
+				isFoundInPicksIndex = picks.findIndex(x => x.element === playerId)
+				replacedElement = playersIn[isFoundInIndex].element_out
+				replacedElementPrice = +playersOut.find(x => x.element === replacedElement).selling_price
+				replacedElementObj = playersOut.find(x => x.element === replacedElement)
+				replacedElementObj.is_captain = playersIn[isFoundInIndex].is_captain
+				replacedElementObj.is_vice_captain = playersIn[isFoundInIndex].is_vice_captain
+				replacedElementObj.multiplier = playersIn[isFoundInIndex].multiplier
+				replacedElementObj.position = playersIn[isFoundInIndex].position
+				playersIn.splice(isFoundInIndex, 1)
+				picks.splice(isFoundInPicksIndex, 1, replacedElementObj)
+
+
+				//In PlayersOut Array
+				isFoundOutIndex = playersOut.findIndex(x => x.element === playerId)
+				isFoundOutTempIndex = tempPlayersOut.findIndex(x => x.element === playerId)
+				remainingBudget = +remainingBudget - replacedElementPrice
+				remainBudget.textContent = remainingBudget.toFixed(1)
+				playersOut.splice(isFoundOutIndex, 1)
+				tempPlayersOut.splice(isFoundOutTempIndex, 1, replacedElementObj)
+
+				trackTransfers(weekNdeadline[1])
+
+				loadTeam()
 			}
 			
 			// Toggle the image
@@ -235,13 +308,12 @@ function loadTeam() {
 			//playersOut.push(picks[playerIndex])
 			document.querySelector('.message').style.display = 'block'
 			document.querySelector('.details-one').style.paddingBottom = 0
-			document.querySelector('.message').classList.add('danger')
-			document.querySelector('.message').classList.remove('success')
 			document.querySelector('.message').innerHTML = loadMessage(playerId)
 			//picks.splice(playerIndex,1)
 			//loadTeam()
-			playersSelected = picks.length - playersOut.length
+			playersSelected = picks.length - tempPlayersOut.length
 			document.querySelector('.player-num').innerHTML = playersSelected
+			loadTransfersOut()
 			
 			if(window.innerWidth >= 620 && (playersSelected === undefined || playersSelected === 15)) {
 				showallswapbtn()

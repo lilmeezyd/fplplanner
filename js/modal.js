@@ -121,6 +121,7 @@ function transferOut(a) {
 <img src="${playerImage}" size="image"></div></div>
 	`
 }
+
 function transferIn(a) {
 	let teamObj = teamState.teams.find(x => x.id === a.team)
 	playerTeam = teamObj.name
@@ -296,9 +297,10 @@ function returnvTcaptain() {
 
 
 function loadMessage(a) {
-	let found = playersOut.some(x => x.element === a)
+	let foundOut = playersOut.some(x => x.element === a)
+	let foundIn = playersIn.some(x => x.element === a)
 	let name = playerState.players.find(x => x.id === a).web_name
-	let msg = found ? 'Transferred OUT' : 'Transferred IN'
+	let msg = foundOut ? 'Transferred OUT' : 'Transferred IN'
 	return `<span>&nbsp;${name}&nbsp;${msg}</span>`
 }
 

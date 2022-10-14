@@ -1208,18 +1208,22 @@
 	#prevGameweek, #nextGameweek {
 		display: flex;
 		align-items: center;
-		width: 20%;
 		padding: 0.8rem 0.5rem;
+		border-radius: 10px;
 
 	}
-	#prevGameweek {
+	.prev_next {
+		background: rgba(0, 255, 255, 0.7);
+		box-shadow: 0px 0px 10px rgba(22, 22, 98, 1.0);
+	}
+	/*#prevGameweek {
 		justify-content: flex-start;
 		column-gap: 2rem;
 	}
 	#nextGameweek {
 		justify-content: flex-end;
 		column-gap: 3.5rem;
-	}
+	}*/
 	.fixture-ticker {
 		/*overflow: auto;*/
 		padding-top: 1rem;

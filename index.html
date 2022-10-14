@@ -73,13 +73,13 @@
 					</div>
 					<div class="gw-buttonswrapper">
 						<div class="gw-buttons">
-							<button class="btn btn-fpl small" id="prevGameweek"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-left" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-</svg><span class="btn-name">Previous</span></button>
+							<button class="btn btn-fpl small prev_next" id="prevGameweek">
+								<img src="./static/chevron_left.png" alt="prev_page">
+							</button>
 							<h4 id="gameweekNum" class="large"></h4>
-							<button class="btn btn-fpl small" id="nextGameweek"><span class="btn-name">Next</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-right" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-</svg></button>
+							<button class="btn btn-fpl small prev_next" id="nextGameweek">
+								<img src="./static/chevron_right.png" alt="next_page">
+							</button>
 						</div>
 					</div>
 					<div class="budgetwrapper">
@@ -451,8 +451,8 @@
 						if(y.id === x.element) {
 							now_cost = (y.now_cost/10).toFixed(1)
 							price_change = (y.cost_change_start/10).toFixed(1)
-							newPicksHyp.push({...x, disabled:true, element_type:y.element_type, team:y.team, now_cost, price_change})
-							realPicksHyp.push({...x, disabled:true, element_type:y.element_type, team:y.team, now_cost, price_change})
+							newPicksHyp.push({...x, disabled:true, element_out:null, element_type:y.element_type, team:y.team, now_cost, price_change})
+							realPicksHyp.push({...x, disabled:true,element_out:null, element_type:y.element_type, team:y.team, now_cost, price_change})
 						}
 					})
 				})
@@ -546,25 +546,43 @@
 				let fts
 				returnFt(1, current.length, 1, current)
 				rolledft = fts  === 1 ? false : true
-				function returnFt(a, b, c) {
+				function returnFt(a, b, c, d) {
 					if(a === b) {
+						console.log(fts)
 						return;
 					}
-					if(current[a-1].event_transfers === 0 && current[a].event_transfers === 0) {
-						if(current[a].event !== wEvent || current[a].event !== fEvent) {
-							c = 2
-						} else {
+					/*wildcardNotActive = current[a].event !== wEvent
+					prevCurrentWeekOne = current[a-1].event_transfers
+					prevCurrentWeek = current[a].event_transfers
+					console.log(`${prevCurrentWeekOne}:${prevCurrentWeek}`)*/
+					if((a-1) > 0) {
+						/*if(prevCurrentWeekOne == 0) {
+							if(prevCurrentWeek == 0) {
+								console.log('you done it') 
+							}
+						}*/
+						console.log(d)
+						console.log(d[a-1])
+						if((d[a].event !== wEvent && d[a].event_transfers === 0 && d[a-1].event_transfers == 0)) {
+							console.log('yay')
+								c = 2
+							} else {
+								c = 1
+							}
+						if(d[a-1].event_transfers === 0 && d[a].event_transfers === 1 && c === 2) {
+								c = 2
+								console.log('yay3')
+							}
+						if(d[a].event_transfers > 1 || d[a].event_transfers_cost > 0) {
 							c = 1
+							console.log('yay4')
 						}
-					}
-					if(current[a-1].event_transfers === 0 && current[a].event_transfers === 1) {
-						if(c === 2) c = 2
-
-					}
-					if(current[a].event_transfers > 1) c = 1
-					if(current[a].event_transfers_cost > 0) c = 1
-					fts = c
-					returnFt(a+1, b, c)
+						fts = c
+				}
+					/*console.log(a)
+					console.log(b)
+					console.log(c)*/
+					returnFt(a+1, b, c, d)
 				}
 				const newManagerHistory = []
 				const newHistory = {
