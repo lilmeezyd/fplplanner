@@ -202,6 +202,12 @@
 		}
 	}
 	@media(max-width: 620px) {
+		.btn {
+			font-size: 0.7rem;
+		}
+		.large {
+			font-size: 0.8rem;
+		}
 		.element_container-two {
 			width: 6.2rem;
 		}

@@ -64,8 +64,8 @@ function loadOpponent(a, b, c) {
 
 	//Loading Blank Gameweek
 	nextFixtures.forEach((x, key) => {
-		if(key === 1 && x.event !== b[c+2]) {
-			nextFixtures.splice(1,1, {...x, event:b[c+2], 
+		if(key === 0 && x.event !== b[c+1]) {
+			nextFixtures.splice(0,1, {...x, event:b[c+1], 
 				team_a_difficulty:0, team_h_difficulty:0}, x)
 		}
 	})

@@ -460,6 +460,12 @@ function upload() {
 									hideallswapbtn()
 								}
 
+								if(window.innerWidth >= 620) {
+									showallswapbtn()
+									} else {
+									hideallswapbtn()
+								}
+
 							} else {
 								document.querySelector('.message').style.display = 'block'
 								document.querySelector('.details-one').style.paddingBottom = 0

@@ -144,11 +144,12 @@ function loadGameweeks() {
                 })
             })
 
-            if(captain.element !== previousCaptain.element || vcaptain.element !== previousVCaptain.element || bdiff.length < 4 || sdiff.length < 11) {
+            if(captain.element !== previousCaptain.element || vcaptain.element !== previousVCaptain.element || bdiff.length < 11 || sdiff.length < 4) {
                 let index = retrievedGameweeks.findIndex(x => x.id === newWeek[0].id)
                 let sideArray = []
                 newWeek[0].newPicks.length = 0
                 newWeek[0].newPicks.push(...picks)
+                console.log('in')
 
                 if(newWeek[0].transfers[0].transfersOut.length === playersOut.length) {
                     sideArray.push()
