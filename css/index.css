@@ -64,6 +64,11 @@
 			font-size: 1rem;
 		}
 	}
+	@media(max-width: 575px) {
+		nav .logo {
+			font-size: 0.8rem;
+		}
+	}
 	nav .links {
 		color: rgba(22, 22, 68, 1.0);
 	}
@@ -313,6 +318,7 @@
 	.pitch {
 		min-height: 597px;
 		background: url('../static/pitch.png') center center / 892px 597px no-repeat;
+		position: relative;
 	}
 	/*.btn-details img {
 		width: 65px;
@@ -578,17 +584,50 @@
 	.slideshow {
 		display: none;
 	}
-	.tname-details, .trank-details, .ttime-details {
-		/*display: flex;*/
-		min-height: 80px;
+	#deadline {
+		text-align: center;
+		padding: 0.5rem;
+	}
+	#gameweekNum, .theading {
+		padding: 0.25rem;
+	}
+	@media(max-width: 620px) {
+		#deadline, #gameweekNum, .theading {
+			padding: 0.2rem;
+		}
+	}
+	.tname-details, .trank-details {
+		display: flex;
 		flex-direction: column;
-		row-gap: 0.5rem;
 		align-items: center;
 		justify-content: center;
 		padding: 0.5rem 1rem;
 		position: relative;
-		width: 90%;
-		/*color: rgba(22, 22, 68, 1.0);*/
+		width: fit-content;
+		color: rgba(22, 22, 68, 1.0);
+		background-color: rgba(0, 255, 255, 1.0);
+		position: absolute;
+		border: 1px solid rgba(22, 22, 68, 1.0);
+		border-radius: 5px;
+		z-index: 1;
+		box-shadow: 0px 0px 5px rgba(22, 22, 68, 1.0);
+	}
+	.tname-details {
+		left: 5%;
+		top: 9.25%;
+	}
+	.trank-details {
+		right: 5%;
+		top: 9.25%;
+	}
+	.trank-details > div {
+		display: flex;
+		align-items: center;
+	}
+	@media(max-width: 600px) {
+		.tname-details, .trank-details {
+			padding: 0.25rem 0.5rem;
+		}
 	}
 	.tname, .trank {
 		/*font-weight: bolder;
@@ -601,6 +640,7 @@
 		justify-content: center;
 		column-gap:  0.5rem;
 		font-weight: bolder;
+		padding: 0.25rem;
 	}
 	.ttime div {
 		background: linear-gradient(300deg,  rgba(0, 255, 255, 0.5) 50%,
@@ -609,9 +649,6 @@
 		padding: 0.2rem 0.5rem;
 		text-align: center;
 		border: 1px solid rgba(22, 22, 68, 0.2);
-	}
-	.trank-details {
-		padding: 0.5rem 1.5rem;
 	}
 	.new_ranks {
 		position: absolute;
@@ -629,11 +666,22 @@
 	.ttime > div {
 		display: flex;
 		align-items: center;
+		min-width: 76.5px;
+	}
+	@media(max-width: 575px) {
+		.ttime > div {
+			flex-direction: column;
+			justify-content: center;
+			min-width: 51px;
+		}
 	}
 	@media(max-width: 390px) {
 		.ttime > div {
 			flex-direction: column;
 			justify-content: center;
+		}
+		.ttime > div:last-of-type {
+			display: none;
 		}
 	}
 	/* The dots/bullets */
@@ -656,8 +704,7 @@
       }
 	#day, #hour, #minute, #second {
 		display: block;
-		margin: 0.5rem;
-		width: 20px;
+		margin: 0.3rem;
 		text-align: right;
 	}
 	.gw-buttons {
@@ -1131,6 +1178,7 @@
 	.btn-displayer p {
 		padding-top: 0.5rem;
 		color: rgba(22, 22, 68, 1.0);
+		cursor: pointer;
 	}
 	.btn-displayer > div {
 		padding: 0.5rem 0;
@@ -1267,7 +1315,7 @@
 		position: sticky;
 		left: 0;
 		background: rgba(255, 255, 255, 1);
-		z-index: 2;
+		z-index: 1;
 		box-shadow: 1px 0;
 	}
 	.ticker-table tbody td:nth-child(2) {
@@ -1381,14 +1429,15 @@
 	@media(max-width: 575px) {
 
 		.ticker-team {		
-			/*display: none;*/
+			display: none;
 		}
 		.ticker-image img {
-			width: 20px;
-			height: 20px;
+			width: 28px;
+			height: 28px;
 		}
 		.ticker-table tbody td:first-child {
-			width:200px
+			max-width:200px;
+			justify-content: center;
 		}
 		[size="element_container"], [size="pitch"] {
 			width: 6.0rem;
@@ -1432,10 +1481,6 @@
 		
 	}
 	@media(max-width: 435px) {
-		
-		.ticker-table tbody td:first-child {
-			width:150px
-		}
 		[size="element_container"], [size="pitch"] {
 			width: 4.4rem;
 		}

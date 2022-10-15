@@ -30,27 +30,10 @@
 		<div class="transfers-col">
 			<div>
 				<div class="details-one">
-					<div class="tteam">
+					<!--<div class="tteam">
 						<div class="tname-details large slideshow">
 							<span class="theading">Name</span>
 							<h4 class="tname"></h4>
-						</div>
-						<div class="ttime-details large slideshow">
-							<h4 class="theading">Gameweek Deadline In:</h4>
-							<div class="ttime small">
-								<div>
-									<span id="day"></span><span>Days</span>
-								</div>
-								<div>
-									<span id="hour"></span><span>Hrs</span>
-								</div>
-								<div>
-									<span id="minute"></span><span>Min</span>
-								</div>
-								<div>
-									<span id="second"></span><span>Sec</span>
-								</div>
-							</div>
 						</div>
 						<div class="trank-details large slideshow">
 							<span class="theading">Overall Rank</span>
@@ -70,13 +53,32 @@
       						<span class="dot" onclick="currentHeader(1)"></span>
      						<span class="dot" onclick="currentHeader(2)"></span>
     					</div>
-					</div>
+					</div>-->
 					<div class="gw-buttonswrapper">
 						<div class="gw-buttons">
 							<button class="btn btn-fpl small prev_next" id="prevGameweek">
 								<img src="./static/chevron_left.png" alt="prev_page">
 							</button>
-							<h4 id="gameweekNum" class="large"></h4>
+							<div id="deadline">
+								<h4 id="gameweekNum" class="large"></h4>
+								<div class="large">
+									<h4 class="theading">Deadline In:</h4>
+									<div class="ttime small">
+										<div>
+											<span id="day"></span><span>Days</span>
+										</div>
+										<div>
+											<span id="hour"></span><span>Hrs</span>
+										</div>
+										<div>
+											<span id="minute"></span><span>Mins</span>
+										</div>
+										<div>
+											<span id="second"></span><span>Secs</span>
+										</div>
+									</div>
+								</div>
+							</div>
 							<button class="btn btn-fpl small prev_next" id="nextGameweek">
 								<img src="./static/chevron_right.png" alt="next_page">
 							</button>
@@ -135,6 +137,19 @@
 				</div>
 				<div class="field">
 					<div class="pitch">
+						<div class="tname-details large">
+							<span class="theading">Name</span>
+							<h4 class="tname"></h4>
+						</div>
+						<div class="trank-details large">
+							<span class="theading">Overall Rank</span>
+							<div>
+								<h4 class="trank"></h4>
+								<div class="arrow">
+								
+							</div>
+							</div>
+						</div>
 						<!-- GoalKeeper -->
 						<div class="pitch_row" id="goal"  size="pitch">
 						</div>
@@ -749,29 +764,18 @@
 			})
 			.catch(error => console.log('error', error));
 		}
+		arrowColor = document.querySelector('.arrow')
 		function riseInRank() {
-			green_rank.classList.remove('hide_rank')
-			green_rank.classList.add('show_rank')
-			red_rank.classList.remove('show_rank')
-			red_rank.classList.add('hide_rank')
-			grey_rank.classList.add('hide_rank')
-			grey_rank.classList.remove('show_rank')
+			arrowColor.innerHTML = `
+									<svg xmlns="http://www.w3.org/2000/svg" fill="green" height="24" width="24"><path d="m7 14 5-5.025L17 14Z"/></svg>`
 		}
 		function dropInRank() { 
-			green_rank.classList.add('hide_rank')
-			green_rank.classList.remove('show_rank')
-			grey_rank.classList.add('hide_rank')
-			grey_rank.classList.remove('show_rank')
-			red_rank.classList.add('show_rank')
-			red_rank.classList.remove('hide_rank')
+			arrowColor.innerHTML = `
+									<svg xmlns="http://www.w3.org/2000/svg" fill="red" height="24" width="24"><path d="m12 15-5-4.975h10Z"/></svg>`
 		}
 		function sameRank() {
-			grey_rank.classList.remove('hide_rank')
-			grey_rank.classList.add('show_rank')
-			green_rank.classList.add('hide_rank')
-			green_rank.classList.remove('show_rank')
-			red_rank.classList.remove('show_rank')
-			red_rank.classList.add('hide_rank')
+			arrowColor.innerHTML = `
+									<svg xmlns="http://www.w3.org/2000/svg" fill="grey" height="24" width="24"><path d="M9.5 25.5q-.65 0-1.075-.425Q8 24.65 8 24q0-.65.425-1.075Q8.85 22.5 9.5 22.5h29q.65 0 1.075.425Q40 23.35 40 24q0 .65-.425 1.075-.425.425-1.075.425Z"/></svg>`
 		}
 
 	    function getTime() {
