@@ -6,14 +6,14 @@ function loadGameweeks() {
 
 
 
-    teamReset.addEventListener('click', resetTeam)
-    document.querySelector('#nextGameweek').addEventListener('click', nextGameweek, false)
-    document.querySelector('#prevGameweek').addEventListener('click', previousGameweek, false)
+    //teamReset.addEventListener('click', resetTeam)
+    //document.getElementById('nextGameweek').addEventListener('click', nxtGameweek, false)
+    //document.querySelector('#prevGameweek').addEventListener('click', previousGameweek, false)
     gameweekNum.textContent = `Gameweek ${curGameweek}`
 
 
     // Loading picks from the previous GW & wiping out future picks
-    function resetTeam() {
+    teamReset.onclick = function resetTeam() {
         tempPlayersOut.length = 0
         let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
@@ -86,7 +86,7 @@ function loadGameweeks() {
     }
 
     // Loading picks from a Gameweek preceding the current
-    function previousGameweek() {
+    document.querySelector('#prevGameweek').onclick = function previousGameweek() {
         let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
         const newWeekIndex = retrievedGameweeks.findIndex(x => x.id === curGameweek)
@@ -203,7 +203,7 @@ function loadGameweeks() {
     }
 
     // Loading picks from an upcoming Gameweek
-    function nextGameweek() {
+    document.getElementById('nextGameweek').onclick = function nxtGameweek() {
         let retrievedGameweeks = JSON.parse(sessionStorage.getItem('managerPicks'))
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory'))
         let realPicks = JSON.parse(sessionStorage.getItem('realPicks'))

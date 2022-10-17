@@ -31,14 +31,14 @@ function removeShow(e) {
 }
 function loadFixtures() {
 	document.querySelector('.btn-game-fixtures').addEventListener('click', function() {
-		document.querySelector('.games-info-results').style.display = 'flex'
-		document.querySelector('.games-info-fixtures').style.display = 'none'
+		document.querySelector('.games-info-results').style.display = 'none'
+		document.querySelector('.games-info-fixtures').style.display = 'flex'
 	})
 }
 function loadResults() {
 	document.querySelector('.btn-game-results').addEventListener('click', function() {
-		document.querySelector('.games-info-results').style.display = 'none'
-		document.querySelector('.games-info-fixtures').style.display = 'flex'
+		document.querySelector('.games-info-results').style.display = 'flex'
+		document.querySelector('.games-info-fixtures').style.display = 'none'
 	})
 }
 
@@ -157,7 +157,7 @@ function load_popup(id) {
 	<div class="playerpop"   style="top: ${topMargin}; left: ${leftMargin}">
 		<div class="namesection small">
 			<span>${player.first_name}&nbsp;${player.second_name}</span>
-			<button class="btn-info btn-close btn-danger">X</button>
+			<button class="btn-info btn-close btn-danger"><svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"> <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" fill="white"></path> </svg></button>
 		</div>
 		<div class="infobuttons">
 			<button class="btn-info btn-info-block btn-danger transfer ${transferBtn} ${hideInplayerButton} ${hideOutplayerButton}">Transfer</button>
@@ -219,7 +219,7 @@ function loadInfo(a) {
 			<span class='large'>${playerName}</span>
 			<span class='small'>${pTeam.name}</span>
 			<span class='small'>${pElement.singular_name}</span>
-			<button class="btn btn-close btn-close-info btn-danger btn-player">X</button>
+			<button class="btn btn-close btn-close-info btn-danger btn-player"><svg style="color: white; font-weight: bold;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"> <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" fill="white"></path> </svg></button>
 		</div>
 		<div class="games-info">
 			<div class="games-info-buttons">
