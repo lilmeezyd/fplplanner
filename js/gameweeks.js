@@ -3,8 +3,6 @@ function loadGameweeks() {
     let teamReset = document.querySelector('.reset')
     const gameweekSize = 1
     let curGameweek = Math.max(...eventIds) + 1
-    const bdiff = []
-    const sdiff = []
 
 
 
@@ -93,11 +91,13 @@ function loadGameweeks() {
         let retrievedHistory = JSON.parse(sessionStorage.getItem('managerHistory')) 
         const newWeekIndex = retrievedGameweeks.findIndex(x => x.id === curGameweek)
         const newHistoryIndex = retrievedHistory.findIndex(x => x.id === curGameweek)
+        const bdiff = []
+        const sdiff = []
         
         document.querySelector('.message').innerHTML = ``
         document.querySelector('.message').style.display = 'none'
 
-        if(remainingBudget < 0 || picks.length < 15) {
+        if(remainingBudget < 0 || (picks.length - tempPlayersOut.length) < 15) {
             if(remainingBudget < 0) {
                 document.querySelector('.message').style.display = 'block'
 				document.querySelector('.details-one').style.paddingBottom = 0
@@ -149,7 +149,6 @@ function loadGameweeks() {
                 let sideArray = []
                 newWeek[0].newPicks.length = 0
                 newWeek[0].newPicks.push(...picks)
-                console.log('in')
 
                 if(newWeek[0].transfers[0].transfersOut.length === playersOut.length) {
                     sideArray.push()
@@ -211,7 +210,7 @@ function loadGameweeks() {
         
         document.querySelector('.message').innerHTML = ``
         document.querySelector('.message').style.display = 'none'
-        if(remainingBudget < 0 || picks.length < 15) {
+        if(remainingBudget < 0 || (picks.length - tempPlayersOut.length) < 15) {
             if(remainingBudget < 0) {
                 document.querySelector('.message').style.display = 'block'
 				document.querySelector('.details-one').style.paddingBottom = 0
@@ -237,24 +236,54 @@ function loadGameweeks() {
             let pTransfercount = previousWeek[0].transfers[0].transfersOut.length
             previousWeek[0].newPicks.length = 0
             previousWeek[0].newPicks.push(...picks)
-            /*let playersOutSet = new Set(playersOut)
-            let playersOutSetArray = Array.from(playersOutSet)
-            let playersInSet = new Set(playersIn)
-            let playersInSetArray = Array.from(playersInSet)*/
+
             trackTransfers(curGameweek)
-            if(previousWeek[0].transfers[0].transfersOut.length === playersOut.length) {
+
+            let playersMatchOut = function() {
+                if(previousWeek[0].transfers[0].transfersOut.length !== playersOut.length) {
+                    return false
+                }
+                for(let i = 0; i < playersOut.length; i++) {
+                   let checkPlayer = previousWeek[0].transfers[0].transfersOut.some(x => x.element !== playersOut[i].element)
+                   if(checkPlayer === false) {
+                    return false
+                   }  
+                }
+                return true 
+            }
+            let playersMatchIn = function() {
+                if(previousWeek[0].transfers[1].transfersIn.length !== playersIn.length) {
+                    return false
+                }
+                for(let i = 0; i < playersIn.length; i++) {
+                   let checkPlayer = previousWeek[0].transfers[1].transfersIn.some(x => x.element === playersIn[i].element)
+                   if(checkPlayer === false) {
+                    return false
+                   }  
+                }
+                return true 
+            }
+
+            doesExist = playersMatchIn()
+
+            //console.log(playersMatchOut())
+            //console.log(playersMatchIn())
+            //console.log(doesExist)
+            if(playersMatchIn() == true && previousWeek[0].transfers[1].transfersIn.length == playersIn.length) {
                 sideArray.push()
             }
-            if(previousWeek[0].transfers[0].transfersOut.length < playersOut.length) {
+            if(playersMatchOut() == false || previousWeek[0].transfers[0].transfersOut.length < playersOut.length) {
                 previousWeek[0].transfers[0].transfersOut.length = 0
                 previousWeek[0].transfers[0].transfersOut.push(...playersOut)
+                console.log(playersOut)
             }
-            if(previousWeek[0].transfers[1].transfersIn.length === playersIn.length) {
+            if(playersMatchOut() == true && previousWeek[0].transfers[0].transfersOut.length == playersOut.length) {
                 sideArray.push()
             }
-            if(previousWeek[0].transfers[1].transfersIn.length < playersIn.length) {
+            if(playersMatchIn() == false || previousWeek[0].transfers[1].transfersIn.length < playersIn.length) {
                 previousWeek[0].transfers[1].transfersIn.length = 0
                 previousWeek[0].transfers[1].transfersIn.push(...playersIn)
+                console.log(playersIn)
             }
 
             let nTransfercount = previousWeek[0].transfers[0].transfersOut.length
@@ -274,6 +303,19 @@ function loadGameweeks() {
            const newWeek = retrievedGameweeks.filter(x => x.id === curGameweek)
            const newHistory = retrievedHistory.filter(x => x.id === curGameweek)
 
+           let picksMatch = function() {
+            for(let i = 0; i < previousWeek[0].newPicks.length; i++) {
+                   let checkPlayer = newWeek[0].newPicks.some(x => x.element === previousWeek[0].newPicks[i].element)
+                   if(checkPlayer === false) {
+                    return false
+                   }  
+                }
+                return true 
+           }
+           //console.log(playersMatchIn())
+           //console.log(picksMatch())
+            console.log(doesExist)
+
            if(previousHistory[0].bboost.event === curGameweek-1 || previousHistory[0].tcap.event === curGameweek-1) {
                 let index = retrievedHistory.findIndex(x => x.id === curGameweek)
                 for(let i=0; i<retrievedHistory.length; i++) {
@@ -290,7 +332,7 @@ function loadGameweeks() {
                 }
             }
             
-            if(pTransfercount !== nTransfercount || (previousHistory[0].wildcard.event === curGameweek-1) || previousHistory[0].freehit.event === curGameweek-1) {
+            if(doesExist == false || pTransfercount !== nTransfercount || (previousHistory[0].wildcard.event === curGameweek-1) || previousHistory[0].freehit.event === curGameweek-1) {
                 let index = retrievedHistory.findIndex(x => x.id === curGameweek)
                 let prevIndex = retrievedGameweeks.findIndex(x => x.id === curGameweek - 2)
                 let prevTeam = prevIndex === -1 ? realPicks : 
@@ -333,9 +375,6 @@ function loadGameweeks() {
                 newHistory[0].fts = 1
                 previousHistory[0].rolledft = false
             }
-            /*if(previousHistory[0].rolledft === true) {
-                newHistory[0].fts = 2
-            }*/
 
             sessionStorage.removeItem('managerPicks')
             sessionStorage.setItem('managerPicks', JSON.stringify(retrievedGameweeks))

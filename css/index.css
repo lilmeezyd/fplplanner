@@ -634,6 +634,27 @@
 		font-size: 1rem;*/
 		text-align: center;
 	}
+	.tname {
+		display: block;
+		max-width: 300px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	@media(max-width:  725px) {
+		.tname {
+			width: 200px;
+		}
+	}
+	@media(max-width:  575px) {
+		.tname {
+			width: 100px;
+		}
+	}
+	.arrow {
+		margin-left: 0.5rem;
+		border: 1px solid black;
+	}
 	.ttime {
 		display: flex;
 		align-items: center;

@@ -558,46 +558,41 @@
 				let bEvent = bboost === true ? chips.filter(x => x.name === 'bboost')[0].event : null
 				let fEvent = freehit === true ? chips.filter(x => x.name === 'freehit')[0].event : null
 				let tEvent = tcap === true ? chips.filter(x => x.name === '3xc')[0].event : null
-				let fts
-				returnFt(1, current.length, 1, current)
-				rolledft = fts  === 1 ? false : true
-				function returnFt(a, b, c, d) {
+				let fts = 1
+				returnFt(1, current.length, fts)
+				rolledft = fts === 1 ? false : 2
+				function returnFt(a, b, c) {
 					if(a === b) {
-						console.log(fts)
+						fts = c
+						//console.log(fts)
 						return;
 					}
-					/*wildcardNotActive = current[a].event !== wEvent
-					prevCurrentWeekOne = current[a-1].event_transfers
-					prevCurrentWeek = current[a].event_transfers
-					console.log(`${prevCurrentWeekOne}:${prevCurrentWeek}`)*/
-					if((a-1) > 0) {
-						/*if(prevCurrentWeekOne == 0) {
-							if(prevCurrentWeek == 0) {
-								console.log('you done it') 
-							}
-						}*/
-						console.log(d)
-						console.log(d[a-1])
-						if((d[a].event !== wEvent && d[a].event_transfers === 0 && d[a-1].event_transfers == 0)) {
-							console.log('yay')
-								c = 2
-							} else {
-								c = 1
-							}
-						if(d[a-1].event_transfers === 0 && d[a].event_transfers === 1 && c === 2) {
-								c = 2
-								console.log('yay3')
-							}
-						if(d[a].event_transfers > 1 || d[a].event_transfers_cost > 0) {
-							c = 1
-							console.log('yay4')
-						}
-						fts = c
-				}
-					/*console.log(a)
-					console.log(b)
-					console.log(c)*/
-					returnFt(a+1, b, c, d)
+					if(current[a].event_transfers === 0 && current[a].event !== wEvent) {
+						//console.log(`saved ${current[a].event}`)
+						c = 2
+					}
+					if(current[a].event_transfers === 0 && current[a].event === wEvent) {
+						//console.log(`not saved ${current[a].event}`)
+						c = 1
+					}
+					if(current[a].event_transfers === 0 && current[a].event === fEvent) {
+						//console.log(`not saved ${current[a].event}`)
+						c = 1
+					}
+					if(current[a].event_transfers > 1) {
+						//console.log(`not saved ${current[a].event}`)
+						c = 1
+					}
+					if(current[a].event_transfers === 1 && c === 1) {
+						//console.log(`not saved ${current[a].event}`)
+						c = 1
+					}
+					if(current[a].event_transfers === 1 && c === 2) {
+						//console.log(`saved 2 ${current[a].event}`)
+						c = 2
+					}
+					a+=1
+					returnFt(a, b, c)
 				}
 				const newManagerHistory = []
 				const newHistory = {
@@ -774,8 +769,9 @@
 									<svg xmlns="http://www.w3.org/2000/svg" fill="red" height="24" width="24"><path d="m12 15-5-4.975h10Z"/></svg>`
 		}
 		function sameRank() {
-			arrowColor.innerHTML = `
-									<svg xmlns="http://www.w3.org/2000/svg" fill="grey" height="24" width="24"><path d="M9.5 25.5q-.65 0-1.075-.425Q8 24.65 8 24q0-.65.425-1.075Q8.85 22.5 9.5 22.5h29q.65 0 1.075.425Q40 23.35 40 24q0 .65-.425 1.075-.425.425-1.075.425Z"/></svg>`
+			arrowColor.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="grey" class="bi bi-circle-fill" viewBox="0 0 12 12">
+  <circle cx="6" cy="6" r="6"/>
+</svg>`
 		}
 
 	    function getTime() {
@@ -812,38 +808,6 @@
 		
 		//Return Main Data
 		
-		links = document.querySelectorAll('.links')
-		let y = document.getElementById("myNav")
-
-		function display() {
-			y.classList.toggle('responsive')
-		}
-
-		let index = 0
-
-		showHeader(index)
-
-		function currentHeader(n) {
-			showHeader(index = n)
-		}
-
-		function showHeader(n) {
-			let headers = document.querySelectorAll('.slideshow')
-			let dots = document.querySelectorAll('.dot')
-			for(let i = 0; i<headers.length; i++) {
-				headers[i].style.display = 'none'
-			}
-			for(let i = 0; i < dots.length; i++) {
-				dots[i].classList.remove('active')
-			}
-			n++;
-			if(n > headers.length) { n = 1}
-			if(n > dots.length) { n = 1}
-
-			headers[n-1].style.display = 'flex'
-			dots[n-1].classList.add('active')
-			setTimeout(showHeader, 10000, n)
-		}
 	</script>
 	</script>
 	<script defer type="text/javascript" src="js/tables.js"></script>

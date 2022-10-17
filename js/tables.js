@@ -415,6 +415,7 @@ function upload() {
 								player.is_vice_captain = playerOut.is_vice_captain
 								player.multiplier = playerOut.multiplier
 								player.element_out = playerOut.element
+								player.position = playerOut.position
 								x.setAttribute('disabled', true)
 								for(let j = 0; j < playersOut.length; j++) {
 									if(player.element === playersOut[j].element) {
