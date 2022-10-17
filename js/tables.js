@@ -204,10 +204,14 @@ function upload() {
 			if(curPage > 1) curPage--
 			document.querySelector('.current').innerHTML = `${curPage}`
 			loadPlayers(plyers)
+			console.log(curPage)
+			console.log(plyers)
 		}
 		function nextPage(plyers=players) {
 			if((curPage * pageSize) < plyers.length) curPage++
 			document.querySelector('.current').innerHTML = `${curPage}`
+			console.log(curPage)
+			console.log(plyers)
 			loadPlayers(plyers)
 		}
 		function lastPage(plyers=players) {

@@ -144,28 +144,55 @@ function loadGameweeks() {
                 })
             })
 
-            if(captain.element !== previousCaptain.element || vcaptain.element !== previousVCaptain.element || bdiff.length < 11 || sdiff.length < 4) {
+            let playersMatchOut = function() {
+                if(newWeek[0].transfers[0].transfersOut.length !== playersOut.length) {
+                    return false
+                }
+                for(let i = 0; i < playersOut.length; i++) {
+                   let checkPlayer = newWeek[0].transfers[0].transfersOut.some(x => x.element !== playersOut[i].element)
+                   if(checkPlayer === false) {
+                    return false
+                   }  
+                }
+                return true 
+            }
+            let playersMatchIn = function() {
+                if(newWeek[0].transfers[1].transfersIn.length !== playersIn.length) {
+                    return false
+                }
+                for(let i = 0; i < playersIn.length; i++) {
+                   let checkPlayer = newWeek[0].transfers[1].transfersIn.some(x => x.element === playersIn[i].element)
+                   if(checkPlayer === false) {
+                    return false
+                   }  
+                }
+                return true 
+            }
+
+            doesExist = playersMatchIn()
+
+            if(doesExist == false || captain.element !== previousCaptain.element || vcaptain.element !== previousVCaptain.element || bdiff.length < 11 || sdiff.length < 4) {
                 let index = retrievedGameweeks.findIndex(x => x.id === newWeek[0].id)
                 let sideArray = []
                 newWeek[0].newPicks.length = 0
                 newWeek[0].newPicks.push(...picks)
 
-                if(newWeek[0].transfers[0].transfersOut.length === playersOut.length) {
+                if(playersMatchOut() == true && newWeek[0].transfers[0].transfersOut.length === playersOut.length) {
                     sideArray.push()
                 }
-                if(newWeek[0].transfers[0].transfersOut.length < playersOut.length) {
+                if(playersMatchOut() == false || newWeek[0].transfers[0].transfersOut.length < playersOut.length) {
                     newWeek[0].transfers[0].transfersOut.length = 0
                     newWeek[0].transfers[0].transfersOut.push(...playersOut)
                 }
-                if(newWeek[0].transfers[1].transfersIn.length === playersIn.length) {
+                if(playersMatchIn() == true && newWeek[0].transfers[1].transfersIn.length === playersIn.length) {
                     sideArray.push()
                 }
-                if(newWeek[0].transfers[1].transfersIn.length < playersIn.length) {
+                if(playersMatchIn() == false || newWeek[0].transfers[1].transfersIn.length < playersIn.length) {
                     newWeek[0].transfers[1].transfersIn.length = 0
                     newWeek[0].transfers[1].transfersIn.push(...playersIn)
                 }
                 let nTransfercount = newWeek[0].transfers[0].transfersOut.length
-                if(pTransfercount !== nTransfercount) {
+                if(doesExist == false || pTransfercount !== nTransfercount) {
                     for(let i=0; i<retrievedGameweeks.length; i++) {
                     if(i>index) {
                         retrievedGameweeks[i].newPicks.length = 0
@@ -275,7 +302,6 @@ function loadGameweeks() {
             if(playersMatchOut() == false || previousWeek[0].transfers[0].transfersOut.length < playersOut.length) {
                 previousWeek[0].transfers[0].transfersOut.length = 0
                 previousWeek[0].transfers[0].transfersOut.push(...playersOut)
-                console.log(playersOut)
             }
             if(playersMatchOut() == true && previousWeek[0].transfers[0].transfersOut.length == playersOut.length) {
                 sideArray.push()
@@ -283,7 +309,6 @@ function loadGameweeks() {
             if(playersMatchIn() == false || previousWeek[0].transfers[1].transfersIn.length < playersIn.length) {
                 previousWeek[0].transfers[1].transfersIn.length = 0
                 previousWeek[0].transfers[1].transfersIn.push(...playersIn)
-                console.log(playersIn)
             }
 
             let nTransfercount = previousWeek[0].transfers[0].transfersOut.length
