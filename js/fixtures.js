@@ -43,7 +43,7 @@ function fixtureBody() {
 		</td>${opponents}</tr>`
 	})
 	tableBody = `
-	<tbody class="small">${result}</tbody>
+	<tbody class="small triple">${result}</tbody>
 	`
 	return tableBody
 }

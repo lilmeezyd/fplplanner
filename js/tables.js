@@ -217,11 +217,15 @@ function upload() {
 		function lastPage(plyers=players) {
 			curPage = Math.ceil(plyers.length/pageSize)
 			document.querySelector('.current').innerHTML = `${curPage}`
+			console.log(curPage)
+			console.log(plyers)
 			loadPlayers(plyers)	
 		}
 		function firstPage(plyers=players) {
 			curPage = 1
 			document.querySelector('.current').innerHTML = `${curPage}`
+			console.log(curPage)
+			console.log(plyers)
 			loadPlayers(plyers)
 		}
 		

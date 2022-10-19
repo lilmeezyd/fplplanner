@@ -40,7 +40,7 @@
 		margin: auto;
 		width: 90%;
 		background: ghostwhite;
-		z-index: 3;
+		z-index: 6;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -51,7 +51,6 @@
 		position: sticky;
 		top: 0;
 		left: 0;
-		z-index: 2;
 	}
 	nav .logo {
 		font-weight: 700;
@@ -856,7 +855,7 @@
 		top: 0;
 		left: 0;
 		background-color: rgba(23, 255, 23, 0.3);
-		z-index: 3;
+		z-index: 9;
 	}
 	.playerpop {
 		position: fixed;
@@ -1318,6 +1317,12 @@
 		margin: 0.5rem auto;
 		overflow-x: auto;
 		white-space: nowrap;
+		position: relative;
+	}
+	@media(max-width: 620px) {
+		.ticker-table {
+			height: 60vh;
+		}
 	}
 	.ticker-table tbody td {
 		padding: 0.2rem;
@@ -1325,6 +1330,11 @@
 	.ticker-table tbody td:not(.ticker-table tbody td:first-child),
 	.ticker-table thead th:not(.ticker-table thead th:first-child) {
 		border-right: 1px solid rgba(22, 22, 68, 0.2);
+	}
+	.ticker-table thead th:not(.ticker-table thead th:first-child) {
+		position: sticky;
+		top: 0;
+		z-index: 3;
 	}
 	.ticker-table thead th {
 		padding: 0.5rem;
@@ -1337,8 +1347,9 @@
 	.ticker-table thead th:first-child {
 		position: sticky;
 		left: 0;
+		top: 0;
 		background: rgba(255, 255, 255, 1);
-		z-index: 1;
+		z-index: 4;
 		box-shadow: 1px 0;
 	}
 	.ticker-table tbody td:nth-child(2) {
@@ -1447,6 +1458,11 @@
 		}
 		.data_name, .data_points, .bean, .x-small {
 			font-size: 0.7rem;
+		}
+	}
+	@media(max-width: 620px) {
+		.ticker-table tbody td:first-child {
+			box-shadow: 0px 0px 2px;
 		}
 	}
 	@media(max-width: 575px) {
@@ -1565,7 +1581,7 @@
 		width: 320px;
 		position: fixed;
 		/*transform: translate(-50%, 0%);*/
-		z-index: 5;
+		z-index: 10;
 		border-radius: 10px;
 		background: rgba(255, 255, 255, 1.0);
 		box-shadow: 0px 0px 10px darkgreen;
