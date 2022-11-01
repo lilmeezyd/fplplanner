@@ -444,7 +444,26 @@
 				let gameweekPicks = []
 				const transferPlayers = []
 				let bank, value
-				//console.log(result.picks)
+
+				// Resetting Team to state before auto-subs
+				if(result.automatic_subs.length > 0) {
+					result.picks.map(x => {
+						let found = result.automatic_subs.some(player => player.element_in === x.element)
+						if(found) {
+							let autoIn = result.automatic_subs.find(player => player.element_in === x.element)
+							let autoOut = result.picks.find(player => player.element === autoIn.element_out)
+							let autoInMultiplier = x.multiplier
+							let autoOutMultiplier = autoOut.multiplier
+							let autoInPosition = x.position
+							let autoOutPosition = autoOut.position
+							x.multiplier = autoOutMultiplier
+							x.position = autoOutPosition
+							autoOut.position = autoInPosition
+							autoOut.multiplier = autoInMultiplier
+
+						}
+					})
+				} 
 				result.picks.forEach(x => {
 					data.forEach(y => {
 						if(x.element === y.element_in) {
@@ -513,9 +532,6 @@
 							selling_price = (+(+(profit/2).toFixed(2).slice(0,3)) + +formattedCost).toFixed(1)
 						}
 						}
-						/*selling_price = +profit < 0.1 && +profit >= 0 ? (+formattedCost).toFixed(1) :
-										+profit < 0 ? (+x.now_cost).toFixed(1) : 
-										(+formattedCost + +profit).toFixed(1)*/
 						newPicks.push({...x, selling_price, element_in_cost:formattedCost})
 					}
 				})
@@ -527,17 +543,42 @@
 					if(isFound) {
 						let element_in_cost = transferPlayers.find(player => player.element === x.element).element_in_cost
 						formattedCost = (element_in_cost/10).toFixed(1)
-						profit = ((+x.now_cost - +formattedCost)/2).toFixed(1)
-						selling_price = +profit < 0.1 && +profit >= 0 ? (+formattedCost).toFixed(1) :
-										+profit < 0 ? (+x.now_cost).toFixed(1) : 
-										(+formattedCost + +profit).toFixed(1)
+						profit = ((+x.now_cost - +formattedCost).toFixed(1))
+						actualProfit = (profit*10) % 2 === 0 ? 'even' : 'odd'
+						if(actualProfit === 'even') {
+							if(+profit < 0 ) {
+								selling_price = (+(+(profit).toFixed(2).slice(0,4)) + +formattedCost).toFixed(1)
+							} else {
+							selling_price = (+((+profit/2).toFixed(1)) + +formattedCost).toFixed(1)
+						}
+						} else {
+							if(+profit < 0 ) {
+								selling_price = (+(+(profit).toFixed(2).slice(0,4)) + +formattedCost).toFixed(1)
+							}
+								else {
+							selling_price = (+(+(profit/2).toFixed(2).slice(0,3)) + +formattedCost).toFixed(1)
+						}
+						}
 						realPicks.push({...x, selling_price, element_in_cost:formattedCost})
 					} else {
 						formattedCost = (+x.now_cost - +x.price_change).toFixed(1)
-						profit = ((+x.now_cost - +formattedCost)/2).toFixed(1)
-						selling_price = +profit < 0.1 && +profit >= 0 ? (+formattedCost).toFixed(1) :
-										+profit < 0 ? (+x.now_cost).toFixed(1) : 
-										(+formattedCost + +profit).toFixed(1)
+						profit = +((+x.now_cost - +formattedCost).toFixed(1))
+						actualProfit = (profit*10) % 2 === 0 ? 'even' : 'odd'
+						//profit = ((+x.now_cost - +formattedCost)/2).toFixed(1)
+						if(actualProfit === 'even') {
+							if(+profit < 0 ) {
+								selling_price = (+(+(profit).toFixed(2).slice(0,4)) + +formattedCost).toFixed(1)
+							} else {
+							selling_price = (+((+profit/2).toFixed(1)) + +formattedCost).toFixed(1)
+						}
+						} else {
+							if(+profit < 0 ) {
+								selling_price = (+(+(profit).toFixed(2).slice(0,4)) + +formattedCost).toFixed(1)
+							}
+								else {
+							selling_price = (+(+(profit/2).toFixed(2).slice(0,3)) + +formattedCost).toFixed(1)
+						}
+						}
 						realPicks.push({...x, selling_price, element_in_cost:formattedCost})
 					}
 				})
