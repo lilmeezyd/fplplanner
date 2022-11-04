@@ -3,19 +3,20 @@ function upload() {
 	players.push(...playerState.players)
 	const cachedPlayers = [...players]
 	selectedPlayers = cachedPlayers
+	let viewPlayers = playerState.players
 	const pageSize = 20
 	let curPage = 1 
 	let maxPrice = Math.max(...cachedPlayers.map(x => (x.now_cost/10).toFixed(1)))
 	let minPrice = Math.min(...cachedPlayers.map(x => (x.now_cost/10).toFixed(1)))
 	let priceCut = maxPrice
-	let sortParam = 'total_points'
+	let sortParam = Array.from(sort_by.options).filter(x => x.selected)[0].value
 	positions = []
 	teams = []
 	viewValue = ''
 
 	let message = document.querySelector('.message')
 
-
+	console.log(sortParam)
 	let goalkeeper_body = document.querySelector('#goalkeepers tbody')
 	let defender_body = document.querySelector('#defenders tbody')
 	let midfielder_body = document.querySelector('#midfielders tbody')
@@ -54,7 +55,7 @@ function upload() {
 
 
 	/* Filter Players By Price */
-	players.filter(player => (player.now_cost/10).toFixed(1) <= maxPrice)
+	/*players.filter(player => (player.now_cost/10).toFixed(1) <= maxPrice)*/
 		cost.addEventListener('change', function() {
 			let priceCut = +this.value
 			let filterPlayers
@@ -71,43 +72,50 @@ function upload() {
 		   } else {
 		   		filterPlayers = players.filter(player => (player.now_cost/10).toFixed(1) <= +this.value)
 		   	}
-		   	selectedPlayers = filterPlayers
+		   	//selectedPlayers = filterPlayers
 			curPage = filterPlayers.length === 0 ? 0 : 1
-			selectedPlayers.sort((x,y) => {
+			/*selectedPlayers.sort((x,y) => {
 					if(x[sortParam] > y[sortParam]) return -1
 					if(x[sortParam] < y[sortParam]) return 1	
-				})
+				})*/
 			document.querySelector('.number').innerHTML = `${filterPlayers.length}`
 			document.querySelector('.numbers').innerHTML = filterPlayers.length === 1 ? 'player shown' : 'players shown'
 			document.querySelector('.current').innerHTML = `${curPage}`
 			document.querySelector('.total_pages').innerHTML = `${Math.ceil(filterPlayers.length/pageSize)}`
 			loadPlayers(filterPlayers)
-			document.querySelector('#nextButton').addEventListener('click', function() {nextPage(filterPlayers)}, false)
-			document.querySelector('#prevButton').addEventListener('click', function() {previousPage(filtersearchPlayers)}, false)
-			document.querySelector('#lastPage').addEventListener('click', function() {lastPage(filterPlayers)}, false)
-			document.querySelector('#firstPage').addEventListener('click', function() {firstPage(filterPlayers)}, false)
+			//document.querySelector('#nextButton').addEventListener('click', function() {nextPage(filterPlayers)}, false)
+			//document.querySelector('#prevButton').addEventListener('click', function() {previousPage(filterPlayers)}, false)
+			//document.querySelector('#lastPage').addEventListener('click', function() {lastPage(filterPlayers)}, false)
+			//document.querySelector('#firstPage').addEventListener('click', function() {firstPage(filterPlayers)}, false)
 
 		})
 		/* search players */
 		document.querySelector('#search').oninput = function() {
 			let c = this.value
 			let searchPlayers
-			searchPlayers = selectedPlayers.filter(x => x.web_name.toLowerCase().startsWith(c.toLowerCase()))
+			searchPlayers = viewPlayers.filter(x => x.web_name.toLowerCase().startsWith(c.toLowerCase()))
 			curPage = searchPlayers.length === 0 ? 0 : 1
 			document.querySelector('.numbers').innerHTML = searchPlayers.length === 1 ? 'player shown' : 'players shown'
 			document.querySelector('.number').innerHTML = `${searchPlayers.length}`
 			document.querySelector('.current').innerHTML = `${curPage}`
 			document.querySelector('.total_pages').innerHTML = `${Math.ceil(searchPlayers.length/pageSize)}`
-			searchPlayers.sort((x,y) => {
+			/*searchPlayers.sort((x,y) => {
 					if(x[sortParam] > y[sortParam]) return -1
 					if(x[sortParam] < y[sortParam]) return 1	
 				})
-			sortPlayers(searchPlayers)
+			sortPlayers(searchPlayers)*/
+			/*if(Math.ceil(searchPlayers.length/pageSize) === curPage) {
+				document.querySelector('#nextButton').setAttribute('disabled')
+				document.querySelector('#lastButton').setAttribute('disabled')
+			} else {
+				document.querySelector('#nextButton').removeAttribute('disabled')
+				document.querySelector('#lastButton').removeAttribute('disabled')
+			}*/
 			loadPlayers(searchPlayers)
-			document.querySelector('#nextButton').addEventListener('click', function() {nextPage(searchPlayers)}, false)
-			document.querySelector('#prevButton').addEventListener('click', function() {previousPage(searchPlayers)}, false)
-			document.querySelector('#lastPage').addEventListener('click', function() {lastPage(searchPlayers)}, false)
-			document.querySelector('#firstPage').addEventListener('click', function() {firstPage(searchPlayers)}, false)
+			//document.querySelector('#nextButton').addEventListener('click', function() {nextPage(searchPlayers)}, false)
+			//document.querySelector('#prevButton').addEventListener('click', function() {previousPage(searchPlayers)}, false)
+			//document.querySelector('#lastPage').addEventListener('click', function() {lastPage(searchPlayers)}, false)
+			//document.querySelector('#firstPage').addEventListener('click', function() {firstPage(searchPlayers)}, false)
 		}
 
 		/* Filter players by position or team */
@@ -116,7 +124,7 @@ function upload() {
 			teams = []
 			viewValue = this.value
 			priceCut = maxPrice
-			let viewPlayers
+			curPage = 1
 			document.querySelector('#search').value = ""
 			Array.from(this.children).forEach(child => {
 				if(child.label.toLowerCase() === 'By position'.toLowerCase()) {
@@ -133,92 +141,96 @@ function upload() {
 			if(positions.includes(this.value)) {
 				let pPosition = +this.value.slice(-1)
 				viewPlayers = cachedPlayers.filter(x => x.element_type === pPosition)
+				loadPlayers(viewPlayers)
 			}
 			if(teams.includes(this.value)) {
 				let pTeam = +this.value.slice(5)
 				viewPlayers = cachedPlayers.filter(x => x.team === pTeam)
+				loadPlayers(viewPlayers)
 			}
 			if(this.value.toLowerCase() === 'all players'.toLowerCase()) {
 				viewPlayers = cachedPlayers
+				loadPlayers()
 			}
-			selectedPlayers = viewPlayers
+			//selectedPlayers = viewPlayers
 			curPage = viewPlayers.length === 0 ? 0 : 1
 			document.querySelector('.numbers').innerHTML = viewPlayers.length === 1 ? 'player shown' : 'players shown'
 			document.querySelector('.number').innerHTML = `${viewPlayers.length}`
 			document.querySelector('.current').innerHTML = `${curPage}`
 			document.querySelector('.total_pages').innerHTML = `${Math.ceil(viewPlayers.length/pageSize)}`
-			selectedPlayers.sort((x,y) => {
+			/*selectedPlayers.sort((x,y) => {
 					if(x[sortParam] > y[sortParam]) return -1
 					if(x[sortParam] < y[sortParam]) return 1	
 				})
+			console.log(sortParam)?*/
+			console.log(viewPlayers)
 			loadPrices()
-			sortPlayers(viewPlayers)
-			loadPlayers(viewPlayers)
-			document.querySelector('#nextButton').addEventListener('click', function() {nextPage(viewPlayers)}, false)
-			document.querySelector('#prevButton').addEventListener('click', function() {previousPage(viewPlayers)}, false)
-			document.querySelector('#lastPage').addEventListener('click', function() {lastPage(viewPlayers)}, false)
-			document.querySelector('#firstPage').addEventListener('click', function() {firstPage(viewPlayers)}, false)
+			//sortPlayers(viewPlayers)
+			//loadPlayers(viewPlayers)
+			//document.querySelector('#nextButton').addEventListener('click', function() {nextPage(viewPlayers)}, false)
+			//document.querySelector('#prevButton').addEventListener('click', function() {previousPage(viewPlayers)}, false)
+			//document.querySelector('#lastPage').addEventListener('click', function() {lastPage(viewPlayers)}, false)
+			//document.querySelector('#firstPage').addEventListener('click', function() {firstPage(viewPlayers)}, false)
 		})
 
+
 		/* sort players */
-		function sortPlayers(plyers=players) {
 			document.querySelector('#sort_by').addEventListener('change', function() {
-				curPage = 1
+				/*curPage = 1
 				if(this.value === 'now_cost') {
-					plyers.sort((x,y) => {
+					viewPlayers.sort((x,y) => {
 						if(x.now_cost>y.now_cost) return -1 
 						if(x.now_cost<y.now_cost) return 1	
 					})
 				}
 				if(this.value === 'total_points') {
-					plyers.sort((x,y) => {
+					viewPlayers.sort((x,y) => {
 						if(x.total_points > y.total_points) return -1
 						if(x.total_points < y.total_points) return 1	
 					})
 				}
-				document.querySelector('.current').innerHTML = `${curPage}`
+				document.querySelector('.current').innerHTML = `${curPage}`*/
+				curPage = 1
 				sortParam = this.value
-				loadPlayers(plyers)
+				loadPlayers(viewPlayers)
 			})
-		}
 		
-			players.sort((x,y) => {
+			/*players.sort((x,y) => {
 				if(x[sortParam]>y[sortParam]) return -1
 				if(x[sortParam]<y[sortParam]) return 1
-			})
+			})*/
 
 
-
-		document.querySelector('#nextButton').addEventListener('click', function() {nextPage(players)}, false)
-		document.querySelector('#prevButton').addEventListener('click', function() {previousPage(players)}, false)
-		document.querySelector('#lastPage').addEventListener('click', function() {lastPage(players)}, false)
-		document.querySelector('#firstPage').addEventListener('click', function() {firstPage(players)}, false)
-		document.querySelector('.number').innerHTML = `${players.length}`
+		document.querySelector('#nextButton').onclick = function() {nextPage(viewPlayers)}
+		document.querySelector('#prevButton').onclick = function() {previousPage(viewPlayers)}
+		document.querySelector('#lastPage').onclick = function() {lastPage(viewPlayers)}
+		document.querySelector('#firstPage').onclick = function() {firstPage(viewPlayers)}
+		document.querySelector('.number').innerHTML = `${viewPlayers.length}`
 		document.querySelector('.current').innerHTML = `${curPage}`
-		document.querySelector('.total_pages').innerHTML = `${Math.ceil(players.length/pageSize)}`
+		document.querySelector('.total_pages').innerHTML = `${Math.ceil(viewPlayers.length/pageSize)}`
 
-		function previousPage(plyers=players) {
+		function previousPage(plyers) {
 			if(curPage > 1) curPage--
 			document.querySelector('.current').innerHTML = `${curPage}`
 			loadPlayers(plyers)
 			console.log(curPage)
 			console.log(plyers)
 		}
-		function nextPage(plyers=players) {
+		function nextPage(plyers) {
 			if((curPage * pageSize) < plyers.length) curPage++
 			document.querySelector('.current').innerHTML = `${curPage}`
 			console.log(curPage)
 			console.log(plyers)
 			loadPlayers(plyers)
 		}
-		function lastPage(plyers=players) {
+		function lastPage(plyers) {
 			curPage = Math.ceil(plyers.length/pageSize)
 			document.querySelector('.current').innerHTML = `${curPage}`
 			console.log(curPage)
 			console.log(plyers)
 			loadPlayers(plyers)	
 		}
-		function firstPage(plyers=players) {
+		function firstPage(plyers) {
 			curPage = 1
 			document.querySelector('.current').innerHTML = `${curPage}`
 			console.log(curPage)
@@ -243,7 +255,10 @@ function upload() {
 					x.disabled = ''
 				}
 			})
-			plyers.filter((row, index) => {
+			plyers.sort((x,y) => {
+				if(x[sortParam]>y[sortParam]) return -1
+				if(x[sortParam]<y[sortParam]) return 1
+			}).filter((row, index) => {
 				let start = (curPage-1)*pageSize
 				let end = curPage*pageSize
 				if(index >= start && index < end) return true
@@ -359,7 +374,6 @@ function upload() {
 					picksCount = teamCountPicksObj[team] == undefined ? 0 : teamCountPicksObj[team]
 					tempCount = tempCountObj[team] == undefined ? 0 : tempCountObj[team]
 					teamCount = picksCount - tempCount
-					console.log(teamCount)
 
 					if(picks.length < 15 || tempPlayersOut.length > 0) {
 						let orderOne = picks.some(x => x.position === 13)
