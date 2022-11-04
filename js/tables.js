@@ -22,8 +22,6 @@ function upload() {
 	let forward_body = document.querySelector('#forwards tbody')
 	let cost = document.querySelector('.cost select')
 
-
-
 	document.querySelector('.numbers').innerHTML = players.length === 1 ? 'player shown' : 'players shown'
 
 	let player_cells = document.getElementsByClassName('player-cell')
@@ -35,8 +33,8 @@ function upload() {
 		pMax.innerHTML = maxPrice.toFixed(1)
 		for(i=maxPrice; i>=minPrice; i-=0.5) {
 			let priceOption = document.createElement('option')
-			priceOption.setAttribute('value', i)
-			priceOption.innerHTML = i
+			priceOption.setAttribute('value', +(i.toFixed(1)))
+			priceOption.innerHTML = +(i.toFixed(1))
 			cost.append(priceOption)
 		}
 		if(players.length) {
@@ -166,7 +164,6 @@ function upload() {
 		function sortPlayers(plyers=players) {
 			document.querySelector('#sort_by').addEventListener('change', function() {
 				curPage = 1
-				console.log(this.value)
 				if(this.value === 'now_cost') {
 					plyers.sort((x,y) => {
 						if(x.now_cost>y.now_cost) return -1 

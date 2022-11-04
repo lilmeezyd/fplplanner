@@ -463,7 +463,9 @@
 
 						}
 					})
-				} 
+				} else {
+					result.picks.map(x => x)
+				}
 				result.picks.forEach(x => {
 					data.forEach(y => {
 						if(x.element === y.element_in) {
@@ -490,7 +492,7 @@
 					})
 				})
 
-        // Adding selling prices and buying prices to the picks
+        		// Adding selling prices and buying prices to the picks
 				newPicksHyp.forEach(x => {
 					let isFound = transferPlayers.some(player => player.element === x.element)
 					if(isFound) {
@@ -536,9 +538,9 @@
 					}
 				})
 
-        /* Adding selling prices and buying prices to picks to be used on reset for
-         the first gw in the ui */
-				realPicksHyp.forEach(x => {
+		        /* Adding selling prices and buying prices to picks to be used on reset for
+		         the first gw in the ui */
+				/*realPicksHyp.forEach(x => {
 					let isFound = transferPlayers.some(player => player.element === x.element)
 					if(isFound) {
 						let element_in_cost = transferPlayers.find(player => player.element === x.element).element_in_cost
@@ -581,7 +583,7 @@
 						}
 						realPicks.push({...x, selling_price, element_in_cost:formattedCost})
 					}
-				})
+				})*/
 				bank = (result.entry_history.bank/10).toFixed(1)
 				value = (result.entry_history.value/10).toFixed(1)
                 let totalBudget = newPicks.reduce((x,y) => x+(+y.selling_price),0) + +bank
