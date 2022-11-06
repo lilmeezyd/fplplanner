@@ -6,9 +6,10 @@ function upload() {
 	let viewPlayers = playerState.players
 	const pageSize = 20
 	let curPage = 1 
-	let maxPrice = Math.max(...cachedPlayers.map(x => (x.now_cost/10).toFixed(1)))
-	let minPrice = Math.min(...cachedPlayers.map(x => (x.now_cost/10).toFixed(1)))
+	let maxPrice = Math.max(...viewPlayers.map(x => (x.now_cost/10).toFixed(1)))
+	let minPrice = Math.min(...viewPlayers.map(x => (x.now_cost/10).toFixed(1)))
 	let priceCut = maxPrice
+	
 	let sortParam = Array.from(sort_by.options).filter(x => x.selected)[0].value
 	positions = []
 	teams = []
@@ -20,6 +21,7 @@ function upload() {
 	let midfielder_body = document.querySelector('#midfielders tbody')
 	let forward_body = document.querySelector('#forwards tbody')
 	let cost = document.querySelector('.cost select')
+
 
 	document.querySelector('.numbers').innerHTML = players.length === 1 ? 'player shown' : 'players shown'
 
@@ -39,6 +41,7 @@ function upload() {
 		if(viewPlayers.length) {
 			actualMax = Math.max(...viewPlayers.map(x => (x.now_cost/10).toFixed(1)))
 			bMax = ((+maxPrice - +actualMax)%0.5 + +actualMax).toFixed(1)
+			priceCut = bMax
 		} else {
 			bMax = priceCut
 		}
@@ -191,10 +194,12 @@ function upload() {
 					x.disabled = ''
 				}
 			})
-			plyers.sort((x,y) => {
+			plyers.filter(x => +(x.now_cost/10).toFixed(1) <= +Array.from(cost_by.options).filter(x => x.selected)[0].value)
+			.sort((x,y) => {
 				if(x[sortParam]>y[sortParam]) return -1
 				if(x[sortParam]<y[sortParam]) return 1
-			}).filter((row, index) => {
+			})
+			.filter((row, index) => {
 				let start = (curPage-1)*pageSize
 				let end = curPage*pageSize
 				if(index >= start && index < end) return true

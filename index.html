@@ -231,7 +231,7 @@
 					<div class="cost">
 						<label>Max cost</label>
 						<div>Between <span id="pMin"></span> and <span id="pMax"></span></div>
-						<select class="custom-select">
+						<select class="custom-select" id="cost_by">
 						</select>
 					</div>
 				</form>
@@ -545,7 +545,7 @@
 					if(isFound) {
 						let element_in_cost = transferPlayers.find(player => player.element === x.element).element_in_cost
 						formattedCost = (element_in_cost/10).toFixed(1)
-						profit = ((+x.now_cost - +formattedCost).toFixed(1))
+						profit = +((+x.now_cost - +formattedCost).toFixed(1))
 						actualProfit = (profit*10) % 2 === 0 ? 'even' : 'odd'
 						if(actualProfit === 'even') {
 							if(+profit < 0 ) {
