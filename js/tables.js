@@ -148,13 +148,13 @@ function upload() {
 		
 
 
-		document.querySelector('#nextButton').onclick = function() {nextPage(viewPlayers)}
-		document.querySelector('#prevButton').onclick = function() {previousPage(viewPlayers)}
-		document.querySelector('#lastPage').onclick = function() {lastPage(viewPlayers)}
-		document.querySelector('#firstPage').onclick = function() {firstPage(viewPlayers)}
-		document.querySelector('.number').innerHTML = `${viewPlayers.length}`
-		document.querySelector('.current').innerHTML = `${curPage}`
-		document.querySelector('.total_pages').innerHTML = `${Math.ceil(viewPlayers.length/pageSize)}`
+		//document.querySelector('#nextButton').onclick = function() {nextPage(viewPlayers)}
+		//document.querySelector('#prevButton').onclick = function() {previousPage(viewPlayers)}
+		//document.querySelector('#lastPage').onclick = function() {lastPage(viewPlayers)}
+		//document.querySelector('#firstPage').onclick = function() {firstPage(viewPlayers)}
+		//document.querySelector('.number').innerHTML = `${viewPlayers.length}`
+		//document.querySelector('.current').innerHTML = `${curPage}`
+		//document.querySelector('.total_pages').innerHTML = `${Math.ceil(viewPlayers.length/pageSize)}`
 
 		function previousPage(plyers) {
 			if(curPage > 1) curPage--
@@ -182,6 +182,8 @@ function upload() {
 			let result1 = ''
 			let result2 = ''
 			let result3 = ''
+			let playerCut = cost_by.options.length === 0 ? maxPrice :
+					Array.from(cost_by.options).filter(x => x.selected)[0].value
 			plyers.forEach(x => {
 				x.disabled = ''
 				if(picks.length > 0) {
@@ -194,7 +196,8 @@ function upload() {
 					x.disabled = ''
 				}
 			})
-			plyers.filter(x => +(x.now_cost/10).toFixed(1) <= +Array.from(cost_by.options).filter(x => x.selected)[0].value)
+			filteredPlyers = plyers.filter(x => +(x.now_cost/10).toFixed(1) <= +playerCut)
+			filteredPlyers
 			.sort((x,y) => {
 				if(x[sortParam]>y[sortParam]) return -1
 				if(x[sortParam]<y[sortParam]) return 1
@@ -227,6 +230,14 @@ function upload() {
 		    defender_body.parentElement.style.display = result1 === '' ? 'none' : 'table'
 		    midfielder_body.parentElement.style.display = result2 === '' ? 'none' : 'table'
 		    forward_body.parentElement.style.display = result3 === '' ? 'none' : 'table'
+
+		    document.querySelector('#nextButton').onclick = function() {nextPage(filteredPlyers)}
+			document.querySelector('#prevButton').onclick = function() {previousPage(filteredPlyers)}
+			document.querySelector('#lastPage').onclick = function() {lastPage(filteredPlyers)}
+			document.querySelector('#firstPage').onclick = function() {firstPage(filteredPlyers)}
+			document.querySelector('.number').innerHTML = `${filteredPlyers.length}`
+			document.querySelector('.current').innerHTML = `${curPage}`
+		    document.querySelector('.total_pages').innerHTML = `${Math.ceil(filteredPlyers.length/pageSize)}`
 
 		    playerinfo = document.querySelectorAll('.player-info-button-table')
 			Array.from(playerinfo).forEach(x => {
