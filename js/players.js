@@ -74,6 +74,7 @@
 					sessionStorage.setItem('fixtures', JSON.stringify(result))
 					setFixtures()
 					loadTeamFixtures()
+					loadNextFixtures()
 				})
 				.catch(error => console.log('error', error));
 				

@@ -332,6 +332,10 @@
 	 	background-size: 30px;
 	 	background-color: #fff;
 	 }
+
+	.custom-select-next {
+		width: 80px;
+	}
 	 .open {
 	 	background-image: url('../static/chevron-up.svg');
 	 	background-repeat: no-repeat;

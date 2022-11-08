@@ -1304,6 +1304,12 @@
 		/*overflow: auto;*/
 		padding-top: 1rem;
 	}
+	.next-fixtures {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 1rem;
+	}
 	.ticker-table, .table {
 		/*margin: auto;
 		table-layout: fixed;
@@ -1318,6 +1324,7 @@
 		overflow-x: auto;
 		white-space: nowrap;
 		position: relative;
+		border-right: 1px solid rgba(0, 0, 0, 0.2);
 	}
 	@media(max-width: 620px) {
 		.ticker-table {
@@ -1353,7 +1360,7 @@
 		box-shadow: 1px 0;
 	}
 	.ticker-table tbody td:nth-child(2) {
-		font-size: 0.9rem;
+		/*font-size: 0.9rem;*/
 	}
 	.table tbody td:first-child {
 		position: sticky;

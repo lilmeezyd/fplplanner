@@ -1,30 +1,55 @@
 let tickerDiv = document.querySelector('.ticker-table')
 let eventIds = []
 
+function loadNextFixtures() {
+	let fixOption = ''
+	let fixtureNum = eventState.events.filter(event => new Date(event.deadline_time) > new Date()).length
+	for(let i = 1; i <= fixtureNum; i++) {
+		if(i === fixtureNum) {
+			fixOption += `<option value="${i}" selected>${i}</option>`
+		} else {
+			fixOption += `<option value="${i}">${i}</option>`
+		}
+	} 
+	nxt_fixtures.innerHTML = fixOption
+}
 
-function loadTeamFixtures() {
-	let table = fixtureHeader()+fixtureBody()
+nxt_fixtures.onchange = function() {
+	loadTeamFixtures(+this.value)
+}
+
+function loadTeamFixtures(x=eventState.events.filter(event => new Date(event.deadline_time) > new Date()).length) {
+	let table = fixtureHeader(x)+fixtureBody(x)
 	tickerDiv.innerHTML = table
+	document.querySelector('.next-fixtures span').innerText = x === 1 ? 'Fixture' : 'Fixtures'
+	//loadNextFixtures()
 }
 
 //Load fixture Header
-function fixtureHeader() {
+function fixtureHeader(d) {
 	let result = '<th>Team</th>'
-	eventState.events.forEach(event => {
-		if(new Date(event.deadline_time) > new Date()) {
+
+	eventState.events
+		.filter(event => new Date(event.deadline_time) > new Date())
+		.filter((event, key) => key <= (d-1))
+		.forEach(event => {
 			newGW = event.name.replace('Gameweek ','GW')
 			result += `<th>${newGW}</th>`
-		} else {
-			eventIds.push(event.id)
-		}
-	})
+		})
+
+	eventState.events
+		.forEach(event => {
+			if(new Date(event.deadline_time) < new Date()) {
+				eventIds.push(event.id)
+			}
+		})	
 	tableHeader = `
 	<thead class="small"><tr>${result}</tr></thead>`
 	return tableHeader
 }
 
 //Load Fixture Body
-function fixtureBody() {
+function fixtureBody(d) {
 	let result = ''
 	let eventztream = JSON.parse(sessionStorage.getItem('events'))
 	if(eventztream === null) return;
@@ -33,8 +58,9 @@ function fixtureBody() {
 	for(let i=filteredEvents.length+1; i <= 38; i++) {
 		nextFixturesObj[i] = i
 	}
+
 	teamState.teams.forEach(team => {
-		let opponents = loadOpponent(team.id, nextFixturesObj, filteredEvents.length)
+		let opponents = loadOpponent(team.id, nextFixturesObj, filteredEvents.length, d)
 		result += `<tr><td>
 		<span class="ticker-image">
 		<img src="./static/t${team.code}.png" alt="${team.name}">
@@ -48,7 +74,7 @@ function fixtureBody() {
 	return tableBody
 }
 
-function loadOpponent(a, b, c) {
+function loadOpponent(a, b, c, d) {
 	let result = ''
 	let nextFixtures = []
 	validFixtures = fixtureState.fixtures
@@ -75,6 +101,7 @@ function loadOpponent(a, b, c) {
 				team_a_difficulty:0, team_h_difficulty:0}, nextFixtures[i-1])}
 	}*/
 	nextFixtures
+	.filter((fix, key) => key <= (d-1))
 	.forEach(x => {
 		if(x.team_a === a && !eventIds.includes(x.event)) {
 			let awayColor = x.team_a_difficulty === 2 ? 'rgb(1, 252, 122)' : 
