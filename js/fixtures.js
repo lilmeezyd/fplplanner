@@ -1,14 +1,18 @@
 let tickerDiv = document.querySelector('.ticker-table')
 let eventIds = []
 
-function loadNextFixtures() {
+function loadNextFixtures(a) {
 	let fixOption = ''
 	let fixtureNum = eventState.events.filter(event => new Date(event.deadline_time) > new Date()).length
 	for(let i = 1; i <= fixtureNum; i++) {
-		if(i === fixtureNum) {
+		if(i === fixtureNum && nxt_fixtures.options.length === 0) {
 			fixOption += `<option value="${i}" selected>${i}</option>`
 		} else {
-			fixOption += `<option value="${i}">${i}</option>`
+			if(i === a) {
+				fixOption += `<option value="${i}" selected>${i}</option>`
+			} else {
+				fixOption += `<option value="${i}">${i}</option>`
+			}
 		}
 	} 
 	nxt_fixtures.innerHTML = fixOption
@@ -22,7 +26,7 @@ function loadTeamFixtures(x=eventState.events.filter(event => new Date(event.dea
 	let table = fixtureHeader(x)+fixtureBody(x)
 	tickerDiv.innerHTML = table
 	document.querySelector('.next-fixtures span').innerText = x === 1 ? 'Gameweek' : 'Gameweeks'
-	loadNextFixtures()
+	loadNextFixtures(x)
 }
 
 //Load fixture Header
