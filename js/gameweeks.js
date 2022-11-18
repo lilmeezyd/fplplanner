@@ -83,6 +83,7 @@ function loadGameweeks() {
             sessionStorage.setItem('managerPicks', JSON.stringify(retrievedGameweeks))
             loadGameweek()
         }
+        view_by.options[0].selected = true
     }
 
     // Loading picks from a Gameweek preceding the current
@@ -223,6 +224,7 @@ function loadGameweeks() {
                 //sessionStorage.setItem('gameweeks', JSON.stringify(retrievedGameweeks))
             }
             gameweekNum.textContent = `Gameweek ${curGameweek}`
+            view_by.options[0].selected = true
             loadGameweek()
             //sdiff.length = 0
             //bdiff.length = 0
@@ -266,6 +268,39 @@ function loadGameweeks() {
 
             trackTransfers(curGameweek)
 
+            let hugh
+            let changeInTransfers = function() {
+                if(playersIn.length > 0) {
+                    playersIn.forEach(x => {
+                        previousWeek[0].transfers[1].transfersIn.forEach(y => {
+                            if(x.element === y.element) {
+                                if(x.element_out === y.element_out) {
+                                    hugh = true
+                                    //console.log(hugh)
+                                    return
+                                }
+                                hugh = false
+                                //console.log(hugh)
+                                return
+                            }
+                        })
+                    })
+                }
+            }
+
+
+            let changeOutTransfers = function() {
+                if(playersOut.length > 0) {
+                    if(playersOut[0].element == previousWeek[0].transfers[0].transfersOut[0].element) {
+                        console.log(playersOut[0].element)
+                        return true
+                    }
+                    console.log(playersOut[0].element)
+                    console.log(previousWeek[0].transfers[0].transfersOut[0].element)
+                    return false
+                }
+            }
+
             let playersMatchOut = function() {
                 if(previousWeek[0].transfers[0].transfersOut.length !== playersOut.length) {
                     return false
@@ -290,23 +325,20 @@ function loadGameweeks() {
                 }
                 return true 
             }
-
+            
             doesExist = playersMatchIn()
 
-            //console.log(playersMatchOut())
-            //console.log(playersMatchIn())
-            //console.log(doesExist)
             if(playersMatchIn() == true && previousWeek[0].transfers[1].transfersIn.length == playersIn.length) {
                 sideArray.push()
             }
-            if(playersMatchOut() == false || previousWeek[0].transfers[0].transfersOut.length < playersOut.length) {
+            if(playersMatchOut() == false || previousWeek[0].transfers[0].transfersOut.length < playersOut.length || changeOutTransfers() == false) {
                 previousWeek[0].transfers[0].transfersOut.length = 0
                 previousWeek[0].transfers[0].transfersOut.push(...playersOut)
             }
             if(playersMatchOut() == true && previousWeek[0].transfers[0].transfersOut.length == playersOut.length) {
                 sideArray.push()
             }
-            if(playersMatchIn() == false || previousWeek[0].transfers[1].transfersIn.length < playersIn.length) {
+            if(playersMatchIn() == false || previousWeek[0].transfers[1].transfersIn.length < playersIn.length || changeInTransfers() == false) {
                 previousWeek[0].transfers[1].transfersIn.length = 0
                 previousWeek[0].transfers[1].transfersIn.push(...playersIn)
             }
@@ -337,9 +369,6 @@ function loadGameweeks() {
                 }
                 return true 
            }
-           //console.log(playersMatchIn())
-           //console.log(picksMatch())
-            console.log(doesExist)
 
            if(previousHistory[0].bboost.event === curGameweek-1 || previousHistory[0].tcap.event === curGameweek-1) {
                 let index = retrievedHistory.findIndex(x => x.id === curGameweek)
@@ -357,7 +386,7 @@ function loadGameweeks() {
                 }
             }
             
-            if(doesExist == false || pTransfercount !== nTransfercount || (previousHistory[0].wildcard.event === curGameweek-1) || previousHistory[0].freehit.event === curGameweek-1) {
+            if(doesExist == false || hugh == false || pTransfercount !== nTransfercount || (previousHistory[0].wildcard.event === curGameweek-1) || previousHistory[0].freehit.event === curGameweek-1) {
                 let index = retrievedHistory.findIndex(x => x.id === curGameweek)
                 let prevIndex = retrievedGameweeks.findIndex(x => x.id === curGameweek - 2)
                 let prevTeam = prevIndex === -1 ? realPicks : 
@@ -405,6 +434,7 @@ function loadGameweeks() {
             sessionStorage.setItem('managerPicks', JSON.stringify(retrievedGameweeks))
             sessionStorage.setItem('managerHistory', JSON.stringify(retrievedHistory))
 
+            view_by.options[0].selected = true
             loadGameweek()
         }
     }
@@ -501,6 +531,7 @@ function loadGameweeks() {
         picks.length = 0
         oldTeam.length = 0
         weekNdeadline.length = 0
+        view_by.options[0].selected = true
         //message.innerHTML = ''
         //message.style.display = 'none'
         if(retrievedPicks === null) {

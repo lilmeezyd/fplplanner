@@ -392,18 +392,34 @@ function upload() {
 									if(player.element === playersOut[j].element) {
 										repeatedPlayer.push(...playersOut.splice(j,1))
 									}
-									for(let i = 0; i < playersIn.length; i++) {
-										if(playersIn[i].element === playersOut[j].element) {
-											playersOut.splice(j,1)
-											playersIn.splice(i,1)
-										}
-									}
 								}
 								if(repeatedPlayer.length === 1) {
 									playersIn.push()
-									removedPlayers = picks.splice(playerOutIndex,1, repeatedPlayer[0])
-									pIndex = tempPlayersOut.findIndex(x => x.element_type == player.element_type)
+									let likelyReplaced = tempPlayersOut.find(x => x.element_type == player.element_type)
+									let isOut =  picks.some(x => x.element_out === repeatedPlayer[0].element)
+									//console.log(likelyReplaced.element)
+									//console.log(repeatedPlayer[0].element)
+									if(isOut) {
+										let withIsOut = picks.find(x => x.element_out === repeatedPlayer[0].element)
+										withIsOut.element_out = likelyReplaced.element
+										inIndex = playersIn.findIndex(x => x.element === withIsOut.element)
+										playersIn.splice(inIndex,1, withIsOut)
+										repeatedPlayer[0].is_captain = likelyReplaced.is_captain
+										repeatedPlayer[0].is_vice_captain = likelyReplaced.is_vice_captain
+										picks.splice(picks.findIndex(x => x.element === likelyReplaced.element),1)
+										picks.push(repeatedPlayer[0])
+
+									} else {
+										picks.map((x, key) => {
+											if(x.element === repeatedPlayer[0].element) {
+												picks.splice(key, 1, repeatedPlayer[0])
+											}
+										})
+									}
+									pIndex = tempPlayersOut.findIndex(x => x.element_type == player.element_type && x.element === likelyReplaced.element)
+									//console.log(tempPlayersOut[pIndex])
 									tempPlayersOut.splice(pIndex,1)
+									//console.log(repeatedPlayer[0].element)
 								} else {
 									playersIn.push(player)
 									removedPlayers = picks.splice(playerOutIndex,1, player)
@@ -426,10 +442,10 @@ function upload() {
 								loadTeam()
 								let playersInTeam = picks.length - tempPlayersOut.length
 								document.querySelector('.player-num').innerHTML = playersInTeam
-								if(playersInTeam === undefined || playersInTeam === 15) {
-									showallswapbtn()
+								if(playersInTeam === 15) {
+									return showallswapbtn()
 								} else {
-									hideallswapbtn()
+									return hideallswapbtn()
 								}
 
 								if(window.innerWidth >= 620) {

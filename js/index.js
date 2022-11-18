@@ -89,6 +89,7 @@ function loadTeam() {
 			teamId = playerState.players.find(x => x.id === playerId).team
 			teamCode = teamState.teams.find(x => x.id === teamId).code
 
+
 			//Add player to playersOut or remove player from playersOut
 			isFoundOut = playersOut.some(x => x.element === playerId)
 			isFoundIn = playersIn.some(x => x.element === playerId)
@@ -116,7 +117,6 @@ function loadTeam() {
 			}
 
 			if(isFoundIn) {
-
 				//In PlayersIn Array
 				isFoundInIndex = playersIn.findIndex(x => x.element === playerId)
 				isFoundInPicksIndex = picks.findIndex(x => x.element === playerId)
@@ -129,7 +129,6 @@ function loadTeam() {
 				replacedElementObj.position = playersIn[isFoundInIndex].position
 				playersIn.splice(isFoundInIndex, 1)
 				picks.splice(isFoundInPicksIndex, 1, replacedElementObj)
-
 
 				//In PlayersOut Array
 				isFoundOutIndex = playersOut.findIndex(x => x.element === playerId)

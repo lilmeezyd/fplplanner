@@ -21,8 +21,8 @@ nxt_fixtures.onchange = function() {
 function loadTeamFixtures(x=eventState.events.filter(event => new Date(event.deadline_time) > new Date()).length) {
 	let table = fixtureHeader(x)+fixtureBody(x)
 	tickerDiv.innerHTML = table
-	document.querySelector('.next-fixtures span').innerText = x === 1 ? 'Fixture' : 'Fixtures'
-	//loadNextFixtures()
+	document.querySelector('.next-fixtures span').innerText = x === 1 ? 'Gameweek' : 'Gameweeks'
+	loadNextFixtures()
 }
 
 //Load fixture Header
