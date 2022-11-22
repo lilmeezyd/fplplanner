@@ -443,9 +443,9 @@ function upload() {
 								let playersInTeam = picks.length - tempPlayersOut.length
 								document.querySelector('.player-num').innerHTML = playersInTeam
 								if(playersInTeam === 15) {
-									return showallswapbtn()
+									showallswapbtn()
 								} else {
-									return hideallswapbtn()
+									hideallswapbtn()
 								}
 
 								if(window.innerWidth >= 620) {
